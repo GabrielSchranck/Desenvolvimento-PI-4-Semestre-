@@ -4,7 +4,7 @@ using BookAPI.Entities.Livros;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BookAPI.Entities
+namespace BookAPI.Entities.Livros
 {
 	public class Livro
 	{
@@ -29,5 +29,5 @@ namespace BookAPI.Entities
 
         public ICollection<FotoLivro> FotosLivros { get; set; } = new List<FotoLivro>();
         public ICollection<ItemHistorico> ItensHistorico { get; set; } = new List<ItemHistorico>();
-    }
+	}
 }

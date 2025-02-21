@@ -16,7 +16,14 @@ namespace BookAPI.Entities.Clientes
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
 
-        [MaxLength(9)]
+        [MaxLength(3)]
+		public int Idade { get; set; }
+		public DateTime DataNascimento { get; set; }
+
+        [MaxLength(1)]
+		public int Genero { get; set; }
+
+		[MaxLength(9)]
         public string Contato { get; set; } = string.Empty;
 
         [MaxLength(2)]

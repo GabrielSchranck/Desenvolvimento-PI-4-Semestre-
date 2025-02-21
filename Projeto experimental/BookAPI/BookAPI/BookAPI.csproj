@@ -21,4 +21,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookModels\BookModels.csproj" />
+  </ItemGroup>
+
 </Project>
