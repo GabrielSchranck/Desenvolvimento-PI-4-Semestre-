@@ -18,7 +18,21 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAngularApp", policy =>
+	{
+		policy.WithOrigins("http://localhost:4200") //Substituir com a URL do Angular
+			  .AllowAnyHeader()
+			  .AllowAnyMethod();
+	});
+});
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+app.UseCors("AllowAngularApp");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
