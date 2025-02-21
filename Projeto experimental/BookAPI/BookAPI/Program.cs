@@ -1,4 +1,5 @@
 using BookAPI.Data;
+using BookAPI.Repositories.Livros;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,8 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 
 var app = builder.Build();
 
