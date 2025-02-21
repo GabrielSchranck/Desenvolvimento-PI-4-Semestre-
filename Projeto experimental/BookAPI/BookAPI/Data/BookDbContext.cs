@@ -20,8 +20,23 @@ namespace BookAPI.Data
         public DbSet<Autor> Autores { get; set; }
         public DbSet<FotoLivro> FotosLivros { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<ItemHistorico>()
+				.HasKey(ih => ih.Id);
+
+			modelBuilder.Entity<ItemHistorico>()
+				.HasOne(ih => ih.Historico)
+				.WithMany(h => h.ItensHistorico)
+				.HasForeignKey(ih => ih.HistoricoId)
+				.OnDelete(DeleteBehavior.Cascade); 
+
+			modelBuilder.Entity<ItemHistorico>()
+				.HasOne(ih => ih.Livro)
+				.WithMany(l => l.ItensHistorico)
+				.HasForeignKey(ih => ih.LivroId)
+				.OnDelete(DeleteBehavior.NoAction); 
 		}
+
 	}
 }

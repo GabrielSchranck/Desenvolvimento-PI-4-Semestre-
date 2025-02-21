@@ -5,6 +5,7 @@ namespace BookAPI.Entities.Clientes
 	public class Endereco
 	{
         public int ClienteId { get; set; }
+        [Key]
         public int Id { get; set; }
 
 		[MaxLength(8)]

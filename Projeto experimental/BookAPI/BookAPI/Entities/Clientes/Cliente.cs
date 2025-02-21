@@ -1,5 +1,7 @@
 ﻿using BookAPI.Entities.Historicos;
 using System.ComponentModel.DataAnnotations;
+using BookAPI.Entities.Livros;
+
 
 namespace BookAPI.Entities.Clientes
 {
