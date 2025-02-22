@@ -10,7 +10,8 @@ namespace BookAPI.Entities.Livros
 	{
 		public int Id { get; set; }
 		public int ClienteId { get; set; }
-		public int AutorId { get; set; }
+        public int CategoriaId { get; set; }
+        public int AutorId { get; set; }
 
 		[MaxLength(100)]
 		public string Titulo { get; set; } = string.Empty;
@@ -26,6 +27,7 @@ namespace BookAPI.Entities.Livros
 
         public Cliente? Cliente { get; set; }
         public Autor? Autor { get; set; }
+        public Categoria? Categoria { get; set; }
 
         public ICollection<FotoLivro> FotosLivros { get; set; } = new List<FotoLivro>();
         public ICollection<ItemHistorico> ItensHistorico { get; set; } = new List<ItemHistorico>();
