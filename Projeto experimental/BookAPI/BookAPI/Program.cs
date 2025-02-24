@@ -1,4 +1,5 @@
 using BookAPI.Data;
+using BookAPI.Repositories.Clientes;
 using BookAPI.Repositories.Livros;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 });
 
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 
 builder.Services.AddCors(options =>
 {

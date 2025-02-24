@@ -1,5 +1,8 @@
-﻿using BookAPI.Entities.Livros;
+﻿using BookAPI.Entities.Clientes;
+using BookAPI.Entities.Livros;
+using BookModels.DTOs.Clientes;
 using BookModels.DTOs.Livros;
+using System.Linq.Expressions;
 
 namespace BookAPI.mappings
 {
@@ -48,6 +51,22 @@ namespace BookAPI.mappings
 				Custo = livro.Custo,
 				QtdPaginas = livro.QtdPaginas,
 				Quantidade = livro.Quantidade
+			};
+		}
+
+		public static ClienteDTO ConverterClienteParaClienteDTO(this Cliente cliente)
+		{
+			return new ClienteDTO
+			{
+				Id = cliente.Id,
+				Nome = cliente.Nome,
+				Cpf = cliente.Cpf,
+				Email = cliente.Email,
+				Contato = cliente.Contato,
+				DDD = cliente.DDD,
+				Idade = cliente.Idade,
+				DataNascimento = cliente.DataNascimento,
+				Genero = cliente.Genero
 			};
 		}
 	}
