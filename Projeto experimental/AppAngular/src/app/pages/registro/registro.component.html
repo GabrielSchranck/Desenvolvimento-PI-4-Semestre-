@@ -51,7 +51,10 @@
       <select id="genero" formControlName="genero"
         class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <option value="" disabled selected>Selecione um gênero</option>
-        <option *ngFor="let genero of opcoesGenero" [ngValue]="genero">{{ genero }}</option>
+        @for (genero of opcoesGenero; track $index) {
+          <option value="genero">{{genero}}</option>
+        }
+        <!-- <option *ngFor="let genero of opcoesGenero" [ngValue]="genero">{{ genero }}</option> -->
       </select>
     </div>
 

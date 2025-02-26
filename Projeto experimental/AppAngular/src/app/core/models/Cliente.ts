@@ -8,4 +8,5 @@ export interface ClienteDTO{
     Idade?: number;
     DataNascimento?: Date;
     Genero?: number;
+    Senha?: string;
 }
