@@ -3,6 +3,7 @@ import { UseracessComponent } from '../../components/useracess/useracess.compone
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { ClienteDTO } from '../../core/models/Cliente';
+import { ClienteService } from '../../core/services/cliente.service';
 
 @Component({
   selector: 'app-registro',
@@ -11,6 +12,8 @@ import { ClienteDTO } from '../../core/models/Cliente';
   styleUrl: './registro.component.css'
 })
 export class RegistroComponent {
+
+  constructor(private clienteService : ClienteService){}
 
   formularioRegistro = new FormGroup({
     nome: new FormControl(''),
@@ -36,6 +39,8 @@ export class RegistroComponent {
       Contato: this.formularioRegistro.get('contato')?.value ?? undefined,
       Senha: this.formularioRegistro.get('senha')?.value ?? undefined
     }
+
+    this.clienteService.CreateUser(cliente)
   }
 
 }
