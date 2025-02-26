@@ -1,51 +1,63 @@
 <app-useracess>
-    <form [formGroup]="formularioRegistro" class="form-container">
-        <div class="form-group">
-          <label for="nome">Nome:</label>
-          <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome">
-        </div>
-      
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input id="email" type="email" formControlName="email" placeholder="Digite seu email">
-        </div>
-      
-        <div class="form-group">
-          <label for="senha">Senha:</label>
-          <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha">
-        </div>
-      
-        <div class="form-group">
-          <label for="cpf">CPF:</label>
-          <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF">
-        </div>
-      
-        <div class="form-group">
-          <label for="ddd">DDD:</label>
-          <input id="ddd" type="text" formControlName="ddd" placeholder="Digite seu DDD">
-        </div>
-      
-        <div class="form-group">
-          <label for="contato">Contato:</label>
-          <input id="contato" type="text" formControlName="contato" placeholder="Digite seu número de contato">
-        </div>
-      
-        <div class="form-group">
-          <label for="dataNascimento">Data de Nascimento:</label>
-          <input id="dataNascimento" type="date" formControlName="dataNascimento">
-        </div>
-      
-        <div class="form-group">
-          <label for="genero">Gênero:</label>
-          <select id="genero" formControlName="genero">
-            <option value="" disabled selected>Selecione um gênero</option>
-            <option *ngFor="let opcao of opcoesGenero" [value]="opcao.valor">
-              {{ opcao.texto }}
-            </option>
-          </select>
-        </div>
-      
-        <button type="submit" [disabled]="formularioRegistro.invalid">Cadastrar</button>
-      </form>
-      
+  <form [formGroup]="formularioRegistro" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+    <h2 class="text-2xl font-semibold text-center text-gray-800">Cadastro</h2>
+
+    <div class="form-group">
+      <label for="nome" class="block text-sm font-medium text-gray-700">Nome:</label>
+      <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+      <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="form-group">
+      <label for="senha" class="block text-sm font-medium text-gray-700">Senha:</label>
+      <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="form-group">
+      <label for="cpf" class="block text-sm font-medium text-gray-700">CPF:</label>
+      <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label for="ddd" class="block text-sm font-medium text-gray-700">DDD:</label>
+        <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
+          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <div>
+        <label for="contato" class="block text-sm font-medium text-gray-700">Contato:</label>
+        <input id="contato" type="text" formControlName="contato" placeholder="Número"
+          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento:</label>
+      <input id="dataNascimento" type="date" formControlName="dataNascimento"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="form-group">
+      <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
+      <select id="genero" formControlName="genero"
+        class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="" disabled selected>Selecione um gênero</option>
+        <option *ngFor="let genero of opcoesGenero" [ngValue]="genero">{{ genero }}</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="formularioRegistro.invalid"
+      class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400">
+      Cadastrar
+    </button>
+  </form>
 </app-useracess>

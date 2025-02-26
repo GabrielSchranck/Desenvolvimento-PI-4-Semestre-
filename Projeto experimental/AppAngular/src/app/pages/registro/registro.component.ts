@@ -22,10 +22,6 @@ export class RegistroComponent {
     senha: new FormControl('')
   });
 
-  opcoesGenero = [
-    {valor: "masculino", texto: "Masculino"},
-    {valor: "feminino", texto: "Feminino"},
-    {valor: "outro", texto: "Outro"}
-  ];
+  opcoesGenero: string[] = ["Masculino", "Feminino", "Outro"];
 
 }
