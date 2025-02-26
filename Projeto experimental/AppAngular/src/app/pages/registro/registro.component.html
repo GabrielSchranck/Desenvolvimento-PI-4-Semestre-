@@ -1,1 +1,51 @@
-<p>registro works!</p>
+<app-useracess>
+    <form [formGroup]="formularioRegistro" class="form-container">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome">
+        </div>
+      
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input id="email" type="email" formControlName="email" placeholder="Digite seu email">
+        </div>
+      
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha">
+        </div>
+      
+        <div class="form-group">
+          <label for="cpf">CPF:</label>
+          <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF">
+        </div>
+      
+        <div class="form-group">
+          <label for="ddd">DDD:</label>
+          <input id="ddd" type="text" formControlName="ddd" placeholder="Digite seu DDD">
+        </div>
+      
+        <div class="form-group">
+          <label for="contato">Contato:</label>
+          <input id="contato" type="text" formControlName="contato" placeholder="Digite seu número de contato">
+        </div>
+      
+        <div class="form-group">
+          <label for="dataNascimento">Data de Nascimento:</label>
+          <input id="dataNascimento" type="date" formControlName="dataNascimento">
+        </div>
+      
+        <div class="form-group">
+          <label for="genero">Gênero:</label>
+          <select id="genero" formControlName="genero">
+            <option value="" disabled selected>Selecione um gênero</option>
+            <option *ngFor="let opcao of opcoesGenero" [value]="opcao.valor">
+              {{ opcao.texto }}
+            </option>
+          </select>
+        </div>
+      
+        <button type="submit" [disabled]="formularioRegistro.invalid">Cadastrar</button>
+      </form>
+      
+</app-useracess>
