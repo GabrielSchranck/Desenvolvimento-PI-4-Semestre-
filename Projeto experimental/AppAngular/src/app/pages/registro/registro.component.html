@@ -1,5 +1,6 @@
 <app-useracess>
-  <form [formGroup]="formularioRegistro" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+  <form [formGroup]="formularioRegistro" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4"
+  (ngSubmit)="CadastrarCliente()">
     <h2 class="text-2xl font-semibold text-center text-gray-800">Cadastro</h2>
 
     <div class="form-group">
@@ -58,7 +59,7 @@
       </select>
     </div>
 
-    <button type="submit" [disabled]="formularioRegistro.invalid" 
+    <button type="submit" 
       class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400">
       Cadastrar
     </button>

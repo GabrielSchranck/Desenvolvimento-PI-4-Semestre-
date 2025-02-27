@@ -7,6 +7,6 @@ export class Cliente{
     DDD?: number;
     Idade?: number;
     DataNascimento?: Date;
-    Genero?: number;
+    Genero?: string;
     Senha?: string;
 }

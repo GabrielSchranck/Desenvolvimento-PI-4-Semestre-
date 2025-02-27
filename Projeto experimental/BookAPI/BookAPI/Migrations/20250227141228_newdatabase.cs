@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigrate : Migration
+    public partial class newdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,19 @@ namespace BookAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categorias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeCategoria = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Clientes",
                 columns: table => new
                 {
@@ -37,7 +50,8 @@ namespace BookAPI.Migrations
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Genero = table.Column<int>(type: "int", maxLength: 1, nullable: false),
                     Contato = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
-                    DDD = table.Column<int>(type: "int", maxLength: 2, nullable: false)
+                    DDD = table.Column<int>(type: "int", maxLength: 2, nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,13 +110,14 @@ namespace BookAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    CategoriaId = table.Column<int>(type: "int", nullable: false),
                     AutorId = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Custo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     QtdPaginas = table.Column<int>(type: "int", nullable: false),
-                    Quantidade = table.Column<int>(type: "int", nullable: false)
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -114,9 +129,40 @@ namespace BookAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Livros_Categorias_CategoriaId",
+                        column: x => x.CategoriaId,
+                        principalTable: "Categorias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Livros_Clientes_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Clientes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientesLivros",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    LivroId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientesLivros", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ClientesLivros_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClientesLivros_Livros_LivroId",
+                        column: x => x.LivroId,
+                        principalTable: "Livros",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -170,6 +216,16 @@ namespace BookAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClientesLivros_ClienteId",
+                table: "ClientesLivros",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientesLivros_LivroId",
+                table: "ClientesLivros",
+                column: "LivroId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enderecos_ClienteId",
                 table: "Enderecos",
                 column: "ClienteId");
@@ -200,6 +256,11 @@ namespace BookAPI.Migrations
                 column: "AutorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Livros_CategoriaId",
+                table: "Livros",
+                column: "CategoriaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Livros_ClienteId",
                 table: "Livros",
                 column: "ClienteId");
@@ -208,6 +269,9 @@ namespace BookAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ClientesLivros");
+
             migrationBuilder.DropTable(
                 name: "Enderecos");
 
@@ -225,6 +289,9 @@ namespace BookAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Autores");
+
+            migrationBuilder.DropTable(
+                name: "Categorias");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

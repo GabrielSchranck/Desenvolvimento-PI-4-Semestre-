@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities.Clientes;
+using BookAPI.mappings;
 using BookAPI.Repositories.Clientes;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,18 @@ namespace BookAPI.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-        private readonly IClienteRepository _repository;
+        private IClienteRepository _repository;
 
-        [HttpGet]
+		public ClienteController(IClienteRepository repository)
+		{
+			_repository = repository;
+		}
+
+		[HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetAllAsync()
         {
             var clientes = await _repository.GetAllClientAsync();
+
 
             try
             {
@@ -49,15 +56,17 @@ namespace BookAPI.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult Create(Cliente cliente)
+        [HttpPost("create")]
+        public async Task<ActionResult<ClienteDTO>> Create(ClienteDTO clienteDTO)
         {
             try
             {
-                if (cliente == null) return BadRequest("Cliente não pode ser nulo");
+				var cliente = clienteDTO.ConverterClienteDTOParaCliente();
 
-                _repository.Create(cliente);
-                return Ok();
+				if (cliente == null) return BadRequest("Cliente não pode ser nulo");
+
+                await _repository.Create(cliente);
+                return Ok(clienteDTO);
             }
             catch (Exception)
             {

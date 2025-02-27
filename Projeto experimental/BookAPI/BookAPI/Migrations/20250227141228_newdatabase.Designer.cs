@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookAPI.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20250221174917_FirstMigrate")]
-    partial class FirstMigrate
+    [Migration("20250227141228_newdatabase")]
+    partial class newdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,9 @@ namespace BookAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Senha")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Clientes");
@@ -117,6 +120,29 @@ namespace BookAPI.Migrations
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Enderecos");
+                });
+
+            modelBuilder.Entity("BookAPI.Entities.ClientesLivros.ClienteLivro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LivroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("LivroId");
+
+                    b.ToTable("ClientesLivros");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Historicos.Historico", b =>
@@ -193,6 +219,24 @@ namespace BookAPI.Migrations
                     b.ToTable("Autores");
                 });
 
+            modelBuilder.Entity("BookAPI.Entities.Livros.Categoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NomeCategoria")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categorias");
+                });
+
             modelBuilder.Entity("BookAPI.Entities.Livros.FotoLivro", b =>
                 {
                     b.Property<int>("Id")
@@ -227,7 +271,10 @@ namespace BookAPI.Migrations
                     b.Property<int>("AutorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Custo")
@@ -251,6 +298,8 @@ namespace BookAPI.Migrations
 
                     b.HasIndex("AutorId");
 
+                    b.HasIndex("CategoriaId");
+
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Livros");
@@ -265,6 +314,25 @@ namespace BookAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("BookAPI.Entities.ClientesLivros.ClienteLivro", b =>
+                {
+                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
+                        .WithMany("ClientesLivros")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookAPI.Entities.Livros.Livro", "Livro")
+                        .WithMany("CLientesLivros")
+                        .HasForeignKey("LivroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Livro");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Historicos.Historico", b =>
@@ -316,24 +384,30 @@ namespace BookAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
+                    b.HasOne("BookAPI.Entities.Livros.Categoria", "Categoria")
                         .WithMany("Livros")
-                        .HasForeignKey("ClienteId")
+                        .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
+
                     b.Navigation("Autor");
+
+                    b.Navigation("Categoria");
 
                     b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Clientes.Cliente", b =>
                 {
+                    b.Navigation("ClientesLivros");
+
                     b.Navigation("Enderecos");
 
                     b.Navigation("Historicos");
-
-                    b.Navigation("Livros");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Historicos.Historico", b =>
@@ -346,8 +420,15 @@ namespace BookAPI.Migrations
                     b.Navigation("Livros");
                 });
 
+            modelBuilder.Entity("BookAPI.Entities.Livros.Categoria", b =>
+                {
+                    b.Navigation("Livros");
+                });
+
             modelBuilder.Entity("BookAPI.Entities.Livros.Livro", b =>
                 {
+                    b.Navigation("CLientesLivros");
+
                     b.Navigation("FotosLivros");
 
                     b.Navigation("ItensHistorico");

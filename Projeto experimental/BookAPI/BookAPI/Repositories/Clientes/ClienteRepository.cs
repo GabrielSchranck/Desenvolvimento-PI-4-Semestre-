@@ -13,10 +13,10 @@ namespace BookAPI.Repositories.Clientes
             this._context = context;
         }
 
-        public void Create(Cliente cliente)
+        public async Task Create(Cliente cliente)
         {
-            _context.Clientes.Add(cliente);
-            _context.SaveChanges();
+            await _context.Clientes.AddAsync(cliente);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Cliente>> GetAllClientAsync()

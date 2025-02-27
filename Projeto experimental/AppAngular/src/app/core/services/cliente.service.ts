@@ -35,7 +35,8 @@ export class ClienteService {
   }
 
   CreateClient(cliente: Cliente) : Observable<any>{
-    return this.http.post<Cliente>(this.url, cliente, httpOptions);
+    const urlApi = `${this.url}/create`
+    return this.http.post<Cliente>(urlApi, cliente, httpOptions);
   }
 
   UpdateClient(cliente: Cliente) : Observable<any>{
