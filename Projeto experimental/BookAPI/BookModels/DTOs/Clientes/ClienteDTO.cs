@@ -18,5 +18,6 @@ namespace BookModels.DTOs.Clientes
 		public int Idade { get; set; }
 		public DateTime DataNascimento { get; set; }
 		public int Genero { get; set; }
-	}
+        public string Senha { get; set; }
+    }
 }

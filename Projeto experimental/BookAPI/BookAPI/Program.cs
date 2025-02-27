@@ -20,15 +20,17 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 
-builder.Services.AddCors(options =>
-{
-	options.AddPolicy("AllowAngularApp", policy =>
-	{
-		policy.WithOrigins("http://localhost:4200") //Substituir com a URL do Angular
-			  .AllowAnyHeader()
-			  .AllowAnyMethod();
-	});
-});
+//builder.Services.AddCors(options =>
+//{
+//	options.AddPolicy("AllowAngularApp", policy =>
+//	{
+//		policy.WithOrigins("http://localhost:4200") //Substituir com a URL do Angular
+//			  .AllowAnyHeader()
+//			  .AllowAnyMethod();
+//	});
+//});
+
+builder.Services.AddCors(options => options.AddPolicy("AllowAngularApp", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 

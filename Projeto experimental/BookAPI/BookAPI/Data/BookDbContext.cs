@@ -1,5 +1,6 @@
 ﻿using BookAPI.Entities;
 using BookAPI.Entities.Clientes;
+using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Historicos;
 using BookAPI.Entities.Livros;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,9 @@ namespace BookAPI.Data
         public DbSet<Autor> Autores { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FotoLivro> FotosLivros { get; set; }
+        public DbSet<ClienteLivro> ClientesLivros { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<ItemHistorico>()
 				.HasKey(ih => ih.Id);

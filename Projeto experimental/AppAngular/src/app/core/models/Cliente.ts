@@ -1,4 +1,4 @@
-export interface ClienteDTO{
+export class Cliente{
     Id?: number;
     Nome?: string;
     Cpf?: string;

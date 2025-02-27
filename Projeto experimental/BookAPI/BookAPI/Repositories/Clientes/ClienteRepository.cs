@@ -1,5 +1,6 @@
 ﻿using BookAPI.Data;
 using BookAPI.Entities.Clientes;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Repositories.Clientes
 {
@@ -16,6 +17,16 @@ namespace BookAPI.Repositories.Clientes
         {
             _context.Clientes.Add(cliente);
             _context.SaveChanges();
+        }
+
+        public async Task<IEnumerable<Cliente>> GetAllClientAsync()
+        {
+            return await _context.Clientes.ToListAsync();
+        }
+
+        public async Task<Cliente> Login(string email, string senha)
+        {
+            return await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email && c.Senha == senha);
         }
     }
 }

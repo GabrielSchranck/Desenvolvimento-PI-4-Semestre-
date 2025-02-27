@@ -44,7 +44,6 @@ namespace BookAPI.mappings
 			return new LivroDTO
 			{
 				Id = livro.Id,
-				ClienteId = livro.ClienteId,
 				AutorId = livro.AutorId,
 				Titulo = livro.Titulo,
 				Valor = livro.Valor,

@@ -1,6 +1,8 @@
 ﻿using BookAPI.Entities.Historicos;
 using System.ComponentModel.DataAnnotations;
 using BookAPI.Entities.Livros;
+using System.ComponentModel;
+using BookAPI.Entities.ClientesLivros;
 
 
 namespace BookAPI.Entities.Clientes
@@ -31,8 +33,11 @@ namespace BookAPI.Entities.Clientes
         [MaxLength(2)]
         public int DDD { get; set; }
 
+        [PasswordPropertyText]
+        public string? Senha { get; set; }
+
         public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
-        public ICollection<Livro> Livros { get; set; } = new List<Livro>();
+        public ICollection<ClienteLivro> ClientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<Historico> Historicos { get; set; } = new List<Historico>();
     }
 }

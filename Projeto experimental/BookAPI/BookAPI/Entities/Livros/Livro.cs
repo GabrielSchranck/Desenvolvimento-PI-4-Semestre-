@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities.Clientes;
+using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Historicos;
 using BookAPI.Entities.Livros;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,6 @@ namespace BookAPI.Entities.Livros
 	public class Livro
 	{
 		public int Id { get; set; }
-		public int ClienteId { get; set; }
         public int CategoriaId { get; set; }
         public int AutorId { get; set; }
 
@@ -30,6 +30,7 @@ namespace BookAPI.Entities.Livros
         public Categoria? Categoria { get; set; }
 
         public ICollection<FotoLivro> FotosLivros { get; set; } = new List<FotoLivro>();
+        public ICollection<ClienteLivro> CLientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<ItemHistorico> ItensHistorico { get; set; } = new List<ItemHistorico>();
 	}
 }
