@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities;
+using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
 using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Historicos;
@@ -22,6 +23,7 @@ namespace BookAPI.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FotoLivro> FotosLivros { get; set; }
         public DbSet<ClienteLivro> ClientesLivros { get; set; }
+        public DbSet<Cep> Ceps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -38,7 +40,13 @@ namespace BookAPI.Data
 				.HasOne(ih => ih.Livro)
 				.WithMany(l => l.ItensHistorico)
 				.HasForeignKey(ih => ih.LivroId)
-				.OnDelete(DeleteBehavior.NoAction); 
+				.OnDelete(DeleteBehavior.NoAction);
+
+			modelBuilder.Entity<Endereco>()
+				.HasOne(e => e.Cep)
+				.WithMany(c => c.Enderecos)
+				.HasForeignKey(e => e.CepId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 
 	}

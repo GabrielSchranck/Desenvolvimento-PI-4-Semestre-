@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class newdatabase : Migration
+    public partial class RefatorandoBanco : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,22 @@ namespace BookAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ceps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CepCod = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Uf = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ceps", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Clientes",
                 columns: table => new
                 {
@@ -65,16 +81,19 @@ namespace BookAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(type: "int", nullable: false),
-                    Cep = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    CepId = table.Column<int>(type: "int", nullable: false),
                     Numero = table.Column<int>(type: "int", nullable: false),
-                    Logradouro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Uf = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false)
+                    Logradouro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enderecos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Enderecos_Ceps_CepId",
+                        column: x => x.CepId,
+                        principalTable: "Ceps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Enderecos_Clientes_ClienteId",
                         column: x => x.ClienteId,
@@ -226,6 +245,11 @@ namespace BookAPI.Migrations
                 column: "LivroId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Enderecos_CepId",
+                table: "Enderecos",
+                column: "CepId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enderecos_ClienteId",
                 table: "Enderecos",
                 column: "ClienteId");
@@ -280,6 +304,9 @@ namespace BookAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "ItensHistoricos");
+
+            migrationBuilder.DropTable(
+                name: "Ceps");
 
             migrationBuilder.DropTable(
                 name: "Historicos");

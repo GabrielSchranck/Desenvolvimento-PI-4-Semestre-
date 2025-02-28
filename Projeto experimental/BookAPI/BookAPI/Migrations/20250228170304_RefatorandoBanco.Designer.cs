@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookAPI.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20250227141228_newdatabase")]
-    partial class newdatabase
+    [Migration("20250228170304_RefatorandoBanco")]
+    partial class RefatorandoBanco
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,39 @@ namespace BookAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BookAPI.Entities.CEPs.Cep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bairro")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CepCod")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Uf")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ceps");
+                });
 
             modelBuilder.Entity("BookAPI.Entities.Clientes.Cliente", b =>
                 {
@@ -84,20 +117,8 @@ namespace BookAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Cep")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("CepId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
@@ -110,12 +131,9 @@ namespace BookAPI.Migrations
                     b.Property<int>("Numero")
                         .HasColumnType("int");
 
-                    b.Property<string>("Uf")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CepId");
 
                     b.HasIndex("ClienteId");
 
@@ -307,11 +325,19 @@ namespace BookAPI.Migrations
 
             modelBuilder.Entity("BookAPI.Entities.Clientes.Endereco", b =>
                 {
+                    b.HasOne("BookAPI.Entities.CEPs.Cep", "Cep")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("CepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
                         .WithMany("Enderecos")
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cep");
 
                     b.Navigation("Cliente");
                 });
@@ -399,6 +425,11 @@ namespace BookAPI.Migrations
                     b.Navigation("Categoria");
 
                     b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("BookAPI.Entities.CEPs.Cep", b =>
+                {
+                    b.Navigation("Enderecos");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Clientes.Cliente", b =>

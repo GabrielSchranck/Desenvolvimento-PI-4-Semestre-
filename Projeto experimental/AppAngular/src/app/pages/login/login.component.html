@@ -1,3 +1,44 @@
 <app-useracess>
-    <p>Login</p>
+    <form [formGroup]="formularioLogin" (ngSubmit)="Logar()" 
+        class="flex flex-col max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4 items-center justify-center"> 
+        <div class="pb-1 pl-1">
+            <input type="text" formControlName="email" placeholder="Insira seu email" class="border border-gray-300 rounded-lg p-1">
+            <div>
+                @if (formularioLogin.get('email')?.touched) {
+                    @if (formularioLogin.get('email')?.hasError('required')) {
+                        <small class="text-red-500 font-bold">{{validacoes['required']('O email')}}</small>
+                    }
+                    @if (formularioLogin.get('email')?.hasError('email')) {
+                        <small class="text-red-500 font-bold">{{validacoes['invalid']('email')}}</small>
+                    }
+                }   
+            </div>
+        </div>
+        <div class="pb-1 pl-1">
+            <input type="password" formControlName="senha" placeholder="Insira sua senha" class="border border-gray-300 rounded-lg p-1">
+        </div>
+        <div>
+            @if (formularioLogin.get('senha')?.touched) {
+                @if (formularioLogin.get('senha')?.hasError('required')) {
+                    <small class="text-red-500 font-bold">{{validacoes['required']('O campo senha')}}</small>
+                }
+            }
+            <div class="flex flex-row items-center justify-between w-full">
+                <div class="text-blue-700 hover:text-blue-500">
+                    <a routerLink="">Esqueci minha senha</a>
+                </div>
+                <div>
+                    <input type="checkbox" formControlName="lembrar" class="p-1">
+                    <label>Lembrar senha</label>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row items-center justify-center w-full">
+            <button type="submit" class="bg-blue-600 p-1 text-white rounded-lg hover:bg-blue-500">Logar</button>
+        </div>
+        <div class="text-blue-700 hover:text-blue-500 ">
+            <a routerLink="/registar">Ainda não possui uma conta?</a>
+        </div>
+    </form>
 </app-useracess>
+<router-outlet/>
