@@ -1,59 +1,110 @@
 <app-useracess>
-  <form [formGroup]="formularioRegistro" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4"
-  (ngSubmit)="CadastrarCliente()">
+  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()"
+    class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
     <h2 class="text-2xl font-semibold text-center text-gray-800">Cadastro</h2>
 
+    <!-- Nome -->
     <div class="form-group">
       <label for="nome" class="block text-sm font-medium text-gray-700">Nome:</label>
       <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
+        [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      @if(formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched){
+        <small class="text-red-500 font-bold">{{validacoes['required']('O nome')}}</small>
+      }
     </div>
 
+    <!-- email -->
     <div class="form-group">
       <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
       <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
+        [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        @if(formularioRegistro.get('email')?.touched){
+          @if(formularioRegistro.get('email')?.hasError('required')){
+            <small class="text-red-500 font-bold">{{validacoes['required']('email')}}</small>
+          }
+          @if(formularioRegistro.get('email')?.hasError('email')){
+            <small class="text-red-500 font-bold">{{validacoes['invalid']('email')}}</small>
+          }
+        }
     </div>
 
+    <!-- Senha -->
     <div class="form-group">
       <label for="senha" class="block text-sm font-medium text-gray-700">Senha:</label>
       <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
+        [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      @if(formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched){
+        <small class="text-red-500 font-bold">{{validacoes['required']('A senha')}}</small>
+      }
     </div>
 
+    <!-- CPF -->
     <div class="form-group">
       <label for="cpf" class="block text-sm font-medium text-gray-700">CPF:</label>
       <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
+        [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      @if(formularioRegistro.get('cpf')?.touched){
+        @if (formularioRegistro.get('cpf')?.hasError('required')) {
+          <small class="text-red-500 font-bold">{{validacoes['required']('O CPF')}}</small>
+        }
+        @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
+          <small class="text-red-500 font-bold">{{validacoes['invalid']('O cpf')}}</small>
+        }
+      }
     </div>
 
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label for="ddd" class="block text-sm font-medium text-gray-700">DDD:</label>
         <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
+          [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
+          [class.focus:ring-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
           class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        @if(formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched){
+          <small class="text-red-500 font-bold">{{validacoes['required']('ddd')}}</small>
+        }
       </div>
 
       <div>
         <label for="contato" class="block text-sm font-medium text-gray-700">Contato:</label>
         <input id="contato" type="text" formControlName="contato" placeholder="Número"
+          [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
+          [class.focus:ring-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
           class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        @if(formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched){
+          <small class="text-red-500 font-bold">{{validacoes['required']('O número')}}</small>
+        }
       </div>
     </div>
 
     <div class="form-group">
       <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento:</label>
       <input id="dataNascimento" type="date" formControlName="dataNascimento"
+        [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      @if(formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched){
+        <small class="text-red-500 font-bold">{{validacoes['required']('A data de nascimento')}}</small>
+      }
     </div>
 
     <div class="form-group">
       <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
       <select id="genero" formControlName="genero"
+        [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <option value="" disabled selected>Selecione um gênero</option>
         @for (genero of opcoesGenero; track $index) {
-          <option value="genero">{{genero}}</option>
+          <option [ngValue]="genero">{{genero}}</option>
         }
         <!-- <option *ngFor="let genero of opcoesGenero" [ngValue]="genero">{{ genero }}</option> -->
       </select>

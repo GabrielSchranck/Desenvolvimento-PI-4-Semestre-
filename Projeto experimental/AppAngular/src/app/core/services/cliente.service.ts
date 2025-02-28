@@ -16,7 +16,7 @@ const httpOptions = {
 })
 export class ClienteService {
 
-  url = 'https://localhost:7010/api/cliente'
+  private readonly url = `${environment["apiUrl"]}/cliente`;
 
   constructor(private http: HttpClient) { }
 
