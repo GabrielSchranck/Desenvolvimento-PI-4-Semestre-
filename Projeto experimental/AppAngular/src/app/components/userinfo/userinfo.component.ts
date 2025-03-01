@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
+import { SidebarComponent } from '../../pages/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-userinfo',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, NavbarComponent, RouterModule, SidebarComponent], 
   templateUrl: './userinfo.component.html',
-  styleUrl: './userinfo.component.css'
+  styleUrls: ['./userinfo.component.css']
 })
-export class UserinfoComponent {
-
-}
+export class UserinfoComponent { }

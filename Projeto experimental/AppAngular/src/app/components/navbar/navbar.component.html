@@ -1,13 +1,31 @@
-<nav>
-    <div class="logo">
-        <!-- Aqui precisa ter a logo -->
+    <nav class="bg-red-300 p-4 flex items-center justify-between shadow-lg fixed top-0 w-full z-50">
+    <!-- Logo -->
+    <div class="flex items-center space-x-2">
+        <img src="logo.png" alt="Logo" class="h-10"> 
+        <span class="text-xl font-bold">Empresta Ai</span>
     </div>
-    <div>
 
+    <!-- Links de navegação -->
+    <div class="hidden md:flex space-x-6">
+        <a href="#" class="text-gray-900 hover:text-white transition">Sobre</a>
+        <a href="#" class="text-gray-900 hover:text-white transition">Serviços</a>
+        <a href="#" class="text-gray-900 hover:text-white transition">Contato</a>
     </div>
-    <div>
-        <div><a routerLink="/login">Login</a></div>
-        <div><a routerLink="/registar">Registrar</a></div>
+
+    <!-- Botões de login e registro -->
+    <div class="flex space-x-4">
+        <a routerLink="/user" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Perfil</a>
+        <a routerLink="/login" class="px-4 py-2 bg-white text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition">Login</a>
+        <a routerLink="/registrar" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Registrar</a>
     </div>
+
+    <!-- Menu hambúrguer para mobile -->
+    <button class="md:hidden text-gray-900 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
 </nav>
+
+
 <router-outlet/>
