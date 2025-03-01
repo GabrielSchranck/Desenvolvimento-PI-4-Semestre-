@@ -1,13 +1,13 @@
-<main>
-    <section>
-        
-    </section>
-    <section>
-        <h1 class="text-3xl font-bold underline text-red-900">
+<main class="flex flex-row">
+    <section class="h-screen flex items-center justify-center bg-blue-500  " style="flex-basis: 65%;">
+        <h1 class="text-3xl font-bold underline text-blue-700">
             AcessUser
         </h1>
-        <ng-content></ng-content>
+    </section>
+    <section class="flex items-center justify-center" style="flex-basis: 35%">
+        <div>
+            <ng-content></ng-content>
+        </div>
     </section>
 </main> 
 <router-outlet/>
-
