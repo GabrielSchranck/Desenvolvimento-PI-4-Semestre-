@@ -15,21 +15,21 @@
       }
     </div>
 
-    <!-- email -->
+    <!-- Email -->
     <div class="w-full">
       <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
       <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
         [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
         [class.focus:ring-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        @if(formularioRegistro.get('email')?.touched){
-          @if(formularioRegistro.get('email')?.hasError('required')){
-            <small class="text-red-500 font-bold">{{validacoes['required']('email')}}</small>
-          }
-          @if(formularioRegistro.get('email')?.hasError('email')){
-            <small class="text-red-500 font-bold">{{validacoes['invalid']('email')}}</small>
-          }
+      @if(formularioRegistro.get('email')?.touched){
+        @if(formularioRegistro.get('email')?.hasError('required')){
+          <small class="text-red-500 font-bold">{{validacoes['required']('email')}}</small>
         }
+        @if(formularioRegistro.get('email')?.hasError('email')){
+          <small class="text-red-500 font-bold">{{validacoes['invalid']('email')}}</small>
+        }
+      }
     </div>
 
     <!-- Senha -->
@@ -74,7 +74,7 @@
         }
       </div>
 
-      <!-- contato -->
+      <!-- Contato -->
       <div>
         <label for="contato" class="block text-sm font-medium text-gray-700">Contato:</label>
         <input id="contato" type="text" formControlName="contato" placeholder="Número"
@@ -87,8 +87,8 @@
       </div>
     </div>
 
-      <!-- Data de nascimento -->
-      <div class="w-full">
+    <!-- Data de nascimento -->
+    <div class="w-full">
       <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento:</label>
       <input id="dataNascimento" type="date" formControlName="dataNascimento"
         [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
@@ -99,7 +99,7 @@
       }
     </div>
 
-    <!-- Genero -->
+    <!-- Gênero -->
     <div class="w-full">
       <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
       <select id="genero" formControlName="genero"
@@ -110,13 +110,20 @@
         @for (genero of opcoesGenero; track $index) {
           <option [ngValue]="genero">{{genero}}</option>
         }
-        <!-- <option *ngFor="let genero of opcoesGenero" [ngValue]="genero">{{ genero }}</option> -->
       </select>
     </div>
 
+    <!-- Botão Cadastrar -->
     <button type="submit" 
       class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400">
       Cadastrar
     </button>
+
+    <!-- Link para Login -->
+    <div class="text-center">
+      <p class="text-gray-700">Já tem uma conta? 
+        <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
+      </p>
+    </div>
   </form>
 </app-useracess>
