@@ -1,111 +1,100 @@
 <app-useracess>
-  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()"
-    class="flex flex-col max-w-md mx-auto bg-white shadow-lg rounded-xl p-8 space-y-4">
-    <h2 class="text-2xl font-semibold text-center text-gray-800">Cadastro</h2>
+  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()">
+    <h2>Cadastro</h2>
 
     <!-- Nome -->
-    <div class="w-full">
-      <label for="nome" class="block text-sm font-medium text-gray-700">Nome:</label>
+    <div>
+      <label for="nome">Nome:</label>
       <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
         [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched">
       @if(formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched){
-        <small class="text-red-500 font-bold">{{validacoes['required']('O nome')}}</small>
+        <small class="text-red-500 font-semibold">{{validacoes['required']('O nome')}}</small>
       }
     </div>
 
     <!-- Email -->
-    <div class="w-full">
-      <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+    <div>
+      <label for="email">Email:</label>
       <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
         [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched">
       @if(formularioRegistro.get('email')?.touched){
         @if(formularioRegistro.get('email')?.hasError('required')){
-          <small class="text-red-500 font-bold">{{validacoes['required']('email')}}</small>
+          <small class="text-red-500 font-semibold">{{validacoes['required']('email')}}</small>
         }
         @if(formularioRegistro.get('email')?.hasError('email')){
-          <small class="text-red-500 font-bold">{{validacoes['invalid']('email')}}</small>
+          <small class="text-red-500 font-semibold">{{validacoes['invalid']('email')}}</small>
         }
       }
     </div>
 
     <!-- Senha -->
-    <div class="w-full">
-      <label for="senha" class="block text-sm font-medium text-gray-700">Senha:</label>
+    <div>
+      <label for="senha">Senha:</label>
       <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
         [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched">
       @if(formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched){
-        <small class="text-red-500 font-bold">{{validacoes['required']('A senha')}}</small>
+        <small class="text-red-500 font-semibold">{{validacoes['required']('A senha')}}</small>
       }
     </div>
 
     <!-- CPF -->
-    <div class="w-full">
-      <label for="cpf" class="block text-sm font-medium text-gray-700">CPF:</label>
+    <div>
+      <label for="cpf">CPF:</label>
       <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
         [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched">
       @if(formularioRegistro.get('cpf')?.touched){
         @if (formularioRegistro.get('cpf')?.hasError('required')) {
-          <small class="text-red-500 font-bold">{{validacoes['required']('O CPF')}}</small>
+          <small class="text-red-500 font-semibold">{{validacoes['required']('O CPF')}}</small>
         }
         @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
-          <small class="text-red-500 font-bold">{{validacoes['invalid']('O cpf')}}</small>
+          <small class="text-red-500 font-semibold">{{validacoes['invalid']('O cpf')}}</small>
         }
       }
     </div>
 
-    <!-- ddd -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label for="ddd" class="block text-sm font-medium text-gray-700">DDD:</label>
-        <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
-          [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
-          [class.focus:ring-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        @if(formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched){
-          <small class="text-red-500 font-bold">{{validacoes['required']('ddd')}}</small>
-        }
-      </div>
+    <!-- DDD -->
+    <div>
+      <label for="ddd">DDD:</label>
+      <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
+        [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched">
+      @if(formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched){
+        <small class="text-red-500 font-semibold">{{validacoes['required']('ddd')}}</small>
+      }
+    </div>
 
-      <!-- Contato -->
-      <div>
-        <label for="contato" class="block text-sm font-medium text-gray-700">Contato:</label>
-        <input id="contato" type="text" formControlName="contato" placeholder="Número"
-          [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
-          [class.focus:ring-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        @if(formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched){
-          <small class="text-red-500 font-bold">{{validacoes['required']('O número')}}</small>
-        }
-      </div>
+    <!-- Contato -->
+    <div>
+      <label for="contato">Contato:</label>
+      <input id="contato" type="text" formControlName="contato" placeholder="Número"
+        [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
+        [class.focus:ring-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched">
+      @if(formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched){
+        <small class="text-red-500 font-semibold">{{validacoes['required']('O número')}}</small>
+      }
     </div>
 
     <!-- Data de nascimento -->
-    <div class="w-full">
-      <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento:</label>
+    <div>
+      <label for="dataNascimento">Data de Nascimento:</label>
       <input id="dataNascimento" type="date" formControlName="dataNascimento"
         [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched">
       @if(formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched){
-        <small class="text-red-500 font-bold">{{validacoes['required']('A data de nascimento')}}</small>
+        <small class="text-red-500 font-semibold">{{validacoes['required']('A data de nascimento')}}</small>
       }
     </div>
 
     <!-- Gênero -->
-    <div class="w-full">
-      <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
+    <div>
+      <label for="genero">Gênero:</label>
       <select id="genero" formControlName="genero"
         [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched"
-        class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        [class.focus:ring-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched">
         <option value="" disabled selected>Selecione um gênero</option>
         @for (genero of opcoesGenero; track $index) {
           <option [ngValue]="genero">{{genero}}</option>
@@ -114,23 +103,16 @@
     </div>
 
     <!-- Botão Cadastrar -->
-    <button type="submit" 
-      class="w-full bg-blue-600 text-white p-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400">
-      Cadastrar
-    </button>
+    <button type="submit">Cadastrar</button>
 
     <!-- Link para Login -->
-    <div class="text-center">
-      <p class="text-gray-700">Já tem uma conta? 
-        <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
-      </p>
+    <div>
+      <p>Já tem uma conta? <a routerLink="/login">Faça login</a></p>
     </div>
 
     <!-- Link para Página Inicial -->
-    <div class="text-center mt-4">
-      <p class="text-gray-700">Voltar à 
-        <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
-      </p>
+    <div>
+      <p>Voltar à <a routerLink="/">Página Inicial</a></p>
     </div>
   </form>
 </app-useracess>

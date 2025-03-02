@@ -1,16 +1,14 @@
 <app-useracess>
-    <form [formGroup]="formularioLogin" (ngSubmit)="Logar()" 
-        class="flex flex-col max-w-md mx-auto bg-white shadow-lg rounded-xl p-8 space-y-4">
+    <form [formGroup]="formularioLogin" (ngSubmit)="Logar()">
         
         <!-- Título -->
-        <h2 class="text-2xl font-bold text-center text-gray-800">Login</h2>
+        <h2>Login</h2>
 
         <!-- Campo Email -->
-        <div class="w-full">
-            <label class="block text-gray-700 font-medium mb-1">Email</label>
-            <input type="text" formControlName="email" placeholder="Digite seu email"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <div class="mt-1">
+        <div>
+            <label>Email</label>
+            <input type="text" formControlName="email" placeholder="Digite seu email">
+            <div>
                 @if (formularioLogin.get('email')?.touched) {
                     @if (formularioLogin.get('email')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O email')}}</small>
@@ -23,11 +21,10 @@
         </div>
 
         <!-- Campo Senha -->
-        <div class="w-full">
-            <label class="block text-gray-700 font-medium mb-1">Senha</label>
-            <input type="password" formControlName="senha" placeholder="Digite sua senha"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <div class="mt-1">
+        <div>
+            <label>Senha</label>
+            <input type="password" formControlName="senha" placeholder="Digite sua senha">
+            <div>
                 @if (formularioLogin.get('senha')?.touched) {
                     @if (formularioLogin.get('senha')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O campo senha')}}</small>
@@ -37,30 +34,30 @@
         </div>
 
         <!-- Opções Adicionais -->
-        <div class="flex justify-between items-center w-full text-sm">
-            <a routerLink="" class="text-blue-600 hover:underline">Esqueci minha senha</a>
-            <div class="flex items-center">
+        <div>
+            <a routerLink="">Esqueci minha senha</a>
+            <div>
                 <input type="checkbox" formControlName="lembrar" class="mr-2">
-                <label class="text-gray-700">Lembrar-me</label>
+                <label>Lembrar-me</label>
             </div>
         </div>
 
         <!-- Botão Login -->
-        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-500 transition">
+        <button type="submit">
             Entrar
         </button>
 
         <!-- Link para Cadastro -->
-        <div class="text-center">
-            <p class="text-gray-700">Ainda não tem uma conta? 
-                <a routerLink="/registrar" class="text-blue-600 hover:underline">Cadastre-se</a>
+        <div>
+            <p>Ainda não tem uma conta? 
+                <a routerLink="/registrar">Cadastre-se</a>
             </p>
         </div>
 
         <!-- Link para Página Inicial -->
-        <div class="text-center mt-4">
-            <p class="text-gray-700">Voltar à 
-                <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
+        <div>
+            <p>Voltar à 
+                <a routerLink="/">Página Inicial</a>
             </p>
         </div>
     </form>
