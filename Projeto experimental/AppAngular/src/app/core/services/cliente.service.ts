@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Cliente } from '../models/Cliente';
 
 const httpOptions = {
@@ -34,9 +34,15 @@ export class ClienteService {
     return this.http.post(urlApi, {email, senha} ,httpOptions);
   }
 
-  CreateClient(cliente: Cliente) : Observable<any>{
+  CreateClient(cliente: Cliente) : Observable<{cliente: Cliente, token : string}>{
     const urlApi = `${this.url}/create`
-    return this.http.post<Cliente>(urlApi, cliente, httpOptions);
+    return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente, httpOptions)
+    .pipe(
+      catchError((error) => {
+        console.error("Erro ao criar cliente", error);
+        return throwError(() => new Error("Erro ao criar cliente"));
+      })
+    );
   }
 
   UpdateClient(cliente: Cliente) : Observable<any>{

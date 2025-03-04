@@ -48,14 +48,29 @@ export class RegistroComponent implements OnInit{
   }
 
   CadastrarCliente(): void{
-    const cliente :Cliente = this.formularioRegistro.value;
-    this.clienteService.CreateClient(cliente).subscribe((retorno) => {
-      this.clienteRetornado = retorno;
-      localStorage.setItem('authToken', this.clienteRetornado.token);
-      this.router.navigate(['']);
+
+    if(this.formularioRegistro.invalid){
+      this.formularioRegistro.markAllAsTouched();
+      return;
+    }
+
+    const cliente: Cliente = this.formularioRegistro.value;
+
+    this.clienteService.CreateClient(cliente).subscribe({
+      next: (retorno) => {
+        if(retorno.token){
+          localStorage.setItem('authToken', retorno.token);
+          this.router.navigate([''])
+        }
+        else{
+          console.error("Erro: Token não recebido");
+        }
+      },
+      error: (err) => {
+        console.error("Erro ao cadastrar cliente:", err);
+      }
     });
 
-    this.formularioRegistro.markAllAsTouched();
   }
 
 }

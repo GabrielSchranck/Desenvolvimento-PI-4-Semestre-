@@ -79,7 +79,8 @@ namespace BookAPI.Controllers
                         cliente.Id,
                         cliente.Email,
                         cliente.Nome
-                    }
+                    },
+                    token = token
                 });
             }
             catch (Exception)

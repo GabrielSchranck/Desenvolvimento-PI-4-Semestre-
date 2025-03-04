@@ -16,9 +16,16 @@
   
     <!-- Botões de login e registro -->
     <div class="flex space-x-4">
-      <a routerLink="/user" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Perfil</a>
-      <a routerLink="/registrar" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Registrar</a>
-      <a routerLink="/login" class="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition duration-300">Login</a>
+      @if (logado) {
+        <a routerLink="/user" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Perfil</a>
+        <button (click)="logout()" class="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition duration-300">Logout</button>
+
+      }
+      @else {
+        <a routerLink="/registrar" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Registrar</a>
+        <a routerLink="/login" class="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition duration-300">Login</a>
+      }
+      
     </div>
   
     <!-- Menu hambúrguer para mobile -->
