@@ -1,4 +1,4 @@
-﻿namespace BookAPI.Services.Cliente
+﻿namespace BookAPI.Services.Clientes
 {
     public class ClienteService
     {
