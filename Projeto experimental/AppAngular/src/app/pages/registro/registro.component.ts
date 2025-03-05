@@ -19,6 +19,7 @@ export class RegistroComponent implements OnInit{
 
   formularioRegistro: any;
   clienteRetornado: any;
+  apiErrors: {[key:string] : string} = {}
 
   ngOnInit(): void {
 
@@ -49,6 +50,8 @@ export class RegistroComponent implements OnInit{
 
   CadastrarCliente(): void{
 
+    console.log("Entrou no método");
+
     if(this.formularioRegistro.invalid){
       this.formularioRegistro.markAllAsTouched();
       return;
@@ -60,17 +63,31 @@ export class RegistroComponent implements OnInit{
       next: (retorno) => {
         if(retorno.token){
           localStorage.setItem('authToken', retorno.token);
-          this.router.navigate([''])
+          this.apiErrors = {};
+          this.router.navigate(['']);
         }
         else{
           console.error("Erro: Token não recebido");
         }
       },
       error: (err) => {
-        console.error("Erro ao cadastrar cliente:", err);
+        console.log(err.errors);
+        if(err.errors){
+          this.apiErrors = err;
+          this.applyApiErrorsToForm();
+        }
       }
     });
+  }
 
+  applyApiErrorsToForm(): void{
+    for(const field in this.apiErrors){
+      const control = this.formularioRegistro.get(field);
+      if(control){
+        control.setErrors({ apiError: this.apiErrors[field]});
+        console.log({ apiError: this.apiErrors[field]});
+      }
+    }
   }
 
 }

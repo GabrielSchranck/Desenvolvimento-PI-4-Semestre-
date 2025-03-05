@@ -3,6 +3,8 @@ import { UseracessComponent } from "../../components/useracess/useracess.compone
 import { RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Cliente } from '../../core/models/Cliente';
+import { ClienteService } from '../../core/services/cliente.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,8 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   formularioLogin: any;
+
+  constructor(private clienteService: ClienteService, private router: Router){}
 
   ngOnInit(): void {
     this.formularioLogin = new FormGroup({
@@ -29,6 +33,27 @@ export class LoginComponent implements OnInit {
   };
 
   Logar(): void {
+    if(this.formularioLogin.invalid){
+      this.formularioLogin.markAllAsTouched();
+      return;
+    }
+
+    const cliente: Cliente = this.formularioLogin.value;
+
+    this.clienteService.GetByEmailPassword(cliente).subscribe({
+      next: (retorno) => {
+        if(retorno.token){
+          localStorage.setItem("authToken", retorno.token);
+          this.router.navigate(['']);
+        }
+        else{
+          console.error("Erro: Token não recebido");
+        }
+      },
+      error: (err) => {
+        console.error("Erro ao procurar cliente", err);
+      }
+    });
 
   }
 

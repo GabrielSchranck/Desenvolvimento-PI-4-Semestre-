@@ -6,10 +6,12 @@
     <div>
       <label for="nome">Nome:</label>
       <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
-        [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched">
-      @if(formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched){
-        <small class="text-red-500 font-semibold">{{validacoes['required']('O nome')}}</small>
+        [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched">
+      @if (formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('O nome') }}</small>
+      }
+      @if (formularioRegistro.get('nome')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('nome')?.errors?.['apiError'] }}</small>
       }
     </div>
 
@@ -17,15 +19,18 @@
     <div>
       <label for="email">Email:</label>
       <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
-        [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched">
-      @if(formularioRegistro.get('email')?.touched){
-        @if(formularioRegistro.get('email')?.hasError('required')){
-          <small class="text-red-500 font-semibold">{{validacoes['required']('email')}}</small>
+        [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched">
+      @if (formularioRegistro.get('email')?.touched) {
+        @if (formularioRegistro.get('email')?.hasError('required')) {
+          <small class="text-red-500 font-semibold">{{ validacoes['required']('O email') }}</small>
         }
-        @if(formularioRegistro.get('email')?.hasError('email')){
-          <small class="text-red-500 font-semibold">{{validacoes['invalid']('email')}}</small>
+        @if (formularioRegistro.get('email')?.hasError('email')) {
+          <small class="text-red-500 font-semibold">{{ validacoes['invalid']('Email') }}</small>
         }
+      }
+
+      @if (formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('email')?.errors?.['apiError'] }}</small>
       }
     </div>
 
@@ -33,10 +38,12 @@
     <div>
       <label for="senha">Senha:</label>
       <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
-        [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched">
-      @if(formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched){
-        <small class="text-red-500 font-semibold">{{validacoes['required']('A senha')}}</small>
+        [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched">
+      @if (formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('A senha') }}</small>
+      }
+      @if (formularioRegistro.get('senha')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('senha')?.errors?.['apiError'] }}</small>
       }
     </div>
 
@@ -44,14 +51,16 @@
     <div>
       <label for="cpf">CPF:</label>
       <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
-        [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched">
-      @if(formularioRegistro.get('cpf')?.touched){
+        [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched">
+      @if (formularioRegistro.get('cpf')?.touched) {
         @if (formularioRegistro.get('cpf')?.hasError('required')) {
-          <small class="text-red-500 font-semibold">{{validacoes['required']('O CPF')}}</small>
+          <small class="text-red-500 font-semibold">{{ validacoes['required']('O CPF') }}</small>
         }
         @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
-          <small class="text-red-500 font-semibold">{{validacoes['invalid']('O cpf')}}</small>
+          <small class="text-red-500 font-semibold">{{ validacoes['invalid']('CPF') }}</small>
+        }
+        @if (formularioRegistro.get('cpf')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('cpf')?.errors?.['apiError'] }}</small>
         }
       }
     </div>
@@ -60,10 +69,12 @@
     <div>
       <label for="ddd">DDD:</label>
       <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
-        [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched">
-      @if(formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched){
-        <small class="text-red-500 font-semibold">{{validacoes['required']('ddd')}}</small>
+        [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched">
+      @if (formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('O DDD') }}</small>
+      }
+      @if (formularioRegistro.get('ddd')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('ddd')?.errors?.['apiError'] }}</small>
       }
     </div>
 
@@ -71,21 +82,25 @@
     <div>
       <label for="contato">Contato:</label>
       <input id="contato" type="text" formControlName="contato" placeholder="Número"
-        [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched">
-      @if(formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched){
-        <small class="text-red-500 font-semibold">{{validacoes['required']('O número')}}</small>
+        [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched">
+      @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('O número') }}</small>
+      }
+      @if (formularioRegistro.get('contato')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('contato')?.errors?.['apiError'] }}</small>
       }
     </div>
 
-    <!-- Data de nascimento -->
+    <!-- Data de Nascimento -->
     <div>
       <label for="dataNascimento">Data de Nascimento:</label>
       <input id="dataNascimento" type="date" formControlName="dataNascimento"
-        [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched">
-      @if(formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched){
-        <small class="text-red-500 font-semibold">{{validacoes['required']('A data de nascimento')}}</small>
+        [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched">
+      @if (formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('A data de nascimento') }}</small>
+      }
+      @if (formularioRegistro.get('dataNascimento')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('dataNascimento')?.errors?.['apiError'] }}</small>
       }
     </div>
 
@@ -93,13 +108,18 @@
     <div>
       <label for="genero">Gênero:</label>
       <select id="genero" formControlName="genero"
-        [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched"
-        [class.focus:ring-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched">
+        [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched">
         <option value="" disabled selected>Selecione um gênero</option>
         @for (genero of opcoesGenero; track $index) {
-          <option [ngValue]="genero">{{genero}}</option>
+          <option [ngValue]="genero">{{ genero }}</option>
         }
       </select>
+      @if (formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched) {
+        <small class="text-red-500 font-semibold">{{ validacoes['required']('O gênero') }}</small>
+      }
+      @if (formularioRegistro.get('genero')?.hasError('apiError')) {
+        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('genero')?.errors?.['apiError'] }}</small>
+      }
     </div>
 
     <!-- Botão Cadastrar -->

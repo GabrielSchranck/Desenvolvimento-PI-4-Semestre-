@@ -1,6 +1,7 @@
 ﻿using BookAPI.Entities.Clientes;
 using BookAPI.mappings;
 using BookAPI.Repositories.Clientes;
+using BookAPI.Services.Autenticadores;
 using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,13 @@ namespace BookAPI.Controllers
     public class ClienteController : ControllerBase
     {
         private IClienteRepository _repository;
+        private IAutenticadorClienteService _autenticadorClienteService;
 
 		public ClienteController(IClienteRepository repository)
 		{
 			_repository = repository;
-		}
+            _autenticadorClienteService = new AutenticadorClienteService(this._repository);
+        }
 
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetAllAsync()
@@ -37,6 +40,7 @@ namespace BookAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<Cliente>> Login([FromBody] ClienteDTO clienteDTO)
         {
@@ -50,7 +54,18 @@ namespace BookAPI.Controllers
                 if (cliente == null)
                     return BadRequest("Cliente não encontrado");
 
-                return Ok(cliente);
+                var token = TokenService.GenerateToken(cliente);
+
+                return Ok(new
+                {
+                    cliente = new
+                    {
+                        cliente.Id,
+                        cliente.Email,
+                        cliente.Nome
+                    },
+                    token = token
+                });
             }
             catch (Exception)
             {
@@ -67,6 +82,11 @@ namespace BookAPI.Controllers
 				var cliente = clienteDTO.ConverterClienteDTOParaCliente();
 
 				if (cliente == null) return BadRequest("Cliente não pode ser nulo");
+
+                var erros = (await _autenticadorClienteService.AutenticarClienteAoCriar(cliente));
+
+                if(erros.Count != 0)
+                    return BadRequest(new { errors = erros});
 
                 await _repository.Create(cliente);
 

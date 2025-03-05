@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Cliente } from '../models/Cliente';
@@ -29,9 +29,17 @@ export class ClienteService {
     return this.http.get<Cliente>(urlApi);
   }
 
-  GetByEmailPassword(email: string, senha: string) : Observable<any>{
+  GetByEmailPassword(cliente: Cliente) : Observable<any>{
     const urlApi = `${this.url}/login`
-    return this.http.post(urlApi, {email, senha} ,httpOptions);
+    return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente ,httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        if(error.status === 400 && error.error.errors){
+          return throwError(() => error.error.errors);
+        }
+        return throwError(() => "Erro desconhecido. Tente novamente.");
+      })
+    );
   }
 
   CreateClient(cliente: Cliente) : Observable<{cliente: Cliente, token : string}>{
