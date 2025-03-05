@@ -17,6 +17,10 @@
                         <small class="text-red-500 font-semibold">{{validacoes['invalid']('email')}}</small>
                     }
                 }   
+                @if (formularioLogin.get('email')?.hasError('apiError')) {
+                    <small class="text-red-500 font-semibold">{{formularioLogin.get('email')?.errors?.['apiError']}}</small>
+
+                }
             </div>
         </div>
 

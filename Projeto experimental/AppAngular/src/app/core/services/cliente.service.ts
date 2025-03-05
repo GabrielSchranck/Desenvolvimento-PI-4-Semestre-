@@ -34,10 +34,10 @@ export class ClienteService {
     return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente ,httpOptions)
     .pipe(
       catchError((error: HttpErrorResponse) => {
-        if(error.status === 400 && error.error.errors){
-          return throwError(() => error.error.errors);
+        if(error.status === 400){
+          return throwError(() => error.error);
         }
-        return throwError(() => "Erro desconhecido. Tente novamente.");
+        return throwError(() => "Erro desconhecido.\n" + error.message);
       })
     );
   }
@@ -47,8 +47,10 @@ export class ClienteService {
     return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente, httpOptions)
     .pipe(
       catchError((error) => {
-        console.error("Erro ao criar cliente", error);
-        return throwError(() => new Error("Erro ao criar cliente"));
+        if(error.status === 400){
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro desconhecido.\n" + error.message);
       })
     );
   }

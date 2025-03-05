@@ -50,8 +50,6 @@ export class RegistroComponent implements OnInit{
 
   CadastrarCliente(): void{
 
-    console.log("Entrou no método");
-
     if(this.formularioRegistro.invalid){
       this.formularioRegistro.markAllAsTouched();
       return;
@@ -71,9 +69,9 @@ export class RegistroComponent implements OnInit{
         }
       },
       error: (err) => {
-        console.log(err.errors);
+        console.log(err);
         if(err.errors){
-          this.apiErrors = err;
+          this.apiErrors = err.errors;
           this.applyApiErrorsToForm();
         }
       }
@@ -85,7 +83,6 @@ export class RegistroComponent implements OnInit{
       const control = this.formularioRegistro.get(field);
       if(control){
         control.setErrors({ apiError: this.apiErrors[field]});
-        console.log({ apiError: this.apiErrors[field]});
       }
     }
   }

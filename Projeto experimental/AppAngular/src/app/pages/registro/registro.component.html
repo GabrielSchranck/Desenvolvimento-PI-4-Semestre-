@@ -29,7 +29,7 @@
         }
       }
 
-      @if (formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.hasError('apiError')) {
+      @if (formularioRegistro.get('email')?.hasError('apiError')) {
         <small class="text-red-500 font-semibold">{{ formularioRegistro.get('email')?.errors?.['apiError'] }}</small>
       }
     </div>

@@ -52,7 +52,7 @@ namespace BookAPI.Controllers
                 var cliente = await _repository.Login(clienteDTO.Email, clienteDTO.Senha);
 
                 if (cliente == null)
-                    return BadRequest("Cliente não encontrado");
+                    return BadRequest("Email ou senha inválido");
 
                 var token = TokenService.GenerateToken(cliente);
 

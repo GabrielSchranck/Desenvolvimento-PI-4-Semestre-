@@ -15,6 +15,7 @@ import { ClienteService } from '../../core/services/cliente.service';
 export class LoginComponent implements OnInit {
 
   formularioLogin: any;
+  apiError: string = "abacaxi";
 
   constructor(private clienteService: ClienteService, private router: Router){}
 
@@ -44,6 +45,7 @@ export class LoginComponent implements OnInit {
       next: (retorno) => {
         if(retorno.token){
           localStorage.setItem("authToken", retorno.token);
+          this.apiError = '';
           this.router.navigate(['']);
         }
         else{
@@ -51,10 +53,16 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error("Erro ao procurar cliente", err);
+        this.apiError = err;
+        this.applyApiErrorsToForm();
       }
     });
-
   }
 
+  applyApiErrorsToForm(): void {
+    console.log(this.apiError);
+    if(this.apiError){
+      this.formularioLogin.get('email').setErrors({apiError: this.apiError});
+    }
+  }
 }
