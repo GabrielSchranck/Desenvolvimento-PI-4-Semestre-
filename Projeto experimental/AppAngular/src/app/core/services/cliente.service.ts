@@ -26,7 +26,15 @@ export class ClienteService {
 
   GetById(id: number) :Observable<Cliente>{
     const urlApi = `${this.url}/${id}`;
-    return this.http.get<Cliente>(urlApi);
+    return this.http.get<Cliente>(urlApi, httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        if(error.status === 404){
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro desconhecido.\n" + error.message);
+      })
+    );
   }
 
   GetByEmailPassword(cliente: Cliente) : Observable<any>{

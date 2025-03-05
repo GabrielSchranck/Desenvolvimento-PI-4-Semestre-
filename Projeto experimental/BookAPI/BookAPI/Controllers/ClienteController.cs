@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookAPI.Controllers
 {
-    [Route("api/[Controller]")]
+	[Authorize]
+	[Route("api/[Controller]")]
     [ApiController]
     public class ClienteController : ControllerBase
     {
@@ -38,6 +39,33 @@ namespace BookAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Cliente>> GetById(int id)
+        {
+            var cliente = await _repository.GetByIdAsync(id);
+
+            if (cliente == null) return BadRequest("Dados não encontrados");
+
+            var token = TokenService.GenerateToken(cliente);
+
+            return Ok(new
+            {
+                cliente = new
+                {
+                    cliente.Id,
+                    cliente.Nome,
+                    cliente.Email,
+                    cliente.Cpf,
+                    cliente.Idade,
+                    cliente.DDD,
+                    cliente.Contato,
+                    cliente.DataNascimento,
+                    cliente.Genero
+                },
+                token = token
+            });
         }
 
         [AllowAnonymous]
