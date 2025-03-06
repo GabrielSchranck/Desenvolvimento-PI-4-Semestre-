@@ -47,7 +47,15 @@ namespace BookAPI.Data
 				.WithMany(c => c.Enderecos)
 				.HasForeignKey(e => e.CepId)
 				.OnDelete(DeleteBehavior.Cascade);
-		}
+
+			modelBuilder.Entity<Cliente>()
+				.HasIndex(c => c.Email)
+				.IsUnique();
+
+			modelBuilder.Entity<Cliente>()
+				.HasIndex(c => c.Cpf)
+				.IsUnique();
+        }
 
 	}
 }

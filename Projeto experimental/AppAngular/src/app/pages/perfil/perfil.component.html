@@ -1,1 +1,12 @@
-<p>perfil works!</p>
+<section>
+    <div class="flex flex-row justify-center items-center p-4 border-blue-500 border-b-2">
+        <form [formGroup]="formularioPerfil">
+            <div>
+                <input type="text" formControlName="nome" placeholder="Nome">
+            </div>
+            <div>
+                <input type="text" formControlName="cpf" placeholder="CPF">
+            </div>
+        </form>
+    </div>
+</section>

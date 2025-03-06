@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Cliente } from '../models/Cliente';
 
 const httpOptions = {
@@ -26,17 +26,41 @@ export class ClienteService {
 
   GetById(id: number) :Observable<Cliente>{
     const urlApi = `${this.url}/${id}`;
-    return this.http.get<Cliente>(urlApi);
+    return this.http.get<Cliente>(urlApi, httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        if(error.status === 404){
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro desconhecido.\n" + error.message);
+      })
+    );
   }
 
-  GetByEmailPassword(email: string, senha: string) : Observable<any>{
+  GetByEmailPassword(cliente: Cliente) : Observable<any>{
     const urlApi = `${this.url}/login`
-    return this.http.post(urlApi, {email, senha} ,httpOptions);
+    return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente ,httpOptions)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        if(error.status === 400){
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro desconhecido.\n" + error.message);
+      })
+    );
   }
 
-  CreateClient(cliente: Cliente) : Observable<any>{
+  CreateClient(cliente: Cliente) : Observable<{cliente: Cliente, token : string}>{
     const urlApi = `${this.url}/create`
-    return this.http.post<Cliente>(urlApi, cliente, httpOptions);
+    return this.http.post<{cliente: Cliente, token: string}>(urlApi, cliente, httpOptions)
+    .pipe(
+      catchError((error) => {
+        if(error.status === 400){
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro desconhecido.\n" + error.message);
+      })
+    );
   }
 
   UpdateClient(cliente: Cliente) : Observable<any>{

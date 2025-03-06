@@ -24,7 +24,32 @@ namespace BookAPI.Repositories.Clientes
             return await _context.Clientes.ToListAsync();
         }
 
-        public async Task<Cliente> Login(string email, string senha)
+        public async Task<bool> GetByCpfAsync(string cpf)
+        {
+            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Cpf == cpf);
+
+            if (cliente == null)
+                return false;
+
+            return true;
+        }
+
+        public async Task<bool> GetByEmailAsync(string email)
+        {
+            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email);
+
+            if (cliente == null)
+                return false;
+
+            return true;
+        }
+
+		public async Task<Cliente> GetByIdAsync(int id)
+		{
+			return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
+		}
+
+		public async Task<Cliente> Login(string email, string senha)
         {
             return await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email && c.Senha == senha);
         }

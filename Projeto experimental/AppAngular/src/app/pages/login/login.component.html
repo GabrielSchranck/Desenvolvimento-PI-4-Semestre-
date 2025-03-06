@@ -17,6 +17,10 @@
                         <small class="text-red-500 font-semibold">{{validacoes['invalid']('email')}}</small>
                     }
                 }   
+                @if (formularioLogin.get('email')?.hasError('apiError')) {
+                    <small class="text-red-500 font-semibold">{{formularioLogin.get('email')?.errors?.['apiError']}}</small>
+
+                }
             </div>
         </div>
 
@@ -28,6 +32,9 @@
                 @if (formularioLogin.get('senha')?.touched) {
                     @if (formularioLogin.get('senha')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O campo senha')}}</small>
+                    }
+                    @if(formularioLogin.get('senha')?.hasError('minlength')){
+                        <small class="text-red-500 font-semibold">{{validacoes['senha']}}</small>
                     }
                 }
             </div>

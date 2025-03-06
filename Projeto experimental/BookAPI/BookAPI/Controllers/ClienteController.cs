@@ -1,6 +1,7 @@
 ﻿using BookAPI.Entities.Clientes;
 using BookAPI.mappings;
 using BookAPI.Repositories.Clientes;
+using BookAPI.Services.Autenticadores;
 using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
@@ -8,16 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookAPI.Controllers
 {
-    [Route("api/[Controller]")]
+	[Authorize]
+	[Route("api/[Controller]")]
     [ApiController]
     public class ClienteController : ControllerBase
     {
         private IClienteRepository _repository;
+        private IAutenticadorClienteService _autenticadorClienteService;
 
 		public ClienteController(IClienteRepository repository)
 		{
 			_repository = repository;
-		}
+            _autenticadorClienteService = new AutenticadorClienteService(this._repository);
+        }
 
 		[HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetAllAsync()
@@ -37,6 +41,34 @@ namespace BookAPI.Controllers
             }
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Cliente>> GetById(int id)
+        {
+            var cliente = await _repository.GetByIdAsync(id);
+
+            if (cliente == null) return BadRequest("Dados não encontrados");
+
+            var token = TokenService.GenerateToken(cliente);
+
+            return Ok(new
+            {
+                cliente = new
+                {
+                    cliente.Id,
+                    cliente.Nome,
+                    cliente.Email,
+                    cliente.Cpf,
+                    cliente.Idade,
+                    cliente.DDD,
+                    cliente.Contato,
+                    cliente.DataNascimento,
+                    cliente.Genero
+                },
+                token = token
+            });
+        }
+
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<Cliente>> Login([FromBody] ClienteDTO clienteDTO)
         {
@@ -48,9 +80,20 @@ namespace BookAPI.Controllers
                 var cliente = await _repository.Login(clienteDTO.Email, clienteDTO.Senha);
 
                 if (cliente == null)
-                    return BadRequest("Cliente não encontrado");
+                    return BadRequest("Email ou senha inválido");
 
-                return Ok(cliente);
+                var token = TokenService.GenerateToken(cliente);
+
+                return Ok(new
+                {
+                    cliente = new
+                    {
+                        cliente.Id,
+                        cliente.Email,
+                        cliente.Nome
+                    },
+                    token = token
+                });
             }
             catch (Exception)
             {
@@ -68,6 +111,11 @@ namespace BookAPI.Controllers
 
 				if (cliente == null) return BadRequest("Cliente não pode ser nulo");
 
+                var erros = (await _autenticadorClienteService.AutenticarClienteAoCriar(cliente));
+
+                if(erros.Count != 0)
+                    return BadRequest(new { errors = erros});
+
                 await _repository.Create(cliente);
 
                 var token = TokenService.GenerateToken(cliente);
@@ -79,7 +127,8 @@ namespace BookAPI.Controllers
                         cliente.Id,
                         cliente.Email,
                         cliente.Nome
-                    }
+                    },
+                    token = token
                 });
             }
             catch (Exception)
