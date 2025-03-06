@@ -9,14 +9,17 @@
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
             <input id="email" type="email" formControlName="email" placeholder="Digite seu email" class="input-field">
             <div class="error-message">
-                <small *ngIf="formularioLogin.get('email')?.touched">
-                    <span *ngIf="formularioLogin.get('email')?.hasError('required')" class="text-red-500 font-semibold">
-                        O email é obrigatório.
-                    </span>
-                    <span *ngIf="formularioLogin.get('email')?.hasError('email')" class="text-red-500 font-semibold">
-                        O email informado é inválido.
-                    </span>
-                </small>
+                @if (formularioLogin.get('email')?.touched) {
+                    @if (formularioLogin.get('email')?.hasError('required')) {
+                        <small class="text-red-500 font-semibold">{{validacoes['required']('O email')}}</small>
+                    }
+                    @if (formularioLogin.get('email')?.hasError('email')) {
+                        <small class="text-red-500 font-semibold">{{validacoes['invalid']('email')}}</small>
+                    }
+                }   
+                @if (formularioLogin.get('email')?.hasError('apiError')) {
+                    <small class="text-red-500 font-semibold">{{formularioLogin.get('email')?.errors?.['apiError']}}</small>
+                }
             </div>
         </div>
 
@@ -25,11 +28,14 @@
             <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
             <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha" class="input-field">
             <div class="error-message">
-                <small *ngIf="formularioLogin.get('senha')?.touched">
-                    <span *ngIf="formularioLogin.get('senha')?.hasError('required')" class="text-red-500 font-semibold">
-                        O campo senha é obrigatório.
-                    </span>
-                </small>
+                @if (formularioLogin.get('senha')?.touched) {
+                    @if (formularioLogin.get('senha')?.hasError('required')) {
+                        <small class="text-red-500 font-semibold">{{validacoes['required']('O campo senha')}}</small>
+                    }
+                    @if(formularioLogin.get('senha')?.hasError('minlength')){
+                        <small class="text-red-500 font-semibold">{{validacoes['senha']}}</small>
+                    }
+                }
             </div>
         </div>
 
