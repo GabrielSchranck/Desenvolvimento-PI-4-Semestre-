@@ -1,14 +1,14 @@
 <app-useracess>
-    <form [formGroup]="formularioLogin" (ngSubmit)="Logar()">
+    <form [formGroup]="formularioLogin" (ngSubmit)="Logar()" class="login-form">
         
         <!-- Título -->
-        <h2>Login</h2>
+        <h2 class="text-center text-2xl font-semibold mb-6">Login</h2>
 
         <!-- Campo Email -->
-        <div>
-            <label>Email</label>
-            <input type="text" formControlName="email" placeholder="Digite seu email">
-            <div>
+        <div class="form-group">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input id="email" type="email" formControlName="email" placeholder="Digite seu email" class="input-field">
+            <div class="error-message">
                 @if (formularioLogin.get('email')?.touched) {
                     @if (formularioLogin.get('email')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O email')}}</small>
@@ -19,16 +19,15 @@
                 }   
                 @if (formularioLogin.get('email')?.hasError('apiError')) {
                     <small class="text-red-500 font-semibold">{{formularioLogin.get('email')?.errors?.['apiError']}}</small>
-
                 }
             </div>
         </div>
 
         <!-- Campo Senha -->
-        <div>
-            <label>Senha</label>
-            <input type="password" formControlName="senha" placeholder="Digite sua senha">
-            <div>
+        <div class="form-group">
+            <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha" class="input-field">
+            <div class="error-message">
                 @if (formularioLogin.get('senha')?.touched) {
                     @if (formularioLogin.get('senha')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O campo senha')}}</small>
@@ -41,32 +40,35 @@
         </div>
 
         <!-- Opções Adicionais -->
-        <div>
-            <a routerLink="">Esqueci minha senha</a>
-            <div>
+        <div class="flex justify-between items-center mt-4">
+            <a routerLink="" class="text-sm text-blue-600 hover:underline">Esqueci minha senha</a>
+            <div class="flex items-center">
                 <input type="checkbox" formControlName="lembrar" class="mr-2">
-                <label>Lembrar-me</label>
+                <label class="text-sm text-gray-700">Lembrar-me</label>
             </div>
         </div>
 
         <!-- Botão Login -->
-        <button type="submit">
-            Entrar
-        </button>
+        <div class="mt-6">
+            <button type="submit" class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                Entrar
+            </button>
+        </div>
 
         <!-- Link para Cadastro -->
-        <div>
-            <p>Ainda não tem uma conta? 
-                <a routerLink="/registrar">Cadastre-se</a>
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-700">Ainda não tem uma conta? 
+                <a routerLink="/registrar" class="text-blue-600 hover:underline">Cadastre-se</a>
             </p>
         </div>
 
         <!-- Link para Página Inicial -->
-        <div>
-            <p>Voltar à 
-                <a routerLink="/">Página Inicial</a>
+        <div class="mt-2 text-center">
+            <p class="text-sm text-gray-700">Voltar à 
+                <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
             </p>
         </div>
+
     </form>
 </app-useracess>
 <router-outlet/>

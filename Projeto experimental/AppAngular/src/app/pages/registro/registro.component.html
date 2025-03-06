@@ -1,100 +1,103 @@
 <app-useracess>
-  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()">
-    <h2>Cadastro</h2>
+  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form">
+    <h2 class="text-center text-2xl font-semibold mb-6">Cadastro</h2>
 
-    <!-- Nome -->
-    <div>
-      <label for="nome">Nome:</label>
-      <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
-        [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched">
-      @if (formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched) {
+    <!-- Nome e Email em linha -->
+    <div class="form-group grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="nome" class="block text-sm font-medium text-gray-700">Nome:</label>
+        <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched">
+        @if (formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched) {
         <small class="text-red-500 font-semibold">{{ validacoes['required']('O nome') }}</small>
-      }
-      @if (formularioRegistro.get('nome')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('nome')?.errors?.['apiError'] }}</small>
-      }
+        }
+        @if (formularioRegistro.get('nome')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('nome')?.errors?.['apiError'] }}</small>
+        }
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+        <input id="email" type="email" formControlName="email" placeholder="Digite seu email" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched">
+        @if (formularioRegistro.get('email')?.touched) {
+          @if (formularioRegistro.get('email')?.hasError('required')) {
+            <small class="text-red-500 font-semibold">{{ validacoes['required']('O email') }}</small>
+          }
+          @if (formularioRegistro.get('email')?.hasError('email')) {
+            <small class="text-red-500 font-semibold">{{ validacoes['invalid']('Email') }}</small>
+          }
+        }
+
+        @if (formularioRegistro.get('email')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('email')?.errors?.['apiError'] }}</small>
+        }
+      </div>
     </div>
 
-    <!-- Email -->
-    <div>
-      <label for="email">Email:</label>
-      <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
-        [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched">
-      @if (formularioRegistro.get('email')?.touched) {
-        @if (formularioRegistro.get('email')?.hasError('required')) {
-          <small class="text-red-500 font-semibold">{{ validacoes['required']('O email') }}</small>
+    <!-- Senha e CPF em linha -->
+    <div class="form-group grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="senha" class="block text-sm font-medium text-gray-700">Senha:</label>
+        <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched">
+        @if (formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched) {
+          <small class="text-red-500 font-semibold">{{ validacoes['required']('A senha') }}</small>
         }
-        @if (formularioRegistro.get('email')?.hasError('email')) {
-          <small class="text-red-500 font-semibold">{{ validacoes['invalid']('Email') }}</small>
+        @if (formularioRegistro.get('senha')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('senha')?.errors?.['apiError'] }}</small>
         }
-      }
+      </div>
 
-      @if (formularioRegistro.get('email')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('email')?.errors?.['apiError'] }}</small>
-      }
+      <div>
+        <label for="cpf" class="block text-sm font-medium text-gray-700">CPF:</label>
+        <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched">
+        @if (formularioRegistro.get('cpf')?.touched) {
+          @if (formularioRegistro.get('cpf')?.hasError('required')) {
+            <small class="text-red-500 font-semibold">{{ validacoes['required']('O CPF') }}</small>
+          }
+          @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
+            <small class="text-red-500 font-semibold">{{ validacoes['invalid']('CPF') }}</small>
+          }
+          @if (formularioRegistro.get('cpf')?.hasError('apiError')) {
+            <small class="text-red-500 font-semibold">{{ formularioRegistro.get('cpf')?.errors?.['apiError'] }}</small>
+          }
+        }
+      </div>
     </div>
 
-    <!-- Senha -->
-    <div>
-      <label for="senha">Senha:</label>
-      <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
-        [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched">
-      @if (formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched) {
-        <small class="text-red-500 font-semibold">{{ validacoes['required']('A senha') }}</small>
-      }
-      @if (formularioRegistro.get('senha')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('senha')?.errors?.['apiError'] }}</small>
-      }
-    </div>
-
-    <!-- CPF -->
-    <div>
-      <label for="cpf">CPF:</label>
-      <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
-        [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched">
-      @if (formularioRegistro.get('cpf')?.touched) {
-        @if (formularioRegistro.get('cpf')?.hasError('required')) {
-          <small class="text-red-500 font-semibold">{{ validacoes['required']('O CPF') }}</small>
+    <!-- DDD e Contato em linha -->
+    <div class="form-group grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="ddd" class="block text-sm font-medium text-gray-700">DDD:</label>
+        <input id="ddd" type="text" formControlName="ddd" placeholder="DDD" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched">
+        @if (formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched) {
+          <small class="text-red-500 font-semibold">{{ validacoes['required']('O DDD') }}</small>
         }
-        @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
-          <small class="text-red-500 font-semibold">{{ validacoes['invalid']('CPF') }}</small>
+        @if (formularioRegistro.get('ddd')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('ddd')?.errors?.['apiError'] }}</small>
         }
-        @if (formularioRegistro.get('cpf')?.hasError('apiError')) {
-          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('cpf')?.errors?.['apiError'] }}</small>
+      </div>
+
+      <div>
+        <label for="contato" class="block text-sm font-medium text-gray-700">Contato:</label>
+        <input id="contato" type="text" formControlName="contato" placeholder="Número" class="input-field"
+          [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched">
+        @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
+          <small class="text-red-500 font-semibold">{{ validacoes['required']('O número') }}</small>
         }
-      }
-    </div>
-
-    <!-- DDD -->
-    <div>
-      <label for="ddd">DDD:</label>
-      <input id="ddd" type="text" formControlName="ddd" placeholder="DDD"
-        [class.border-red-500]="formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched">
-      @if (formularioRegistro.get('ddd')?.invalid && formularioRegistro.get('ddd')?.touched) {
-        <small class="text-red-500 font-semibold">{{ validacoes['required']('O DDD') }}</small>
-      }
-      @if (formularioRegistro.get('ddd')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('ddd')?.errors?.['apiError'] }}</small>
-      }
-    </div>
-
-    <!-- Contato -->
-    <div>
-      <label for="contato">Contato:</label>
-      <input id="contato" type="text" formControlName="contato" placeholder="Número"
-        [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched">
-      @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
-        <small class="text-red-500 font-semibold">{{ validacoes['required']('O número') }}</small>
-      }
-      @if (formularioRegistro.get('contato')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('contato')?.errors?.['apiError'] }}</small>
-      }
+        @if (formularioRegistro.get('contato')?.hasError('apiError')) {
+          <small class="text-red-500 font-semibold">{{ formularioRegistro.get('contato')?.errors?.['apiError'] }}</small>
+        }
+      </div>
     </div>
 
     <!-- Data de Nascimento -->
-    <div>
-      <label for="dataNascimento">Data de Nascimento:</label>
-      <input id="dataNascimento" type="date" formControlName="dataNascimento"
+    <div class="form-group">
+      <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento:</label>
+      <input id="dataNascimento" type="date" formControlName="dataNascimento" class="input-field"
         [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched">
       @if (formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched) {
         <small class="text-red-500 font-semibold">{{ validacoes['required']('A data de nascimento') }}</small>
@@ -105,9 +108,9 @@
     </div>
 
     <!-- Gênero -->
-    <div>
-      <label for="genero">Gênero:</label>
-      <select id="genero" formControlName="genero"
+    <div class="form-group">
+      <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
+      <select id="genero" formControlName="genero" class="input-field"
         [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched">
         <option value="" disabled selected>Selecione um gênero</option>
         @for (genero of opcoesGenero; track $index) {
@@ -123,16 +126,25 @@
     </div>
 
     <!-- Botão Cadastrar -->
-    <button type="submit">Cadastrar</button>
+    <div class="mt-6">
+      <button type="submit" class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+        Cadastrar
+      </button>
+    </div>
 
     <!-- Link para Login -->
-    <div>
-      <p>Já tem uma conta? <a routerLink="/login">Faça login</a></p>
+    <div class="mt-4 text-center">
+      <p class="text-sm text-gray-700">Já tem uma conta? 
+        <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
+      </p>
     </div>
 
     <!-- Link para Página Inicial -->
-    <div>
-      <p>Voltar à <a routerLink="/">Página Inicial</a></p>
+    <div class="mt-2 text-center">
+      <p class="text-sm text-gray-700">Voltar à 
+        <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
+      </p>
     </div>
+
   </form>
 </app-useracess>
