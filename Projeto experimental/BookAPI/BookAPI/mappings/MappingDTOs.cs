@@ -64,14 +64,13 @@ namespace BookAPI.mappings
 				Contato = cliente.Contato,
 				DDD = cliente.DDD,
 				Idade = cliente.Idade,
-				DataNascimento = cliente.DataNascimento,
-				//Genero = cliente.Genero
+				DataNascimento = cliente.DataNascimento
 			};
 		}
 
 		public static Cliente ConverterClienteDTOParaCliente(this ClienteDTO clienteDTO)
 		{
-			var cliente =  new Cliente
+			var cliente = new Cliente
 			{
 				Nome = clienteDTO.Nome,
 				Email = clienteDTO.Email,
@@ -81,10 +80,6 @@ namespace BookAPI.mappings
 				Contato = clienteDTO.Contato,
 				DataNascimento = clienteDTO.DataNascimento
 			};
-
-			if (clienteDTO.Genero == "Masculino") cliente.Genero = 1;
-			else if(clienteDTO.Genero == "Feminino") cliente.Genero= 2;
-			else cliente.Genero = 3;
 
 			return cliente;
 		}

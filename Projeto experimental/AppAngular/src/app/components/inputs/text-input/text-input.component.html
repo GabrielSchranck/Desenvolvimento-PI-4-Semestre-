@@ -1,0 +1,9 @@
+<div class="flex flex-row w-72 h-10 border-2 border-blue-500 rounded-lg">
+  <img [src]="src" alt="icon" class="w-10 rounded-l-lg">
+  <input [formControl]="control"
+         [type]="type"
+         class="input-field w-full pl-2 outline-none rounded-lg"
+         [placeholder]="placeholder"
+         [name]="name">
+</div>
+<p>{{error}}</p>

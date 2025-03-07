@@ -1,5 +1,5 @@
 <app-useracess>
-  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form">
+  <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form p-4">
     <h2 class="text-center text-2xl font-semibold mb-6">Cadastro</h2>
 
     <!-- Nome e Email em linha -->
@@ -107,24 +107,6 @@
       }
     </div>
 
-    <!-- Gênero -->
-    <div class="form-group">
-      <label for="genero" class="block text-sm font-medium text-gray-700">Gênero:</label>
-      <select id="genero" formControlName="genero" class="input-field"
-        [class.border-red-500]="formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched">
-        <option value="" disabled selected>Selecione um gênero</option>
-        @for (genero of opcoesGenero; track $index) {
-          <option [ngValue]="genero">{{ genero }}</option>
-        }
-      </select>
-      @if (formularioRegistro.get('genero')?.invalid && formularioRegistro.get('genero')?.touched) {
-        <small class="text-red-500 font-semibold">{{ validacoes['required']('O gênero') }}</small>
-      }
-      @if (formularioRegistro.get('genero')?.hasError('apiError')) {
-        <small class="text-red-500 font-semibold">{{ formularioRegistro.get('genero')?.errors?.['apiError'] }}</small>
-      }
-    </div>
-
     <!-- Botão Cadastrar -->
     <div class="mt-6">
       <button type="submit" class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
@@ -134,14 +116,14 @@
 
     <!-- Link para Login -->
     <div class="mt-4 text-center">
-      <p class="text-sm text-gray-700">Já tem uma conta? 
+      <p class="text-sm text-gray-700">Já tem uma conta?
         <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
       </p>
     </div>
 
     <!-- Link para Página Inicial -->
     <div class="mt-2 text-center">
-      <p class="text-sm text-gray-700">Voltar à 
+      <p class="text-sm text-gray-700">Voltar à
         <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
       </p>
     </div>

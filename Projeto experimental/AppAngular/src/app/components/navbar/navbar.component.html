@@ -1,19 +1,19 @@
 <nav class="bg-gradient-to-r from-gray-800 to-blue-600 p-4 flex items-center justify-between shadow-md fixed top-0 w-full z-50">
     <!-- Logo -->
     <div class="flex items-center space-x-2">
-        <img src="livro.png" alt="Logo" class="h-10 w-12"> 
+        <img src="home/livro.png" alt="Logo" class="h-10 w-12">
         <span routerLink="/" class="text-2xl font-bold text-white cursor-pointer">
         Empresta Ai
         </span>
-    </div>  
-  
+    </div>
+
     <!-- Links de navegação -->
     <div class="hidden md:flex space-x-6 text-white">
       <a href="#" class="hover:text-blue-200 transition duration-300">Sobre</a>
       <a href="#" class="hover:text-blue-200 transition duration-300">Serviços</a>
       <a href="#" class="hover:text-blue-200 transition duration-300">Contato</a>
     </div>
-  
+
     <!-- Botões de login e registro -->
     <div class="flex space-x-4">
       @if (logado) {
@@ -25,9 +25,9 @@
         <a routerLink="/registrar" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Registrar</a>
         <a routerLink="/login" class="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition duration-300">Login</a>
       }
-      
+
     </div>
-  
+
     <!-- Menu hambúrguer para mobile -->
     <button class="md:hidden text-white focus:outline-none" id="hamburger-menu">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@
       </svg>
     </button>
   </nav>
-  
+
   <!-- Menu Hamburguer Responsivo -->
   <div id="mobile-menu" class="md:hidden bg-gradient-to-r from-gray-800 to-blue-600 w-full p-4 absolute top-0 left-0 hidden">
     <div class="space-y-4 text-white">
@@ -47,5 +47,5 @@
       <a routerLink="/registrar" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Registrar</a>
     </div>
   </div>
-  
+
   <router-outlet/>

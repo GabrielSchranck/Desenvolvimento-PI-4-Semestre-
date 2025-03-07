@@ -48,8 +48,6 @@ namespace BookAPI.Controllers
 
             if (cliente == null) return BadRequest("Dados não encontrados");
 
-            var token = TokenService.GenerateToken(cliente);
-
             return Ok(new
             {
                 cliente = new
@@ -61,10 +59,9 @@ namespace BookAPI.Controllers
                     cliente.Idade,
                     cliente.DDD,
                     cliente.Contato,
-                    cliente.DataNascimento,
-                    cliente.Genero
-                },
-                token = token
+                    cliente.DataNascimento
+                }
+                
             });
         }
 
@@ -88,9 +85,7 @@ namespace BookAPI.Controllers
                 {
                     cliente = new
                     {
-                        cliente.Id,
-                        cliente.Email,
-                        cliente.Nome
+                        cliente.Id
                     },
                     token = token
                 });
