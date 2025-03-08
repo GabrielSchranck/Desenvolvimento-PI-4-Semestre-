@@ -1,14 +1,15 @@
 <main class="flex h-screen">
     
-    <div class="flex flex-col w-2/3 h-full">
-        <section class="flex-grow flex items-center justify-center bg-gradient-to-b from-black to-blue-500">
-            <h1 class="w-2/3 text-3xl font-bold underline text-white text-center">
+    <div class="h-screen hidden lg:w-3/5 lg:flex">
+        <section class="bg-gradient-to-b from-black to-blue-500 hidden lg:flex-grow lg:flex lg:flex-col h-screen w-full ">
+            <h1 class="w-full text-xl xl:text-2xl font-bold text-white text-center mt-40"> 
                 ”⁠Uma boa leitura é terapia para a alma e conhecimento para mente”.
             </h1>
+            <img src="home/livro.png" alt="teste">
         </section>        
     </div>
 
-    <div class="flex flex-col w-1/3 h-full overflow-y-auto">
+    <div class="h-full flex items-center justify-center w-full lg:w-2/5">
         <section class="flex-grow flex items-center justify-center">
             <div>
                 <ng-content></ng-content>

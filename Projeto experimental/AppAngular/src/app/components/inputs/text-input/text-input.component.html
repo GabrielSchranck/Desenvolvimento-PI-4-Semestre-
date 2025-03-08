@@ -1,9 +1,15 @@
-<div class="flex flex-row w-72 h-10 border-2 border-blue-500 rounded-lg">
-  <img [src]="src" alt="icon" class="w-10 rounded-l-lg">
-  <input [formControl]="control"
-         [type]="type"
-         class="input-field w-full pl-2 outline-none rounded-lg"
-         [placeholder]="placeholder"
-         [name]="name">
-</div>
-<p>{{error}}</p>
+<section>
+  @if(label){
+    <!-- <label class="font-bold text-[#3596D2]">{{label}}</label> -->
+  }
+  <div class="flex flex-row w-72 h-10 border-2 border-[#3596D2] rounded-lg text-[#3596D2] font-semibold">
+    <img [src]="src" alt="icon" class="w-10 h-10 rounded-l-lg p-2">
+    <input [formControl]="control"
+           [type]="type"
+           class="input-field w-full pl-2 outline-none rounded-lg"
+           [placeholder]="placeholder"
+           [name]="name">
+  </div>
+  <p>{{error}}</p>
+  
+</section>

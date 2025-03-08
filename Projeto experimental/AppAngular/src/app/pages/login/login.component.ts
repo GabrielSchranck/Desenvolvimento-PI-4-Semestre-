@@ -5,10 +5,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { Cliente } from '../../core/models/Cliente';
 import { ClienteService } from '../../core/services/cliente.service';
+import { TextInputComponent } from "../../components/inputs/text-input/text-input.component";
 
 @Component({
   selector: 'app-login',
-  imports: [UseracessComponent, RouterModule, ReactiveFormsModule],
+  imports: [UseracessComponent, RouterModule, ReactiveFormsModule, TextInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
