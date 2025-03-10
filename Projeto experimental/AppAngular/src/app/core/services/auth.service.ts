@@ -39,7 +39,7 @@ export class AuthService {
 
     const tokenPayload = this.decodeToken(token);
     if (tokenPayload && tokenPayload.exp) {
-      return tokenPayload.exp * 1000 > Date.now(); 
+      return tokenPayload.exp * 1000 > Date.now();
     }
 
     return false;
@@ -49,5 +49,5 @@ export class AuthService {
     const payload = token.split('.')[1];
     return JSON.parse(atob(payload));
   }
-  
+
 }

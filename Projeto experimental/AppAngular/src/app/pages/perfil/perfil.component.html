@@ -1,12 +1,22 @@
-<section>
-    <div class="flex flex-row justify-center items-center p-4 border-blue-500 border-b-2">
+<section class="flex flex-row justify-center h-screen">
+    <div class="flex flex-col w-1/2 w-full bg-blue-500 border-2 border-green-500 z-10">
         <form [formGroup]="formularioPerfil">
-            <div>
-                <input type="text" formControlName="nome" placeholder="Nome">
+            <div class="flex flex-row justify-between bg-green-500 w-full h-screen">
+                <app-text-input
+                  [type]="'text'"
+                  [placeholder]="'Nome'"
+                  class="w-5 h-2"
+                ></app-text-input>
+                <app-text-input
+                  [type]="'text'"
+                  [placeholder]="'CPF'"
+                  class="w-5 h-2"
+                ></app-text-input>
             </div>
             <div>
-                <input type="text" formControlName="cpf" placeholder="CPF">
+
             </div>
         </form>
     </div>
+    <div class="flex w-1/2"></div>
 </section>

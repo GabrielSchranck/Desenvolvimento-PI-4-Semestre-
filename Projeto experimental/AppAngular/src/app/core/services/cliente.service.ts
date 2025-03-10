@@ -45,7 +45,7 @@ export class ClienteService {
         if(error.status === 400){
           return throwError(() => error.error);
         }
-        return throwError(() => "Erro desconhecido.\n" + error.message);
+        return throwError(() => "Erro ao conectar com a API.");
       })
     );
   }

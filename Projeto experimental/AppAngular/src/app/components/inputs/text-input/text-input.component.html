@@ -2,8 +2,10 @@
   @if(label){
     <!-- <label class="font-bold text-[#3596D2]">{{label}}</label> -->
   }
-  <div class="flex flex-row w-72 h-10 border-2 border-[#3596D2] rounded-lg text-[#3596D2] font-semibold">
-    <img [src]="src" alt="icon" class="w-10 h-10 rounded-l-lg p-2">
+  <div class="flex flex-row w-60 md:w-72 h-8 md:h-10 border-2 border-[#3596D2] rounded-lg text-[#3596D2] font-semibold">
+    @if(src != '') {
+      <img [src]="src" alt="icon" class="w-8 h-8 p-2 md:w-10 md:h-10 rounded-l-lg ">
+    }
     <input [formControl]="control"
            [type]="type"
            class="input-field w-full pl-2 outline-none rounded-lg"
@@ -11,5 +13,5 @@
            [name]="name">
   </div>
   <p>{{error}}</p>
-  
+
 </section>
