@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
 
   formularioLogin: any;
   apiError: string = "abacaxi";
+  isLoading: boolean = false;
 
   constructor(private clienteService: ClienteService, private router: Router){}
 
@@ -40,12 +41,14 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
     const cliente: Cliente = this.formularioLogin.value;
 
     this.clienteService.GetByEmailPassword(cliente).subscribe({
       next: (retorno) => {
         if(retorno.token){
           localStorage.setItem("authToken", retorno.token);
+          this.isLoading = false;
           this.apiError = '';
           this.router.navigate(['']);
         }
@@ -55,6 +58,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.apiError = err;
+        this.isLoading = false;
         this.applyApiErrorsToForm();
       }
     });

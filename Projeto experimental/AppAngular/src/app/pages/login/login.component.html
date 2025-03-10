@@ -62,12 +62,20 @@
         </div>
 
         <!-- Botão Login -->
-        <div class="mt-6">
-            <button type="submit" class="w-full py-2 bg-[#3596D2] text-white font-semibold rounded-xl hover:bg-blue-700 transition">
-                Entrar
-            </button>
-        </div>
-
+         @if(!isLoading){
+            <div class="mt-6">
+                <button type="submit" class="w-full py-2 bg-[#3596D2] text-white font-semibold rounded-xl hover:bg-blue-700 transition">
+                    Entrar
+                </button>
+            </div>    
+         }
+         @else {
+            <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+              </svg>
+         }
+        
         <!-- Link para Cadastro -->
         <div class="mt-4 text-center">
             <p class="text-sm text-gray-700">Ainda não tem uma conta? 
