@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     senha: "A senha precisa ter no mínimo 6 dígitos",
   };
 
-  Logar(): void {
+  async Logar(): Promise<void> {
     if(this.formularioLogin.invalid){
       this.formularioLogin.markAllAsTouched();
       return;
