@@ -7,6 +7,7 @@ namespace BookAPI.Services.Autenticadores
     {
         private readonly IClienteRepository _clienteRepository;
 
+        Task<int> IAutenticadorClienteService.GetIdadeAsync(DateTime dataNascimento) => GetIdadeAsync(dataNascimento);
         public AutenticadorClienteService(IClienteRepository clienteRepository)
         {
             _clienteRepository = clienteRepository;
@@ -24,7 +25,6 @@ namespace BookAPI.Services.Autenticadores
 
             return erros;
         }
-
         private async Task<bool> ExisteEmailAsync(Cliente cliente)
         {
             return await _clienteRepository.GetByEmailAsync(cliente.Email);
@@ -33,5 +33,18 @@ namespace BookAPI.Services.Autenticadores
         {
             return await _clienteRepository.GetByCpfAsync(cpf);
         }
+        private async Task<int> GetIdadeAsync(DateTime dataNascimento)
+        {
+            try
+            {
+                var idade = DateTime.Now.Year - dataNascimento.Year;
+                return idade;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

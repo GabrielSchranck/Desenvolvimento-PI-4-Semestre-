@@ -41,7 +41,7 @@
 button {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
+    background-color: #3596D2;
     color: white;
     border: none;
     border-radius: 8px;
@@ -50,8 +50,24 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+#google-login-botton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid #3596D2;
+    padding: 0.5rem;
+}
+
+#google-login-botton:hover{
+    background-color: #3596D2;
+    color: white;
+}
+
 button:hover {
-    background-color: #0056b3;
+    background-color: #007bff;
     transform: translateY(-2px);
 }
 

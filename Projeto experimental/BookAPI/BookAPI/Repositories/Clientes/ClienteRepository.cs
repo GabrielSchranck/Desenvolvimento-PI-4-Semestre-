@@ -1,4 +1,5 @@
 ﻿using BookAPI.Data;
+using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +19,10 @@ namespace BookAPI.Repositories.Clientes
             await _context.Clientes.AddAsync(cliente);
             await _context.SaveChangesAsync();
         }
-
         public async Task<IEnumerable<Cliente>> GetAllClientAsync()
         {
             return await _context.Clientes.ToListAsync();
         }
-
         public async Task<bool> GetByCpfAsync(string cpf)
         {
             var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Cpf == cpf);
@@ -33,7 +32,6 @@ namespace BookAPI.Repositories.Clientes
 
             return true;
         }
-
         public async Task<bool> GetByEmailAsync(string email)
         {
             var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email);
@@ -43,15 +41,18 @@ namespace BookAPI.Repositories.Clientes
 
             return true;
         }
-
 		public async Task<Cliente> GetByIdAsync(int id)
 		{
 			return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
 		}
-
-		public async Task<Cliente> Login(string email, string senha)
+        public async Task<IEnumerable<Cep>> GetClienteEnderecosAsync(int clienteId)
+        {
+            return await _context.Ceps.Where(c => c.Enderecos.Any(e => e.ClienteId == clienteId)).Include(c => c.Enderecos).ToListAsync();
+        }
+        public async Task<Cliente> Login(string email, string senha)
         {
             return await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email && c.Senha == senha);
         }
+        
     }
 }

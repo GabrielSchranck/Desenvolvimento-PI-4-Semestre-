@@ -41,12 +41,39 @@ namespace BookAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Cliente>> GetById(int id)
+        [HttpGet("me")]
+        public async Task<ActionResult<Cliente>> GetById()
         {
-            var cliente = await _repository.GetByIdAsync(id);
+            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("Token de autenticação não encontrado.");
+            }
 
-            if (cliente == null) return BadRequest("Dados não encontrados");
+            int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+            var cliente = await _repository.GetByIdAsync(clienteId);
+            if (cliente == null)
+            {
+                return BadRequest("Dados não encontrados");
+            }
+
+            var ceps = await _repository.GetClienteEnderecosAsync(clienteId);
+
+            var enderecosList = ceps.Select(cep => new
+            {
+                cep.Id,
+                cep.CepCod,
+                cep.Bairro,
+                cep.Cidade,
+                cep.Uf,
+                EnderecosList = cep.Enderecos.Select(endereco => new
+                {
+                    endereco.Id,
+                    endereco.Logradouro,
+                    endereco.Numero,
+                }).ToList()
+            }).ToList();
 
             return Ok(new
             {
@@ -60,10 +87,11 @@ namespace BookAPI.Controllers
                     cliente.DDD,
                     cliente.Contato,
                     cliente.DataNascimento
-                }
-                
+                },
+                enderecos = enderecosList
             });
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -83,11 +111,7 @@ namespace BookAPI.Controllers
 
                 return Ok(new
                 {
-                    cliente = new
-                    {
-                        cliente.Id
-                    },
-                    token = token
+                    token = token.Token
                 });
             }
             catch (Exception)
@@ -111,19 +135,19 @@ namespace BookAPI.Controllers
                 if(erros.Count != 0)
                     return BadRequest(new { errors = erros});
 
+                if(cliente.DataNascimento > DateTime.Now)
+                    return BadRequest("A data de nascimento não pode ser maior que a atual");
+
+                else
+                    cliente.Idade = await _autenticadorClienteService.GetIdadeAsync(cliente.DataNascimento);
+
                 await _repository.Create(cliente);
 
                 var token = TokenService.GenerateToken(cliente);
 
                 return Ok(new
                 {
-                    cliente = new
-                    {
-                        cliente.Id,
-                        cliente.Email,
-                        cliente.Nome
-                    },
-                    token = token
+                    token = token.Token
                 });
             }
             catch (Exception)

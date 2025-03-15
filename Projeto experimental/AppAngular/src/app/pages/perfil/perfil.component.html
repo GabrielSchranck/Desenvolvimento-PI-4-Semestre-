@@ -1,17 +1,8 @@
-<section class="flex flex-row justify-center h-screen">
-    <div class="flex flex-col w-1/2 w-full bg-blue-500 border-2 border-green-500 z-10">
-        <form [formGroup]="formularioPerfil">
-            <div class="flex flex-row justify-between bg-green-500 w-full h-screen">
-                <app-text-input
-                  [type]="'text'"
-                  [placeholder]="'Nome'"
-                  class="w-5 h-2"
-                ></app-text-input>
-                <app-text-input
-                  [type]="'text'"
-                  [placeholder]="'CPF'"
-                  class="w-5 h-2"
-                ></app-text-input>
+<section class="flex flex-row justify-center h-full">
+    <div class="flex flex-col w-1/2 border-2 bg-green-500 z-10">
+        <form [formGroup]="formularioPerfil" class="h-full">
+            <div class="flex flex-row justify-between bg-green-500 w-full">
+                <!-- <input type="text" formControlName="nome" placeholder="Nome"> -->
             </div>
             <div>
 

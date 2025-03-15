@@ -1,4 +1,3 @@
-<section>
   @if(label){
     <!-- <label class="font-bold text-[#3596D2]">{{label}}</label> -->
   }
@@ -8,10 +7,8 @@
     }
     <input [formControl]="control"
            [type]="type"
-           class="input-field w-full pl-2 outline-none rounded-lg"
+           class="input-field w-full pl-2 outline-none rounded-lg border-0"
            [placeholder]="placeholder"
            [name]="name">
   </div>
   <p>{{error}}</p>
-
-</section>

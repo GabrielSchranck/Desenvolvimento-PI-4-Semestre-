@@ -24,18 +24,38 @@ export class ClienteService {
     return this.http.get<Cliente[]>(this.url);
   }
 
-  GetById(id: number) :Observable<Cliente>{
-    const urlApi = `${this.url}/${id}`;
-    return this.http.get<Cliente>(urlApi, httpOptions)
-    .pipe(
-      catchError((error: HttpErrorResponse) => {
-        if(error.status === 404){
-          return throwError(() => error.error);
+  GetByToken(): Observable<any> {
+    
+  if (typeof window !== 'undefined' && window.localStorage) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          return throwError(() => new Error('Token de autenticação não encontrado.'));
         }
-        return throwError(() => "Erro desconhecido.\n" + error.message);
+
+    const urlApi = `${this.url}/me`; 
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
       })
-    );
+    };
+
+    return this.http.get<Cliente>(urlApi, httpOptions) 
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            return throwError(() => error.error);
+          }
+          return throwError(() => "Erro desconhecido.\n" + error.message);
+        })
+      );
+    }
+    else {
+      return throwError(() => new Error('Ambiente não suportado.'));
+    }
   }
+
 
   GetByEmailPassword(cliente: Cliente) : Observable<any>{
     const urlApi = `${this.url}/login`

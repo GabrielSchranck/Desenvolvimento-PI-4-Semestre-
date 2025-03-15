@@ -9,76 +9,76 @@ import { TextInputComponent } from "../../components/inputs/text-input/text-inpu
 
 @Component({
   selector: 'app-perfil',
-  imports: [ReactiveFormsModule, TextInputComponent],
+  imports: [ReactiveFormsModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
 export class PerfilComponent implements OnInit {
 
   formularioPerfil: FormGroup = new FormGroup({});
-  clienteDTO: Cliente = new Cliente();
+  cliente: Cliente = new Cliente();
+  clienteLocal: any;
 
   constructor(private clienteService: ClienteService) {}
 
   async ngOnInit(): Promise<void> {
-    await this.getPerfil();
-    this.inicializarFormulario();
-  }
-
-  private inicializarFormulario(): void {
-    try {
-      this.formularioPerfil = new FormGroup({
-        nome: new FormControl(this.clienteDTO?.Nome || '', [Validators.required]),
-        email: new FormControl(this.clienteDTO?.Email || '', [Validators.required, Validators.email]),
-        cpf: new FormControl(this.clienteDTO?.Cpf || ''),
-        idade: new FormControl(this.clienteDTO?.Idade || ''),
-        dataNascimento: new FormControl(this.clienteDTO?.DataNascimento || ''),
-        genero: new FormControl(this.clienteDTO?.Genero || ''),
-        ddd: new FormControl(this.clienteDTO?.DDD || ''),
-        contato: new FormControl(this.clienteDTO?.Contato || ''),
-      });
-    } catch (error) {
-      console.error("Erro ao inicializar o formulário:", error);
-    }
-  }
-
-  private obterIdDoUsuario(): number | null {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const user = JSON.parse(localStorage.getItem('authToken') || '{}');
-      console.log(user);
-      return user?.cliente?.id || null;
+      this.clienteLocal = JSON.parse(localStorage.getItem("clienteDatas") || '{}');
     }
-    console.error("Erro: localStorage não está disponível.");
-    return null;
+    
+    this.formularioPerfil = new FormGroup({
+      nome: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      cpf: new FormControl(''),
+      idade: new FormControl(''),
+      dataNascimento: new FormControl(''),
+      ddd: new FormControl( ''),
+      contato: new FormControl(''),
+    });
+
+    console.log(this.clienteLocal)
+
+    if(this.clienteLocal){
+      await this.setPerfil();
+    }
+    else{
+      this.getPerfil();
+    }
   }
 
 
   private async getPerfil(): Promise<void> {
-    const id = this.obterIdDoUsuario();
-    if (!id) {
-      console.error("Erro: ID do usuário inválido ou ausente.");
-      return;
+    this.clienteService.GetByToken().subscribe({
+      next: (retorno) => {
+        if(retorno){
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem("clienteDatas", JSON.stringify(retorno));
+          }
+        }
+        else{
+          console.log("Erro ao obter cliente");
+        }
+      },
+      error: (erro) => {
+        console.log("Erro ao conectar à API: " + erro);
+      }
+    })
+  }
+
+  private async setPerfil(): Promise<void>{
+    // "{"cliente":{"id":1,"nome":"Gabriel Schranck","email":"gabriel.futurisss@gmail.com","cpf":"44807757814","idade":0,"ddd":19,"contato":"912345678","dataNascimento":"2003-06-02T00:00:00"},"enderecos":[]}"
+    if(this.clienteLocal){
+      this.cliente.Nome = this.clienteLocal.nome;
+      this.cliente.Email = this.clienteLocal.email;
+      this.cliente.Cpf = this.clienteLocal.cpf;
+      this.cliente.Idade = this.clienteLocal.idade;
+      this.cliente.DDD = this.clienteLocal.ddd;
+      this.cliente.Contato = this.clienteLocal.contato;
+      this.cliente.DataNascimento = this.clienteLocal.dataNascimento;
     }
 
-    try {
-      this.clienteDTO = await firstValueFrom(this.clienteService.GetById(id));
-    } catch (error) {
-      console.error("Erro ao buscar cliente:", error);
-      this.clienteDTO = new Cliente();
-    }
+    console.log(this.cliente)
   }
-
-  get nomeControl(): FormControl {
-    return this.formularioPerfil.get('nome') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.formularioPerfil.get('email') as FormControl;
-  }
-
-  get cpfControl(): FormControl {
-    return this.formularioPerfil.get('cpf') as FormControl;
-  }
-
+  
 }
 

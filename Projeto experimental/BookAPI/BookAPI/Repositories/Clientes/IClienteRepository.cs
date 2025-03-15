@@ -1,4 +1,5 @@
-﻿using BookAPI.Entities.Clientes;
+﻿using BookAPI.Entities.CEPs;
+using BookAPI.Entities.Clientes;
 
 namespace BookAPI.Repositories.Clientes
 {
@@ -10,5 +11,6 @@ namespace BookAPI.Repositories.Clientes
         Task<bool> GetByEmailAsync(string email);
         Task<Cliente> Login(string email, string senha);
         Task<Cliente> GetByIdAsync(int id);
+        Task<IEnumerable<Cep>> GetClienteEnderecosAsync(int clienteId);
     }
 }

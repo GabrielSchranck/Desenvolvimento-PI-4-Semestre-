@@ -1,13 +1,11 @@
-<app-navbar></app-navbar>
+<main>
+    <app-navbar></app-navbar>
 
-<!-- Layout principal -->
-<div class="bg-blue-400 w-full h-screen flex flex-row pt-16">
-    <!-- Sidebar -->
-    <app-sidebar></app-sidebar>
-
-    <!-- Conteúdo dinâmico carregado via RouterOutlet -->
-    <div class="flex-1 p-4 bg-gray-200">
-        <app-perfil></app-perfil>
-        <!-- <router-outlet></router-outlet> -->
+    <div class="flex flex-row">
+        <app-sidebar class="w-full md:max-w-64 max-w-24"></app-sidebar>
+        <app-perfil class="w-full mt-16"></app-perfil>
     </div>
-</div>
+    
+    <!-- Layout principal -->
+     
+</main>

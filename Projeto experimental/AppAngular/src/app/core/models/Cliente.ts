@@ -1,12 +1,16 @@
-export class Cliente{
+export class Cliente {
     Id?: number;
     Nome?: string;
-    Cpf?: string;
     Email?: string;
+    Cpf?: string;
     Contato?: string;
     DDD?: number;
     Idade?: number;
     DataNascimento?: Date;
-    Genero?: string;
     Senha?: string;
+    Enderecos?: Endereco[];  
+}
+
+export class Endereco{
+
 }
