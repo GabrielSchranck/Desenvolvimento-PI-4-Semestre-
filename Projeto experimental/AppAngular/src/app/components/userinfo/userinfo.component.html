@@ -1,11 +1,7 @@
-<main>
+<main class="min-h-screen">
     <app-navbar></app-navbar>
-
-    <div class="flex flex-row">
-        <app-sidebar class="w-full md:max-w-64 max-w-24"></app-sidebar>
-        <app-perfil class="w-full mt-16"></app-perfil>
+    <div class="flex flex-row w-full h-full lg:h-screen">
+      <app-sidebar class="w-full hidden md:flex md:max-w-64 max-h-full"></app-sidebar>
+      <app-perfil class="w-full mt-16"></app-perfil>
     </div>
-    
-    <!-- Layout principal -->
-     
 </main>

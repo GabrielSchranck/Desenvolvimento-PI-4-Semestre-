@@ -54,6 +54,19 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("authToken", retorno.token);
           this.isLoading = false;
           this.apiError = '';
+          this.clienteService.GetByToken().subscribe({
+            next: (retorno) => {
+              if(retorno){
+                localStorage.setItem("clienteDatas", JSON.stringify(retorno));
+              }
+              else{
+                console.log("Erro ao obter cliente");
+              }
+            },
+            error: (erro) => {
+              console.error(erro);
+            }
+          });
           this.router.navigate(['']);
         }
         else{
@@ -67,7 +80,7 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    
+
   }
 
   applyApiErrorsToForm(): void {

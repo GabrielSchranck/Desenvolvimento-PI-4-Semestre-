@@ -1,11 +1,9 @@
+import { Endereco } from './../../core/models/Cliente';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { cpf } from 'cpf-cnpj-validator';
 import { Cliente } from '../../core/models/Cliente';
 import { ClienteService } from '../../core/services/cliente.service';
-import { firstValueFrom } from 'rxjs';
-import { get } from 'http';
-import { TextInputComponent } from "../../components/inputs/text-input/text-input.component";
 
 @Component({
   selector: 'app-perfil',
@@ -16,35 +14,52 @@ import { TextInputComponent } from "../../components/inputs/text-input/text-inpu
 export class PerfilComponent implements OnInit {
 
   formularioPerfil: FormGroup = new FormGroup({});
+  formularioEndereco: FormGroup = new FormGroup({});
   cliente: Cliente = new Cliente();
   clienteLocal: any;
+  editarPerfil: boolean = false;
+  dadosCarregados: boolean = false;
+  adicionaEndereco: boolean = false;
+  possuiEnderecos: boolean = false;
 
-  constructor(private clienteService: ClienteService) {}
-
-  async ngOnInit(): Promise<void> {
-    
+  constructor(private clienteService: ClienteService) {
     this.clienteLocal = JSON.parse(localStorage.getItem("clienteDatas") || '{}');
-
-    this.getPerfil();
-
-    if(Object.keys(this.clienteLocal).length > 0){
-      await this.setPerfil();
-    }
-    else{
-      this.getPerfil();
-    }
-
-    this.formularioPerfil = new FormGroup({
-      nome: new FormControl(this.cliente.Nome || '', [Validators.required]),
-      email: new FormControl(this.cliente.Email || '', [Validators.required, Validators.email]),
-      cpf: new FormControl(this.cliente.Cpf || ''),
-      idade: new FormControl(this.cliente.Idade || 0),
-      dataNascimento: new FormControl(this.cliente.DataNascimento || ''), 
-      ddd: new FormControl(this.cliente.DDD || ''),
-      contato: new FormControl(this.cliente.Contato || ''),
-    });
+    this.criaFormulario();
   }
 
+  async ngOnInit(): Promise<void> {
+
+    if(this.clienteLocal && JSON.stringify(this.clienteLocal) !== '{}'){
+      this.cliente = this.clienteLocal.cliente;
+      this.atualizarFormulario();
+    }
+    else{
+      this.dadosCarregados = false;
+      await this.getPerfil();
+      this.atualizarFormulario();
+    }
+    this.dadosCarregados = true;
+  }
+
+  private criaFormulario(): void {
+    this.formularioPerfil = new FormGroup({
+      nome: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      cpf: new FormControl(''),
+      dataNascimento: new FormControl(''),
+      contato: new FormControl(''),
+    });
+
+    this.formularioEndereco = new FormGroup({
+      cep: new FormControl('', [Validators.required]),
+      rua: new FormControl('', [Validators.required]),
+      numero: new FormControl('', [Validators.required]),
+      complemento: new FormControl(''),
+      bairro: new FormControl('', [Validators.required]),
+      cidade: new FormControl('', [Validators.required]),
+      estado: new FormControl('', [Validators.required]),
+    });
+  }
 
   private async getPerfil(): Promise<void> {
     this.clienteService.GetByToken().subscribe({
@@ -62,24 +77,27 @@ export class PerfilComponent implements OnInit {
     })
   }
 
-  private async setPerfil(): Promise<void> {
-    if (this.clienteLocal) {
-      this.cliente.Nome = this.clienteLocal.cliente.nome;
-      this.cliente.Email = this.clienteLocal.cliente.email;
-      this.cliente.Cpf = this.clienteLocal.cliente.cpf;
-      this.cliente.Idade = Number(this.clienteLocal.cliente.idade) || 0; // Garante que seja número
-      this.cliente.DDD = this.clienteLocal.cliente.ddd;
-      this.cliente.Contato = this.clienteLocal.cliente.contato;
-      
-      // Converter data para YYYY-MM-DD se for válida
-      if (this.clienteLocal.cliente.dataNascimento) {
-        this.cliente.DataNascimento = this.clienteLocal.cliente.dataNascimento.split('T')[0];
-      } else {
-        this.cliente.DataNascimento = '';
-      }
-    }
-}
+  private atualizarFormulario(): void {
+    if (!this.clienteLocal) return;
 
-  
+    console.log(this.clienteLocal.enderecos);
+
+    this.formularioPerfil.patchValue({
+      nome: this.clienteLocal.cliente.nome || '',
+      email: this.clienteLocal.cliente.email || '',
+      cpf: this.clienteLocal.cliente.cpf || '',
+      dataNascimento: this.clienteLocal.cliente.dataNascimento ? this.clienteLocal.cliente.dataNascimento.split('T')[0] : '',
+      contato: this.clienteLocal.cliente.contato || '',
+    });
+
+    if(this.clienteLocal.enderecos.length > 0){
+      this.possuiEnderecos = true;
+
+    }
+  }
+
+  public adicionaEnderecoClick(): void {
+    this.adicionaEndereco = !this.adicionaEndereco;
+  }
 }
 
