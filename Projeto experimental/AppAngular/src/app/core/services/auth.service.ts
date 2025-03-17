@@ -28,9 +28,8 @@ export class AuthService {
   }
 
   logout(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('authToken');
-    }
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('clienteDatas');
   }
 
   isTokenValid(): boolean {

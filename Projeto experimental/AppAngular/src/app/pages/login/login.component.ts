@@ -40,8 +40,6 @@ export class LoginComponent implements OnInit {
   }
 
   async Logar(): Promise<void> {
-    console.log("Passei aqui")
-
     if(this.formularioLogin.invalid){
       this.formularioLogin.markAllAsTouched();
       return;
@@ -50,12 +48,9 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     const cliente: Cliente = this.formularioLogin.value;
 
-    console.log(cliente)
-
     this.clienteService.GetByEmailPassword(cliente).subscribe({
       next: (retorno) => {
         if(retorno.token){
-          console.log(retorno.token)
           localStorage.setItem("authToken", retorno.token);
           this.isLoading = false;
           this.apiError = '';
@@ -71,6 +66,8 @@ export class LoginComponent implements OnInit {
         this.applyApiErrorsToForm();
       }
     });
+
+    
   }
 
   applyApiErrorsToForm(): void {

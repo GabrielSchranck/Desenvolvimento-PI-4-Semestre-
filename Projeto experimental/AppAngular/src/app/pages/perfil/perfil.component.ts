@@ -22,28 +22,27 @@ export class PerfilComponent implements OnInit {
   constructor(private clienteService: ClienteService) {}
 
   async ngOnInit(): Promise<void> {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      this.clienteLocal = JSON.parse(localStorage.getItem("clienteDatas") || '{}');
-    }
     
-    this.formularioPerfil = new FormGroup({
-      nome: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      cpf: new FormControl(''),
-      idade: new FormControl(''),
-      dataNascimento: new FormControl(''),
-      ddd: new FormControl( ''),
-      contato: new FormControl(''),
-    });
+    this.clienteLocal = JSON.parse(localStorage.getItem("clienteDatas") || '{}');
 
-    console.log(this.clienteLocal)
+    this.getPerfil();
 
-    if(this.clienteLocal){
+    if(Object.keys(this.clienteLocal).length > 0){
       await this.setPerfil();
     }
     else{
       this.getPerfil();
     }
+
+    this.formularioPerfil = new FormGroup({
+      nome: new FormControl(this.cliente.Nome || '', [Validators.required]),
+      email: new FormControl(this.cliente.Email || '', [Validators.required, Validators.email]),
+      cpf: new FormControl(this.cliente.Cpf || ''),
+      idade: new FormControl(this.cliente.Idade || 0),
+      dataNascimento: new FormControl(this.cliente.DataNascimento || ''), 
+      ddd: new FormControl(this.cliente.DDD || ''),
+      contato: new FormControl(this.cliente.Contato || ''),
+    });
   }
 
 
@@ -51,34 +50,36 @@ export class PerfilComponent implements OnInit {
     this.clienteService.GetByToken().subscribe({
       next: (retorno) => {
         if(retorno){
-          if (typeof window !== 'undefined' && window.localStorage) {
-            localStorage.setItem("clienteDatas", JSON.stringify(retorno));
-          }
+          localStorage.setItem("clienteDatas", JSON.stringify(retorno));
         }
         else{
           console.log("Erro ao obter cliente");
         }
       },
       error: (erro) => {
-        console.log("Erro ao conectar à API: " + erro);
+        console.log("Erro ao conectar a API: " + erro);
       }
     })
   }
 
-  private async setPerfil(): Promise<void>{
-    // "{"cliente":{"id":1,"nome":"Gabriel Schranck","email":"gabriel.futurisss@gmail.com","cpf":"44807757814","idade":0,"ddd":19,"contato":"912345678","dataNascimento":"2003-06-02T00:00:00"},"enderecos":[]}"
-    if(this.clienteLocal){
-      this.cliente.Nome = this.clienteLocal.nome;
-      this.cliente.Email = this.clienteLocal.email;
-      this.cliente.Cpf = this.clienteLocal.cpf;
-      this.cliente.Idade = this.clienteLocal.idade;
-      this.cliente.DDD = this.clienteLocal.ddd;
-      this.cliente.Contato = this.clienteLocal.contato;
-      this.cliente.DataNascimento = this.clienteLocal.dataNascimento;
+  private async setPerfil(): Promise<void> {
+    if (this.clienteLocal) {
+      this.cliente.Nome = this.clienteLocal.cliente.nome;
+      this.cliente.Email = this.clienteLocal.cliente.email;
+      this.cliente.Cpf = this.clienteLocal.cliente.cpf;
+      this.cliente.Idade = Number(this.clienteLocal.cliente.idade) || 0; // Garante que seja número
+      this.cliente.DDD = this.clienteLocal.cliente.ddd;
+      this.cliente.Contato = this.clienteLocal.cliente.contato;
+      
+      // Converter data para YYYY-MM-DD se for válida
+      if (this.clienteLocal.cliente.dataNascimento) {
+        this.cliente.DataNascimento = this.clienteLocal.cliente.dataNascimento.split('T')[0];
+      } else {
+        this.cliente.DataNascimento = '';
+      }
     }
+}
 
-    console.log(this.cliente)
-  }
   
 }
 

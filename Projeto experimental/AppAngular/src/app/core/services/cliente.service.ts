@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { afterNextRender, Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -26,11 +26,11 @@ export class ClienteService {
 
   GetByToken(): Observable<any> {
     
-  if (typeof window !== 'undefined' && window.localStorage) {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          return throwError(() => new Error('Token de autenticação não encontrado.'));
-        }
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return throwError(() => new Error('Token de autenticação não encontrado.'));
+    }
 
     const urlApi = `${this.url}/me`; 
 
@@ -50,10 +50,6 @@ export class ClienteService {
           return throwError(() => "Erro desconhecido.\n" + error.message);
         })
       );
-    }
-    else {
-      return throwError(() => new Error('Ambiente não suportado.'));
-    }
   }
 
 

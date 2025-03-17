@@ -6,7 +6,7 @@ export class Cliente {
     Contato?: string;
     DDD?: number;
     Idade?: number;
-    DataNascimento?: Date;
+    DataNascimento?: string;
     Senha?: string;
     Enderecos?: Endereco[];  
 }

@@ -1,13 +1,57 @@
-<section class="flex flex-row justify-center h-full">
-    <div class="flex flex-col w-1/2 border-2 bg-green-500 z-10">
-        <form [formGroup]="formularioPerfil" class="h-full">
-            <div class="flex flex-row justify-between bg-green-500 w-full">
-                <!-- <input type="text" formControlName="nome" placeholder="Nome"> -->
-            </div>
-            <div>
+<section class="flex flex-col md:flex-row h-full w-full  p-6">
 
+    <div class="flex flex-col lg:w-1/2 z-10">
+        <form [formGroup]="formularioPerfil" class="h-full w-full p-4">
+            
+            <div class="flex flex-row items-center mb-4">
+                <h1 class="font-sans text-4xl mr-4">Informações do usuário</h1>
+                <hr class="flex-grow border-t border-gray-600">
             </div>
+            
+
+            <!-- Primeira linha -->
+            <div class="flex flex-col lg:flex-row lg:justify-between w-full items-start">
+                <div class="flex flex-col w-full lg:w-3/5 m-1">
+                    <label for="nome">Nome</label>
+                    <input type="text" formControlName="nome" placeholder="Nome" class="p-2 border rounded-md">
+                </div>
+                <div class="flex flex-col w-full lg:w-2/5 m-1">
+                    <label for="cpf">CPF</label>
+                    <input type="text" formControlName="cpf" placeholder="CPF" class="p-2 border rounded-md">
+                </div>
+            </div>
+            
+            <!-- Segunda linha -->
+            <div class="w-full">
+                <div class="flex flex-col flex-grow m-1">
+                    <label for="email">Email</label>
+                    <input type="text" formControlName="email" placeholder="Email" class="p-2 border rounded-md">
+                </div>
+            </div>
+            
+            <!-- Terceira linha (Idade + Data de Nascimento) -->
+            <!-- <div class="flex flex-col lg:flex-row w-full lg:justify-between items-start">
+                
+            </div> -->
+        
+            <div class="flex flex-col lg:flex-row w-full lg:justify-between items-start space-y-4 lg:space-y-0">
+                <!-- Campo Data de Nascimento -->
+                <div class="flex flex-col w-full lg:w-1/4 m-1">
+                    <label for="dataNascimento">Data de nascimento</label>
+                    <input type="date" formControlName="dataNascimento" class="p-2 border rounded-md h-full">
+                </div>
+            
+                <!-- Campo Contato -->
+                <div class="flex flex-col w-full lg:w-1/4 m-1">
+                    <label for="contato">Contato</label>
+                    <input type="text" formControlName="contato" class="p-2 border rounded-md h-full">
+                </div>
+            </div>
+            
+            
         </form>
+        
+            
     </div>
-    <div class="flex w-1/2"></div>
+    <div class="flex w-full h-full lg:w-1/2"></div>
 </section>
