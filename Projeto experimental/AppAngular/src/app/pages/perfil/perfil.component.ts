@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators  } from '@angul
 import { cpf } from 'cpf-cnpj-validator';
 import { Cliente } from '../../core/models/Cliente';
 import { ClienteService } from '../../core/services/cliente.service';
+import { EnderecoService } from '../../core/services/endereco.service';
 
 @Component({
   selector: 'app-perfil',
@@ -22,7 +23,7 @@ export class PerfilComponent implements OnInit {
   adicionaEndereco: boolean = false;
   possuiEnderecos: boolean = false;
 
-  constructor(private clienteService: ClienteService) {
+  constructor(private clienteService: ClienteService, private enderecoService: EnderecoService) {
     this.clienteLocal = JSON.parse(localStorage.getItem("clienteDatas") || '{}');
     this.criaFormulario();
   }
@@ -40,7 +41,6 @@ export class PerfilComponent implements OnInit {
     }
     this.dadosCarregados = true;
   }
-
   private criaFormulario(): void {
     this.formularioPerfil = new FormGroup({
       nome: new FormControl('', [Validators.required]),
@@ -60,7 +60,6 @@ export class PerfilComponent implements OnInit {
       estado: new FormControl('', [Validators.required]),
     });
   }
-
   private async getPerfil(): Promise<void> {
     this.clienteService.GetByToken().subscribe({
       next: (retorno) => {
@@ -76,7 +75,6 @@ export class PerfilComponent implements OnInit {
       }
     })
   }
-
   private atualizarFormulario(): void {
     if (!this.clienteLocal) return;
 
@@ -95,9 +93,26 @@ export class PerfilComponent implements OnInit {
 
     }
   }
-
   public adicionaEnderecoClick(): void {
     this.adicionaEndereco = !this.adicionaEndereco;
   }
+  public async createEndereco(): Promise<void> {
+    const endereco: Endereco = this.formularioEndereco.value;
+
+    console.log("Endereco: " + endereco)
+
+    this.enderecoService.createEndereco(endereco).subscribe({
+        next: (resposta) => {
+            if (!this.cliente.Enderecos) {
+                this.cliente.Enderecos = [];
+            }
+            this.cliente.Enderecos.push(resposta.endereco);
+        },
+        error: (erro) => {
+            console.error("Erro ao criar endereço:", erro);
+        }
+    });
+}
+
 }
 

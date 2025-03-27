@@ -1,39 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { UseracessComponent } from '../../components/useracess/useracess.component';
-import { RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { UserAcessComponent } from "../../MainPages/user-acess/user-acess.component";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ClienteService } from '../../core/services/cliente-service.service';
+import { Router, RouterModule } from '@angular/router';
 import { Cliente } from '../../core/models/Cliente';
-import { ClienteService } from '../../core/services/cliente.service';
-import { Router } from '@angular/router';
 import { cpf } from 'cpf-cnpj-validator';
 
 @Component({
-  selector: 'app-registro',
-  imports: [UseracessComponent, RouterModule, ReactiveFormsModule],
-  templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+  selector: 'app-register',
+  imports: [UserAcessComponent, ReactiveFormsModule, RouterModule],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
-export class RegistroComponent implements OnInit{
+export class RegisterComponent implements OnInit {
 
   constructor(private clienteService : ClienteService, private router: Router){}
 
   formularioRegistro: any;
   clienteRetornado: any;
   apiErrors: {[key:string] : string} = {}
-
-  ngOnInit(): void {
-
-    this.formularioRegistro = new FormGroup({
-      nome: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      cpf: new FormControl('', [Validators.required, this.cpfInvalid]),
-      dataNascimento: new FormControl('', [Validators.required]),
-      genero: new FormControl('', [Validators.required]),  
-      ddd: new FormControl('', [Validators.required]),
-      contato: new FormControl('', [Validators.required]),
-      senha: new FormControl('', [Validators.required])
-    });
-  }
+  isClicked: boolean = false;
 
   public validacoes = {
     required: (campo:string) => `${campo} é obrigatório`,
@@ -41,7 +27,17 @@ export class RegistroComponent implements OnInit{
     senha: "A senha precisa ter no mínimo 6 dígitos",
     ddd: "DDD não encontrado"
   };
-  opcoesGenero: string[] = ["Masculino", "Feminino", "Outro"];
+
+  ngOnInit(): void {
+    this.formularioRegistro = new FormGroup({
+      nome: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      cpf: new FormControl('', [Validators.required, this.cpfInvalid]),
+      dataNascimento: new FormControl('', [Validators.required]),
+      contato: new FormControl('', [Validators.required]),
+      senha: new FormControl('', [Validators.required])
+    });
+  }
 
   public cpfInvalid(control: any){
     const isValid = cpf.isValid(control.value);
@@ -50,27 +46,33 @@ export class RegistroComponent implements OnInit{
 
   public CadastrarCliente(): void{
 
+    this.isClicked = true;
+
     if(this.formularioRegistro.invalid){
       this.formularioRegistro.markAllAsTouched();
+      this.isClicked = false;
       return;
     }
 
     const cliente: Cliente = this.formularioRegistro.value;
-
+   
     this.clienteService.CreateClient(cliente).subscribe({
       next: (retorno) => {
         if(retorno.token){
           localStorage.setItem('authToken', retorno.token);
           this.apiErrors = {};
+          this.isClicked = false;
           this.router.navigate(['']);
         }
         else{
+          this.isClicked = false;
           console.error("Erro: Token não recebido");
         }
       },
       error: (err) => {
         console.log(err);
         if(err.errors){
+          this.isClicked = false;
           this.apiErrors = err.errors;
           this.applyApiErrorsToForm();
         }

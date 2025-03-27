@@ -1,0 +1,123 @@
+<app-user-acess>
+    <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto">
+        <h2 class="text-center text-2xl font-semibold mb-6 text-gray-700">Cadastro</h2>
+      
+        <!-- Nome e Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Nome -->
+          <div>
+            <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">Nome:</label>
+            <input id="nome" type="text" formControlName="nome" placeholder="Digite seu nome"
+              class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              [class.border-red-500]="formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched" />
+            @if (formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched) {
+              <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O nome') }}</small>
+            }
+          </div>
+      
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email:</label>
+            <input id="email" type="email" formControlName="email" placeholder="Digite seu email"
+              class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              [class.border-red-500]="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched" />
+            @if (formularioRegistro.get('email')?.touched) {
+              @if (formularioRegistro.get('email')?.hasError('required')) {
+                <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O email') }}</small>
+              }
+              @if (formularioRegistro.get('email')?.hasError('email')) {
+                <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['invalid']('Email') }}</small>
+              }
+            }
+          </div>
+        </div>
+      
+        <!-- Senha e CPF -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+          <!-- Senha -->
+          <div>
+            <label for="senha" class="block text-sm font-medium text-gray-700 mb-2">Senha:</label>
+            <input id="senha" type="password" formControlName="senha" placeholder="Digite sua senha"
+              class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              [class.border-red-500]="formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched" />
+            @if (formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched) {
+              <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A senha') }}</small>
+            }
+          </div>
+      
+          <!-- CPF -->
+          <div>
+            <label for="cpf" class="block text-sm font-medium text-gray-700 mb-2">CPF:</label>
+            <input id="cpf" type="text" formControlName="cpf" placeholder="Digite seu CPF"
+              class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              [class.border-red-500]="formularioRegistro.get('cpf')?.invalid && formularioRegistro.get('cpf')?.touched" />
+            @if (formularioRegistro.get('cpf')?.touched) {
+              @if (formularioRegistro.get('cpf')?.hasError('required')) {
+                <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O CPF') }}</small>
+              }
+              @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
+                <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['invalid']('CPF') }}</small>
+              }
+            }
+          </div>
+        </div>
+      
+        <!-- Contato -->
+        <div class="mt-4">
+          <label for="contato" class="block text-sm font-medium text-gray-700 mb-2">Contato:</label>
+          <input id="contato" type="text" formControlName="contato" placeholder="Número"
+            class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+            [class.border-red-500]="formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched" />
+          @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
+            <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O número') }}</small>
+          }
+        </div>
+      
+        <!-- Data de Nascimento -->
+        <div class="mt-4">
+          <label for="dataNascimento" class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento:</label>
+          <input id="dataNascimento" type="date" formControlName="dataNascimento"
+            class="input-field w-full px-4 py-2 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+            [class.border-red-500]="formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched" />
+          @if (formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched) {
+            <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A data de nascimento') }}</small>
+          }
+        </div>
+      
+        <!-- Botão Cadastrar -->
+         @if(!isClicked){
+            <div class="mt-6">
+                <button type="submit"
+                  class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out">
+                  Cadastrar
+                </button>
+              </div>
+         }
+         @else {
+            <div class="mt-6">
+              <button type="button" class="py-2 px-4 flex justify-center items-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md">
+                <svg width="20" height="20" fill="currentColor" class="animate-spin mx-auto" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M526 1394q0 53-37.5 90.5t-90.5 37.5q-52 0-90-38t-38-90q0-53 37.5-90.5t90.5-37.5 90.5 37.5 37.5 90.5zm498 206q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-704-704q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm1202 498q0 52-38 90t-90 38q-53 0-90.5-37.5t-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-964-996q0 66-47 113t-113 47-113-47-47-113 47-113 113-47 113 47 47 113zm1170 498q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-640-704q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm530 206q0 93-66 158.5t-158 65.5q-93 0-158.5-65.5t-65.5-158.5q0-92 65.5-158t158.5-66q92 0 158 66t66 158z">
+                    </path>
+                </svg>
+              </button>
+            </div>
+          }
+      
+        <!-- Link para Login -->
+        <div class="mt-4 text-center">
+          <p class="text-sm text-gray-700">Já tem uma conta?
+            <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
+          </p>
+        </div>
+      
+        <!-- Link para Página Inicial -->
+        <div class="mt-2 text-center">
+          <p class="text-sm text-gray-700">Voltar à
+            <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
+          </p>
+        </div>
+      </form>
+  </app-user-acess>
+  <router-outlet/>
+  

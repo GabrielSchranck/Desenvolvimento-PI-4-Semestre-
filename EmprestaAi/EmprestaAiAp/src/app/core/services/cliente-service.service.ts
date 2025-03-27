@@ -1,8 +1,7 @@
-import { afterNextRender, Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { environment } from '../../../../environments/environments';
 import { Cliente } from '../models/Cliente';
 
 const httpOptions = {
