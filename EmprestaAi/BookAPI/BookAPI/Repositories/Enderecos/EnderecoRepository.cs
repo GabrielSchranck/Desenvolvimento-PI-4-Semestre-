@@ -13,9 +13,9 @@ namespace BookAPI.Repositories.Enderecos
             this._context = context;
         }
 
-        public async Task Create(Cep cep)
+        public async Task Create(Entities.CEPs.Endereco cep)
         {
-            await _context.Ceps.AddAsync(cep);
+            await _context.Enderecos.AddAsync(cep);
             await _context.SaveChangesAsync();
         }
     }

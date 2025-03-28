@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookAPI.Entities.CEPs
 {
-	public class Cep
+	public class Endereco
 	{
         public int Id { get; set; }
 
 		[MaxLength(8)]
-		public string CepCod { get; set; } = string.Empty;
+		public string CodigoCep { get; set; } = string.Empty;
 
 		[MaxLength(100)]
 		public string Bairro { get; set; } = string.Empty;
@@ -19,6 +19,6 @@ namespace BookAPI.Entities.CEPs
 		[MaxLength(2)]
 		public string Uf { get; set; } = string.Empty;
 
-		public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
+		public ICollection<EnderecoCliente> EnderecosCliente { get; set; } = new List<EnderecoCliente>();
     }
 }

@@ -15,7 +15,7 @@ namespace BookAPI.Data
         }
 
         public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Endereco> Enderecos { get; set; }
+        public DbSet<Entities.Clientes.EnderecoCliente> EnderecosClientes { get; set; }
         public DbSet<Historico> Historicos { get; set; }
         public DbSet<ItemHistorico> ItensHistoricos { get; set; }
         public DbSet<Livro> Livros { get; set; }
@@ -23,7 +23,7 @@ namespace BookAPI.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FotoLivro> FotosLivros { get; set; }
         public DbSet<ClienteLivro> ClientesLivros { get; set; }
-        public DbSet<Cep> Ceps { get; set; }
+        public DbSet<Entities.CEPs.Endereco> Enderecos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -42,10 +42,10 @@ namespace BookAPI.Data
 				.HasForeignKey(ih => ih.LivroId)
 				.OnDelete(DeleteBehavior.NoAction);
 
-			modelBuilder.Entity<Endereco>()
-				.HasOne(e => e.Cep)
-				.WithMany(c => c.Enderecos)
-				.HasForeignKey(e => e.CepId)
+			modelBuilder.Entity<EnderecoCliente>()
+				.HasOne(e => e.Endereco)
+				.WithMany(c => c.EnderecosCliente)
+				.HasForeignKey(e => e.EnderecoId)
 				.OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<Cliente>()

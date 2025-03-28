@@ -79,7 +79,22 @@ export class ClienteService {
   }
 
   UpdateClient(cliente: Cliente) : Observable<any>{
-    return this.http.put<Cliente>(this.url, cliente, httpOptions);
+    const urlApi = `${this.url}/update`;
+
+    const token = localStorage.getItem('authToken'); 
+    
+    if (!token) {
+      return throwError(() => new Error('Token de autenticação não encontrado.'));
+    }
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      })
+    };
+
+    return this.http.put<Cliente>(urlApi, cliente, httpOptions);
   }
 
   Delete(id: number) : Observable<any>{

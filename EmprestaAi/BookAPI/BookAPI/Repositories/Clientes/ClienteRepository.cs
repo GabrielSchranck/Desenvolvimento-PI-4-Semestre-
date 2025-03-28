@@ -45,14 +45,18 @@ namespace BookAPI.Repositories.Clientes
 		{
 			return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
 		}
-        public async Task<IEnumerable<Cep>> GetClienteEnderecosAsync(int clienteId)
+        public async Task<IEnumerable<Entities.CEPs.Endereco>> GetClienteEnderecosAsync(int clienteId)
         {
-            return await _context.Ceps.Where(c => c.Enderecos.Any(e => e.ClienteId == clienteId)).Include(c => c.Enderecos).ToListAsync();
+            return await _context.Enderecos.Where(c => c.EnderecosCliente.Any(e => e.ClienteId == clienteId)).Include(c => c.EnderecosCliente).ToListAsync();
         }
         public async Task<Cliente> Login(string email, string senha)
         {
             return await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email && c.Senha == senha);
         }
-        
+        public async Task Update(Cliente cliente)
+        {
+            _context.Update(cliente);
+            await _context.SaveChangesAsync();
+        }
     }
 }

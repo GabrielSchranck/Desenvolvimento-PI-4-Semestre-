@@ -39,7 +39,7 @@ namespace BookAPI.Entities.Clientes
         public bool EmailConfirmado { get; set; } = false;
         public string? TokenConfirmacao { get; set; }
 
-        public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
+        public ICollection<EnderecoCliente> Enderecos { get; set; } = new List<EnderecoCliente>();
         public ICollection<ClienteLivro> ClientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<Historico> Historicos { get; set; } = new List<Historico>();
     }

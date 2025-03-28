@@ -3,6 +3,7 @@ using BookAPI.mappings;
 using BookAPI.Repositories.Clientes;
 using BookAPI.Repositories.Enderecos;
 using BookAPI.Services.Autenticadores;
+using BookAPI.Services.Clientes;
 using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +19,12 @@ namespace BookAPI.Controllers
         private IClienteRepository _repository;
         private IAutenticadorClienteService _autenticadorClienteService;
         private IEnderecoRepository _enderecoRepository;
+        private IClienteService _clienteService;
 
-        public ClienteController(IClienteRepository repository)
+        public ClienteController(IClienteRepository repository, IClienteService clienteService)
         {
             _repository = repository;
+            _clienteService = clienteService;
             _autenticadorClienteService = new AutenticadorClienteService(this._repository);
         }
 
@@ -47,33 +50,30 @@ namespace BookAPI.Controllers
         public async Task<ActionResult<Cliente>> GetById()
         {
             var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized("Token de autenticação não encontrado.");
-            }
+
+            if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
 
             int clienteId = (int)await TokenService.GetClientIdFromToken(token);
-
             var cliente = await _repository.GetByIdAsync(clienteId);
-            if (cliente == null)
-            {
-                return BadRequest("Dados não encontrados");
-            }
 
-            var ceps = await _repository.GetClienteEnderecosAsync(clienteId);
+            if (cliente == null) return BadRequest("Dados não encontrados");
 
-            var enderecosList = ceps.Select(cep => new
+            cliente.DataNascimento = DateTime.Parse(cliente.DataNascimento.ToString("yyyy-MM-dd"));
+
+            var enderecosList = await _clienteService.GetClienteEnderecosAsync(clienteId);
+
+            var enderecoCliente = enderecosList.Select(endereco => new
             {
-                cep.Id,
-                cep.CepCod,
-                cep.Bairro,
-                cep.Cidade,
-                cep.Uf,
-                EnderecosList = cep.Enderecos.Select(endereco => new
+                endereco.Id,
+                endereco.CodigoCep,
+                endereco.Bairro,
+                endereco.Cidade,
+                endereco.Uf,
+                EnderecosList = endereco.EnderecosCliente.Select(enderecoCliente => new
                 {
-                    endereco.Id,
-                    endereco.Logradouro,
-                    endereco.Numero,
+                    enderecoCliente.Id,
+                    enderecoCliente.Logradouro,
+                    enderecoCliente.Numero,
                 }).ToList()
             }).ToList();
 
@@ -90,7 +90,7 @@ namespace BookAPI.Controllers
                     cliente.Contato,
                     cliente.DataNascimento
                 },
-                enderecos = enderecosList
+                enderecos = enderecoCliente
             });
         }
 
@@ -158,7 +158,7 @@ namespace BookAPI.Controllers
         }
 
         [HttpPost("endereco")]
-        public async Task<ActionResult<EnderecoDTO>> CreateEndereco(EnderecoDTO enderecoDTO)
+        public async Task<ActionResult<EnderecoDTO>> CreateEnderecoCliente(EnderecoDTO enderecoDTO)
         {
             try
             {
@@ -168,6 +168,31 @@ namespace BookAPI.Controllers
 
                 return Ok();
 
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPut("update")]
+        public async Task<ActionResult> Update(ClienteDTO clienteDTO)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                var cliente = clienteDTO.ConverterClienteDTOParaCliente();
+                cliente.Id = clienteId;
+
+                if(cliente == null) return BadRequest("Cliente não pode ser nulo");
+
+                await _repository.Update(cliente);
+
+                return Ok();
             }
             catch (Exception)
             {

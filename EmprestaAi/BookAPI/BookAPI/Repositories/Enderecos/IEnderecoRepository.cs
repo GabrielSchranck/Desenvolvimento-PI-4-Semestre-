@@ -5,6 +5,7 @@ namespace BookAPI.Repositories.Enderecos
 {
     public interface IEnderecoRepository
     {
-        Task Create(Cep cep);
+        Task Create(Entities.CEPs.Endereco cep);
+        
     }
 }

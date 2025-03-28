@@ -86,17 +86,17 @@ namespace BookAPI.mappings
 			return cliente;
 		}
 
-		public static Cep ConverterEnderecoDTOParaEndereco(this EnderecoDTO enderecoDTO)
+		public static Entities.CEPs.Endereco ConverterEnderecoDTOParaEndereco(this EnderecoDTO enderecoDTO)
 		{
-			var cep = new Cep
+			var cep = new Entities.CEPs.Endereco
 			{
-				CepCod = enderecoDTO.Cep,
+				CodigoCep = enderecoDTO.Cep,
                 Bairro = enderecoDTO.Bairro,
                 Cidade = enderecoDTO.Cidade,
                 Uf = enderecoDTO.Uf,
-				Enderecos = new List<Endereco>
-				{
-                    new Endereco
+				EnderecosCliente = new List<Entities.Clientes.EnderecoCliente>
+                {
+                    new Entities.Clientes.EnderecoCliente
 					{
 						Numero = enderecoDTO.Numero,
                         Logradouro = enderecoDTO.Logradouro,
