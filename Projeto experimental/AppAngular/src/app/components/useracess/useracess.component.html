@@ -1,19 +1,24 @@
 <main class="flex h-screen md:overflow-hidden">
-  <div class="hidden lg:flex lg:w-3/5 h-full">
-      <section class="bg-gradient-to-b from-black to-blue-500 flex-grow flex flex-col justify-center items-center h-full">
-          <h1 class="w-full text-xl xl:text-2xl font-bold text-white text-center px-4">
-              ”⁠Uma boa leitura é terapia para a alma e conhecimento para mente”.
-          </h1>
-          <img src="home/livro.png" alt="teste" class="max-w-full h-auto">
-      </section>
-  </div>
-
-  <div class="flex items-center justify-center w-full lg:w-2/5 h-full">
-      <section class="flex-grow flex items-center justify-center h-full">
-          <div>
-              <ng-content></ng-content>
+    <!-- Esquerda: Citação e imagem -->
+    <div class="hidden lg:flex lg:w-3/5 h-full items-center justify-center">
+      <section class="flex flex-col justify-center items-center text-center bg-gradient-to-b from-black to-blue-500 w-full h-full">
+          <div class="flex flex-col items-center justify-center h-full"> 
+              <h1 class="w-full text-xl xl:text-2xl font-bold text-white px-4 mb-4">
+                  "Uma boa leitura é terapia para a alma e conhecimento para a mente."
+              </h1>
+              <img src="home/livro.png" alt="teste" class="max-w-full h-auto">
           </div>
-      </section>
-      <router-outlet></router-outlet>
-  </div>
-</main>
+      </section>        
+    </div>
+  
+    <!-- Direita: Conteúdo dinâmico -->
+    <div class="flex items-center justify-center w-full lg:w-2/5 h-full">
+          <section class="flex-grow flex items-center justify-center">
+            <div>
+                <ng-content></ng-content>
+            </div>
+          </section>
+        <router-outlet></router-outlet>
+    </div>
+  </main>
+  
