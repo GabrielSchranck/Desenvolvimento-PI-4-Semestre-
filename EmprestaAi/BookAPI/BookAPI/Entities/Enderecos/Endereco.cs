@@ -19,6 +19,9 @@ namespace BookAPI.Entities.CEPs
 		[MaxLength(2)]
 		public string Uf { get; set; } = string.Empty;
 
-		public ICollection<EnderecoCliente> EnderecosCliente { get; set; } = new List<EnderecoCliente>();
+        [MaxLength(100)]
+        public string Logradouro { get; set; } = string.Empty;
+
+        public ICollection<EnderecoCliente> EnderecosCliente { get; set; } = new List<EnderecoCliente>();
     }
 }

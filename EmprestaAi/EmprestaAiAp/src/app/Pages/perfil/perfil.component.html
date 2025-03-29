@@ -100,7 +100,7 @@
                     <div class="flex flex-col md:flex-row justify-between">
                       <div class="flex flex-col w-full lg:w-1/4 m-1">
                         <label for="cep">Cep</label>
-                        <input type="text" formControlName="cep" placeholder="Cep" class="p-2 border rounded-md">
+                        <input type="text" (keydown.enter)="getEnderecoViaCep()" formControlName="cep" placeholder="Cep" class="p-2 border rounded-md">
                       </div>
                       <div class="flex flex-col w-full md:w-1/4 m-1">
                         <label for="cep">Número</label>
@@ -111,7 +111,7 @@
                     <div class="flex flex-row">
                       <div class="flex flex-col w-full m-1">
                         <label for="cep">Rua</label>
-                        <input type="text" formControlName="cep" placeholder="Rua" class="p-2 border rounded-md w-full">
+                        <input type="text" formControlName="rua" placeholder="Rua" class="p-2 border rounded-md w-full">
                       </div>
                     </div>
                     <!-- Complemento -->
@@ -136,7 +136,7 @@
                       </div>
                       <div class="flex flex-col w-full md:w-1/4 m-1">
                         <label for="cep">Uf</label>
-                        <input type="text" formControlName="estado" placeholder="estado" class="p-2 border rounded-md">
+                        <input type="text" formControlName="uf" placeholder="estado" class="p-2 border rounded-md">
                       </div>
                     </div>
                     <!-- Botões -->

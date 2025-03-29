@@ -5,7 +5,8 @@ namespace BookAPI.Repositories.Enderecos
 {
     public interface IEnderecoRepository
     {
-        Task Create(Entities.CEPs.Endereco cep);
-        
+        Task CreateAsync(Endereco endereco);
+        Task<Endereco> GetByCepAsync(string cep);
+        Task CreateEnderecoClienteAsync(EnderecoCliente enderecoCliente);
     }
 }

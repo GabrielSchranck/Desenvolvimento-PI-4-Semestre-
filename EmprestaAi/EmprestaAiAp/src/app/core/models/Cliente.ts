@@ -8,15 +8,10 @@ export class Cliente {
     Idade?: number;
     DataNascimento?: string;
     Senha?: string;
-    Enderecos?: Endereco[];  
+    Enderecos?: EnderecoCliente[];  
 }
 
-export class Endereco{
-    Cep?: string;
-    Numero?: number;
-    Rua?: string;
-    Complemento?: string;
-    Bairro?: string;
-    Cidade?: string;
-    Uf?: string;
+export class EnderecoCliente{
+    numero?: number;
+    complemento?: string;
 }

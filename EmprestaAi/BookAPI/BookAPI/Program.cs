@@ -3,6 +3,7 @@ using BookAPI.Repositories.Clientes;
 using BookAPI.Repositories.Enderecos;
 using BookAPI.Repositories.Livros;
 using BookAPI.Services.Clientes;
+using BookAPI.Services.Enderecos;
 using BookAPI.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -53,10 +54,14 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+//Repositories
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+
+//Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 
 var key = Encoding.ASCII.GetBytes(Key.Secret);
 

@@ -94,12 +94,12 @@ namespace BookAPI.mappings
                 Bairro = enderecoDTO.Bairro,
                 Cidade = enderecoDTO.Cidade,
                 Uf = enderecoDTO.Uf,
-				EnderecosCliente = new List<Entities.Clientes.EnderecoCliente>
+                Logradouro = enderecoDTO.Logradouro,
+                EnderecosCliente = new List<Entities.Clientes.EnderecoCliente>
                 {
                     new Entities.Clientes.EnderecoCliente
 					{
 						Numero = enderecoDTO.Numero,
-                        Logradouro = enderecoDTO.Logradouro,
                         ClienteId = enderecoDTO.ClienteId
                     }
                 }

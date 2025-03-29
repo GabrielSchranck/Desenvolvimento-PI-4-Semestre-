@@ -69,10 +69,10 @@ namespace BookAPI.Controllers
                 endereco.Bairro,
                 endereco.Cidade,
                 endereco.Uf,
+                endereco.Logradouro,
                 EnderecosList = endereco.EnderecosCliente.Select(enderecoCliente => new
                 {
                     enderecoCliente.Id,
-                    enderecoCliente.Logradouro,
                     enderecoCliente.Numero,
                 }).ToList()
             }).ToList();
@@ -164,7 +164,7 @@ namespace BookAPI.Controllers
             {
                 if (enderecoDTO == null) return BadRequest("Adicone um endereço válido");
                 var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
-                _enderecoRepository.Create(endereco);
+                _enderecoRepository.CreateAsync(endereco);
 
                 return Ok();
 

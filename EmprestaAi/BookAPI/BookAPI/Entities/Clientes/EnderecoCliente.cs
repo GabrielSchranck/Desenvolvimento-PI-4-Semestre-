@@ -12,10 +12,10 @@ namespace BookAPI.Entities.Clientes
 		public int Id { get; set; }
 		public int Numero { get; set; }
 
-		[MaxLength(100)]
-		public string Logradouro { get; set; } = string.Empty;
+        [MaxLength(100)]
+        public string? Complemento { get; set; } = string.Empty;
 
-		public Endereco? Endereco { get; set; }
+        public Endereco? Endereco { get; set; }
 		public Cliente? Cliente { get; set; }
 	}
 

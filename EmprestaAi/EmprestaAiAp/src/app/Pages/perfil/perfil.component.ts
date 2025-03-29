@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ClienteService } from '../../core/services/cliente-service.service';
 import { Cliente } from '../../core/models/Cliente';
 import Swal from 'sweetalert2';
+import { EnderecoService } from '../../core/services/endereco.service';
+import { Endereco } from '../../core/models/Endereco';
 
 @Component({
   selector: 'app-perfil',
@@ -16,11 +18,12 @@ export class PerfilComponent implements OnInit{
   formularioPerfil!: FormGroup;
   formularioEndereco!: FormGroup;
   cliente: Cliente = new Cliente();
+  cep: string = "";
   editarPerfil: boolean = false;
   possuiEnderecos: boolean = false;
   adicionaEndereco: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private clienteService: ClienteService){}
+  constructor(private formBuilder: FormBuilder, private clienteService: ClienteService, private enderecoService: EnderecoService){}
   
   ngOnInit(): void {
     
@@ -110,11 +113,58 @@ export class PerfilComponent implements OnInit{
     
   }
 
+  public async getEnderecoViaCep(): Promise<void> {
+    
+    this.cep = this.formularioEndereco?.get("cep")?.value ;
+
+    if(this.cep === "") return;
+
+    (await this.enderecoService.GetEnderecoByViaCep(this.cep)).subscribe(
+      (response) => {
+
+        console.log(response.cep)
+        console.log(response.rua)
+        console.log(response.bairro)
+        console.log(response.cidade)
+        console.log(response.uf)
+
+        const enderecoResult: Endereco = {
+          cep: response.cep,         
+          rua: response.rua,         
+          bairro: response.bairro,   
+          cidade: response.cidade,   
+          uf: response.uf            
+        };
+
+        this.formularioEndereco.patchValue({
+          cep: enderecoResult.cep,
+          rua: enderecoResult.rua,
+          bairro: enderecoResult.bairro,
+          cidade: enderecoResult.cidade,
+          uf: enderecoResult.uf
+        });
+      },
+
+      (error) => {
+        console.log("Error " + error)
+      }
+    );
+  }
+
   public EditarClick(): void{
     this.editarPerfil = !this.editarPerfil;
   }
 
   public adicionaEnderecoClick(): void{
+
+    this.formularioEndereco.patchValue({
+      cep: "",
+      rua: "",
+      bairro: "",
+      cidade: "",
+      uf: ""
+    });
+
     this.adicionaEndereco = !this.adicionaEndereco;
   }
 }
