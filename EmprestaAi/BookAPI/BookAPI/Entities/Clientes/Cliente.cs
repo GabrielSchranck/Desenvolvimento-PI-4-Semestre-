@@ -27,7 +27,7 @@ namespace BookAPI.Entities.Clientes
         [MaxLength(1)]
 		public int Genero { get; set; }
 
-		[MaxLength(9)]
+		[MaxLength(15)]
         public string Contato { get; set; } = string.Empty;
 
         [MaxLength(2)]

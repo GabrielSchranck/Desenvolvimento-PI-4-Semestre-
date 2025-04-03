@@ -55,7 +55,7 @@ export class RegisterComponent implements OnInit {
     }
 
     const cliente: Cliente = this.formularioRegistro.value;
-   
+
     this.clienteService.CreateClient(cliente).subscribe({
       next: (retorno) => {
         if(retorno.token){
@@ -71,6 +71,7 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
+        console.log("Erro erro super erro")
         if(err.errors){
           this.isClicked = false;
           this.apiErrors = err.errors;

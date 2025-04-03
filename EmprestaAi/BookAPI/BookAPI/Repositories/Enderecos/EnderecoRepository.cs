@@ -26,9 +26,20 @@ namespace BookAPI.Repositories.Enderecos
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Endereco> GetByCepAsync(string cep)
+		public async Task<bool> FindEnderecoClienteAsync(EnderecoCliente enderecoCliente)
+		{
+			var result = await _context.EnderecosClientes
+				.FirstOrDefaultAsync(e => e.ClienteId == enderecoCliente.ClienteId && e.EnderecoId == enderecoCliente.EnderecoId && e.Numero == enderecoCliente.Numero);
+
+            if (result != null) return true;
+
+			return false;
+		}
+
+		public async Task<Endereco> GetByCepAsync(string cep)
         {
             return await _context.Enderecos.FirstOrDefaultAsync(e => e.CodigoCep == cep);
         }
+
     }
 }

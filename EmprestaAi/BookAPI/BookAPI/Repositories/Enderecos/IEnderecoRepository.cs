@@ -8,5 +8,6 @@ namespace BookAPI.Repositories.Enderecos
         Task CreateAsync(Endereco endereco);
         Task<Endereco> GetByCepAsync(string cep);
         Task CreateEnderecoClienteAsync(EnderecoCliente enderecoCliente);
+        Task<bool> FindEnderecoClienteAsync(EnderecoCliente enderecoCliente);
     }
 }

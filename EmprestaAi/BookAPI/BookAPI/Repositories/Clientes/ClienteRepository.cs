@@ -60,8 +60,22 @@ namespace BookAPI.Repositories.Clientes
         }
         public async Task Update(Cliente cliente)
         {
-            _context.Update(cliente);
-            await _context.SaveChangesAsync();
+            var clienteExistente = await _context.Clientes.FindAsync(cliente.Id);
+
+            if(clienteExistente != null)
+            {
+                clienteExistente.Nome = cliente.Nome;
+				clienteExistente.Email = cliente.Email;
+				clienteExistente.DataNascimento = cliente.DataNascimento;
+				clienteExistente.Contato = cliente.Contato;
+
+                _context.Entry(clienteExistente).Property(c => c.Nome).IsModified = true;
+				_context.Entry(clienteExistente).Property(c => c.Email).IsModified = true;
+				_context.Entry(clienteExistente).Property(c => c.DataNascimento).IsModified = true;
+                _context.Entry(clienteExistente).Property(c => c.Contato).IsModified = true;
+
+				await _context.SaveChangesAsync();
+			}
         }
     }
 }

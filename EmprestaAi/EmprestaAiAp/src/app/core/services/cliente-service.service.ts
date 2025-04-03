@@ -24,23 +24,23 @@ export class ClienteService {
   }
 
   GetByToken(): Observable<any> {
-    
-    const token = localStorage.getItem('authToken'); 
-    
+
+    const token = localStorage.getItem('authToken');
+
     if (!token) {
       return throwError(() => new Error('Token de autenticação não encontrado.'));
     }
 
-    const urlApi = `${this.url}/me`; 
+    const urlApi = `${this.url}/perfil`;
 
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       })
     };
 
-    return this.http.get<Cliente>(urlApi, httpOptions) 
+    return this.http.get<Cliente>(urlApi, httpOptions)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 404) {
@@ -81,8 +81,8 @@ export class ClienteService {
   UpdateClient(cliente: Cliente) : Observable<any>{
     const urlApi = `${this.url}/update`;
 
-    const token = localStorage.getItem('authToken'); 
-    
+    const token = localStorage.getItem('authToken');
+
     if (!token) {
       return throwError(() => new Error('Token de autenticação não encontrado.'));
     }
@@ -90,7 +90,7 @@ export class ClienteService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       })
     };
 

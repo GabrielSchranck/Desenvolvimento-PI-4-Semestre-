@@ -15,10 +15,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './perfil.component.css'
 })
 export class PerfilComponent implements OnInit{
-  
+
   formularioPerfil!: FormGroup;
   formularioEndereco!: FormGroup;
   cliente: Cliente = new Cliente();
+  enabled: boolean = true;
   enderecos: EnderecoCliente[] = [];
   cep: string = "";
   editarPerfil: boolean = false;
@@ -26,9 +27,9 @@ export class PerfilComponent implements OnInit{
   adicionaEndereco: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private clienteService: ClienteService, private enderecoService: EnderecoService){}
-  
+
   ngOnInit(): void {
-    
+
     this.CreateFormPerfil();
     this.CreateFormEndereco();
 
@@ -66,19 +67,27 @@ export class PerfilComponent implements OnInit{
     });
   }
 
-  private GetUserData(): void{
-    this.clienteService.GetByToken().subscribe(
-      (dados) => {
+  private GetUserData(): void {
+    this.clienteService.GetByToken().subscribe({
+      next: (dados) => {
+        console.log("Dados recebidos:", dados);
         this.cliente = dados.cliente;
         this.enderecos = dados.enderecos;
-        console.log(this.enderecos)
+
+        console.log(this.cliente)
+
+        if (this.cliente.DataNascimento) {
+          this.cliente.DataNascimento = this.cliente.DataNascimento.split("T")[0];
+        }
+
+        console.log(this.cliente.DataNascimento)
+
         this.formularioPerfil.patchValue(this.cliente);
       },
-
-      (error) => {
-        console.log("Erro ao selecionar clientes " + error);
+      error: (error) => {
+        console.error("Erro ao selecionar clientes:", error);
       }
-    );
+    });
   }
 
   public EditarCliente(): void {
@@ -117,17 +126,34 @@ export class PerfilComponent implements OnInit{
       }
   }
 
-  public createEndereco(): void{
+  public createEndereco(): void {
     const enderecoCliente: Endereco = this.formularioEndereco?.value;
-    this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe(
-      (result) => {
-        console.log("Sucesso")
+
+    this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe({
+      next: (retorno) => {
+        Swal.fire({
+          title: "Sucesso!",
+          text: "O endereço foi cadastrado.",
+          icon: "success",
+          confirmButtonText: "Ok"
+        });
+        this.adicionaEndereco = false;
+        this.GetUserData();
       },
-    );
+      error: (error) => {
+        Swal.fire({
+          title: "Erro!",
+          text: "Erro ao comunicar com o servidor.",
+          icon: "error",
+          confirmButtonText: "Ok"
+        });
+        console.error("Erro ao cadastrar endereço:", error);
+      }
+    });
   }
 
   public async getEnderecoViaCep(): Promise<void> {
-    
+
     this.cep = this.formularioEndereco?.get("cep")?.value ;
 
     if(this.cep === "") return;
@@ -135,11 +161,11 @@ export class PerfilComponent implements OnInit{
     (await this.enderecoService.GetEnderecoByViaCep(this.cep)).subscribe(
       (response) => {
         const enderecoResult: Endereco = {
-          cep: response.cep,         
-          rua: response.rua,         
-          bairro: response.bairro,   
-          cidade: response.cidade,   
-          uf: response.uf            
+          cep: response.cep,
+          rua: response.rua,
+          bairro: response.bairro,
+          cidade: response.cidade,
+          uf: response.uf
         };
 
         this.formularioEndereco.patchValue({
@@ -159,6 +185,7 @@ export class PerfilComponent implements OnInit{
 
   public EditarClick(): void{
     this.editarPerfil = !this.editarPerfil;
+    this.enabled = !this.enabled;
   }
 
   public adicionaEnderecoClick(): void{

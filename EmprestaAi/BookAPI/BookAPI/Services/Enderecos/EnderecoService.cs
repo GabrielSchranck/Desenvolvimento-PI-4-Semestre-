@@ -93,13 +93,18 @@ namespace BookAPI.Services.Enderecos
 
             if (enderecoBanco != null)
             {
-                await _enderecoRepository.CreateEnderecoClienteAsync(new EnderecoCliente
+                var enderecoCLiente = new EnderecoCliente
                 {
                     ClienteId = clienteId,
                     Complemento = endereco.EnderecosCliente.FirstOrDefault().Complemento,
                     Numero = endereco.EnderecosCliente.FirstOrDefault().Numero,
                     EnderecoId = enderecoBanco.Id
-                });
+                };
+
+				if (!(await _enderecoRepository.FindEnderecoClienteAsync(enderecoCLiente)))
+                {
+					await _enderecoRepository.CreateEnderecoClienteAsync(enderecoCLiente);
+				}
             }
             else
             {

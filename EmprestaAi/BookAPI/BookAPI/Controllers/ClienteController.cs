@@ -50,7 +50,7 @@ namespace BookAPI.Controllers
             }
         }
 
-        [HttpGet("me")]
+        [HttpGet("perfil")]
         public async Task<ActionResult<Cliente>> GetById()
         {
             var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -62,7 +62,7 @@ namespace BookAPI.Controllers
 
             if (cliente == null) return BadRequest("Dados não encontrados");
 
-            cliente.DataNascimento = DateTime.Parse(cliente.DataNascimento.ToString("yyyy-MM-dd"));
+            var dataNascimento = cliente.DataNascimento.ToString("yyyy-MM-dd");
 
             var enderecosList = (await _clienteService.GetClienteEnderecosAsync(clienteId)).ToList();
 
@@ -70,19 +70,22 @@ namespace BookAPI.Controllers
 
             foreach (var endereco in enderecosList)
             {
-                var enderecoDTO = new EnderecoDTO
+                foreach(var enderecoCliente in endereco.EnderecosCliente)
                 {
-                    Id = endereco.Id,
-                    Rua = endereco.Logradouro,
-                    Bairro = endereco.Bairro,
-                    Cidade = endereco.Cidade,
-                    Uf = endereco.Uf,
-                    Cep = endereco.CodigoCep,
-                    Complemento = endereco.EnderecosCliente.FirstOrDefault().Complemento,
-                    Numero = endereco.EnderecosCliente.FirstOrDefault().Numero
-                };
+					var enderecoDTO = new EnderecoDTO
+					{
+						Id = endereco.Id,
+						Rua = endereco.Logradouro,
+						Bairro = endereco.Bairro,
+						Cidade = endereco.Cidade,
+						Uf = endereco.Uf,
+						Cep = endereco.CodigoCep,
+						Complemento = enderecoCliente.Complemento,
+						Numero = enderecoCliente.Numero
+					};
 
-                enderecosCliente.Add(enderecoDTO);
+					enderecosCliente.Add(enderecoDTO);
+				}
             }
 
             return Ok(new
@@ -96,8 +99,8 @@ namespace BookAPI.Controllers
                     cliente.Idade,
                     cliente.DDD,
                     cliente.Contato,
-                    cliente.DataNascimento
-                },
+					dataNascimento
+				},
                 enderecos = enderecosCliente
             });
         }

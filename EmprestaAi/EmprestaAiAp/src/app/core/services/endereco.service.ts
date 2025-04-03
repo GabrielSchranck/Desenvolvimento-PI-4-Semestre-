@@ -22,7 +22,7 @@ export class EnderecoService {
   public async GetEnderecoByViaCep(cep:string): Promise<Observable<Endereco>>{
     const apiUrl = `${this.url}/getViaCep?cep=${cep}`
     return this.httpCliente.get<Endereco>(apiUrl, httpOptions)
-  } 
+  }
 
   public CreateEnderecoCliente(endereco: Endereco): Observable<void> {
     const apiUrl = `${this.url}/create`;
@@ -32,8 +32,6 @@ export class EnderecoService {
         return throwError(() => new Error('Token de autenticação não encontrado.'));
     }
 
-    console.log("Passou aqui")
-
     const httpOptions = {
         headers: new HttpHeaders({
             'Content-Type': 'application/json',
@@ -41,8 +39,10 @@ export class EnderecoService {
         })
     };
 
-    console.log("Tentou comunicar na api")
+    const retorno = this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
 
-    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
+    console.log(retorno)
+
+    return retorno;
   }
 }

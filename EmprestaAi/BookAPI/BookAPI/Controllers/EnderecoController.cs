@@ -62,9 +62,10 @@ namespace BookAPI.Controllers
 
                 await _enderecoService.CreateEnderecoCliente(endereco, clienteId);
 
-                return Ok("Endereço cadastrado com sucesso");
-            }
-            catch (Exception)
+				return Ok(new { message = "Endereço cadastrado com sucesso" });
+
+			}
+			catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
