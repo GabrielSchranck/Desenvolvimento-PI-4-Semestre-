@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ClienteService } from '../../core/services/cliente-service.service';
-import { Cliente } from '../../core/models/Cliente';
+import { Cliente, EnderecoCliente } from '../../core/models/Cliente';
 import Swal from 'sweetalert2';
 import { EnderecoService } from '../../core/services/endereco.service';
 import { Endereco } from '../../core/models/Endereco';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-perfil',
-  imports: [UserInfoComponent, ReactiveFormsModule],
+  imports: [UserInfoComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
@@ -18,6 +19,7 @@ export class PerfilComponent implements OnInit{
   formularioPerfil!: FormGroup;
   formularioEndereco!: FormGroup;
   cliente: Cliente = new Cliente();
+  enderecos: EnderecoCliente[] = [];
   cep: string = "";
   editarPerfil: boolean = false;
   possuiEnderecos: boolean = false;
@@ -35,6 +37,11 @@ export class PerfilComponent implements OnInit{
     }else{
       this.GetUserData();
     }
+  }
+
+  public editarEndereco(endereco: EnderecoCliente): void {
+    // Sua lógica para edição aqui
+    console.log('Editando endereço:', endereco);
   }
 
   private CreateFormPerfil(): void{
@@ -63,6 +70,8 @@ export class PerfilComponent implements OnInit{
     this.clienteService.GetByToken().subscribe(
       (dados) => {
         this.cliente = dados.cliente;
+        this.enderecos = dados.enderecos;
+        console.log(this.enderecos)
         this.formularioPerfil.patchValue(this.cliente);
       },
 
@@ -87,7 +96,6 @@ export class PerfilComponent implements OnInit{
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Aqui você salva os dados
                 this.clienteService.UpdateClient(clienteEditado).subscribe(
                   (sucesso) => {
                     Swal.fire({
@@ -110,7 +118,12 @@ export class PerfilComponent implements OnInit{
   }
 
   public createEndereco(): void{
-    
+    const enderecoCliente: Endereco = this.formularioEndereco?.value;
+    this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe(
+      (result) => {
+        console.log("Sucesso")
+      },
+    );
   }
 
   public async getEnderecoViaCep(): Promise<void> {
@@ -121,13 +134,6 @@ export class PerfilComponent implements OnInit{
 
     (await this.enderecoService.GetEnderecoByViaCep(this.cep)).subscribe(
       (response) => {
-
-        console.log(response.cep)
-        console.log(response.rua)
-        console.log(response.bairro)
-        console.log(response.cidade)
-        console.log(response.uf)
-
         const enderecoResult: Endereco = {
           cep: response.cep,         
           rua: response.rua,         
@@ -161,6 +167,8 @@ export class PerfilComponent implements OnInit{
       cep: "",
       rua: "",
       bairro: "",
+      complemento: "",
+      numero: "",
       cidade: "",
       uf: ""
     });

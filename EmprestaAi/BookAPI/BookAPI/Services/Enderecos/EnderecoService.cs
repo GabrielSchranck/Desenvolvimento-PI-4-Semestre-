@@ -80,6 +80,10 @@ namespace BookAPI.Services.Enderecos
 
         public async Task CreateAsync(Endereco endereco)
         {
+            var result = await _enderecoRepository.GetByCepAsync(endereco.CodigoCep);
+
+            if (result != null) return;
+
             await _enderecoRepository.CreateAsync(endereco);
         }
 
@@ -92,19 +96,20 @@ namespace BookAPI.Services.Enderecos
                 await _enderecoRepository.CreateEnderecoClienteAsync(new EnderecoCliente
                 {
                     ClienteId = clienteId,
-                    Complemento = endereco.EnderecosCliente.FirstOrDefault(e => e.ClienteId == clienteId).Complemento,
-                    Numero = endereco.EnderecosCliente.FirstOrDefault(e => e.ClienteId == clienteId).Numero,
+                    Complemento = endereco.EnderecosCliente.FirstOrDefault().Complemento,
+                    Numero = endereco.EnderecosCliente.FirstOrDefault().Numero,
                     EnderecoId = enderecoBanco.Id
                 });
             }
             else
             {
                 await CreateAsync(endereco);
+
                 await _enderecoRepository.CreateEnderecoClienteAsync(new EnderecoCliente
                 {
                     ClienteId = clienteId,
-                    Complemento = endereco.EnderecosCliente.FirstOrDefault(e => e.ClienteId == clienteId).Complemento,
-                    Numero = endereco.EnderecosCliente.FirstOrDefault(e => e.ClienteId == clienteId).Numero,
+                    Complemento = endereco.EnderecosCliente.FirstOrDefault().Complemento,
+                    Numero = endereco.EnderecosCliente.FirstOrDefault().Numero,
                     EnderecoId = endereco.Id
                 });
             }

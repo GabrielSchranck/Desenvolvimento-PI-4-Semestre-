@@ -75,84 +75,107 @@
         </div>
 
         <div class="flex w-full h-screen md:h-full flex-col lg:w-1/2 items-center pt-4">
-            <div class="flex items-center justify-center gap-4 mb-6">
-                <h1 class="font-sans text-3xl font-semibold text-gray-800 text-center">
-                    Endereços
-                </h1>
-            </div>
-
-            @if(possuiEnderecos){
-
-            } @else {
+          <div class="flex items-center justify-center gap-4 mb-6">
+              <h1 class="font-sans text-3xl font-semibold text-gray-800 text-center">
+                  Endereços
+              </h1>
+          </div>
       
-              @if(!adicionaEndereco){
-                <div class="flex items-center justify-center w-full">
-                  <button type="button" (click)="adicionaEnderecoClick()"
-                        class="px-6 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-700 hover:text-white transition">
-                        Adicionar
-                      </button>
-                </div>
+          <div class="grid gap-4 w-1/2 mb-4">
+              <!-- Iteração sobre os endereços -->
+              @for (endereco of enderecos; track endereco.id) {
+                  <div class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                      <div class="flex justify-between items-start">
+                          <div>
+                              <p class="font-semibold text-gray-700">{{ endereco.rua }}, {{ endereco.numero }}</p>
+                              <p class="text-sm text-gray-500">CEP: {{ endereco.cep }}</p>
+                          </div>
+                          <button 
+                              (click)="editarEndereco(endereco)"
+                              class="text-blue-600 hover:text-blue-800 transition-colors"
+                          >
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                          </button>
+                      </div>
+                  </div>
               }
-              @else {
-                <div class="w-4/5 flex flex-col bg-white p-5 border rounded-md mb-8">
-                  <form [formGroup]="formularioEndereco" (ngSubmit)="createEndereco()" class="flex flex-col w-full">
-                    <!-- Cep e número-->
-                    <div class="flex flex-col md:flex-row justify-between">
-                      <div class="flex flex-col w-full lg:w-1/4 m-1">
-                        <label for="cep">Cep</label>
-                        <input type="text" (keydown.enter)="getEnderecoViaCep()" formControlName="cep" placeholder="Cep" class="p-2 border rounded-md">
-                      </div>
-                      <div class="flex flex-col w-full md:w-1/4 m-1">
-                        <label for="cep">Número</label>
-                        <input type="text" formControlName="numero" placeholder="Número" class="p-2 border rounded-md">
-                      </div>
-                    </div>
-                    <!-- Rua -->
-                    <div class="flex flex-row">
-                      <div class="flex flex-col w-full m-1">
-                        <label for="cep">Rua</label>
-                        <input type="text" formControlName="rua" placeholder="Rua" class="p-2 border rounded-md w-full">
-                      </div>
-                    </div>
-                    <!-- Complemento -->
-                    <div class="flex flex-row">
-                      <div class="flex flex-col w-full m-1">
-                        <label for="cep">Complemento</label>
-                        <input type="text" formControlName="complemento" placeholder="Complemento" class="p-2 border rounded-md w-full">
-                      </div>
-                    </div>
-                    <!-- Bairro -->
-                    <div class="flex flex-row">
-                      <div class="flex flex-col w-full m-1">
-                        <label for="cep">Bairro</label>
-                        <input type="text" formControlName="bairro" placeholder="Bairro" class="p-2 border rounded-md w-full">
-                      </div>
-                    </div>
-                    <!-- Cidade e UF -->
-                    <div class="flex flex-col md:flex-row">
-                      <div class="flex flex-col w-full md:w-3/4 m-1">
-                        <label for="cep">Cidade</label>
-                        <input type="text" formControlName="cidade" placeholder="Cidade" class="p-2 border rounded-md">
-                      </div>
-                      <div class="flex flex-col w-full md:w-1/4 m-1">
-                        <label for="cep">Uf</label>
-                        <input type="text" formControlName="uf" placeholder="estado" class="p-2 border rounded-md">
-                      </div>
-                    </div>
-                    <!-- Botões -->
-                    <div class="mt-6 flex flex-col lg:flex-row gap-4 items-center justify-center">
-                      <button type="submit"
-                        class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-                        Salvar
-                      </button>
-                      <button type="button" (click)="adicionaEnderecoClick()"
-                        class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-700 transition">
-                        Cancelar
-                      </button>
-                    </div>
-                  </form>
-                </div>
+              <!-- Caso não haja endereços cadastrados -->
+              @empty {
+                  <p class="text-gray-500 text-center py-4">Nenhum endereço cadastrado</p>
               }
+          </div>
+      
+
+            @if(!adicionaEndereco){
+              <div class="flex items-center justify-center w-full">
+                <button type="button" (click)="adicionaEnderecoClick()"
+                      class="px-6 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-700 hover:text-white transition">
+                      Adicionar
+                    </button>
+              </div>
+            }
+            @else {
+              <div class="w-4/5 flex flex-col bg-white p-5 border rounded-md mb-8">
+                <form [formGroup]="formularioEndereco" class="flex flex-col w-full">
+                  <!-- Cep e número-->
+                  <div class="flex flex-col md:flex-row justify-between">
+                    <div class="flex flex-col w-full lg:w-1/4 m-1">
+                      <label for="cep">Cep</label>
+                      <input type="text" (focusout)="getEnderecoViaCep()" formControlName="cep" placeholder="Cep" class="p-2 border rounded-md">
+                    </div>
+                    <div class="flex flex-col w-full md:w-1/4 m-1">
+                      <label for="cep">Número</label>
+                      <input type="text" formControlName="numero" placeholder="Número" class="p-2 border rounded-md">
+                    </div>
+                  </div>
+                  <!-- Rua -->
+                  <div class="flex flex-row">
+                    <div class="flex flex-col w-full m-1">
+                      <label for="cep">Rua</label>
+                      <input type="text" formControlName="rua" placeholder="Rua" class="p-2 border rounded-md w-full">
+                    </div>
+                  </div>
+                  <!-- Complemento -->
+                  <div class="flex flex-row">
+                    <div class="flex flex-col w-full m-1">
+                      <label for="cep">Complemento</label>
+                      <input type="text" formControlName="complemento" placeholder="Complemento" class="p-2 border rounded-md w-full">
+                    </div>
+                  </div>
+                  <!-- Bairro -->
+                  <div class="flex flex-row">
+                    <div class="flex flex-col w-full m-1">
+                      <label for="cep">Bairro</label>
+                      <input type="text" formControlName="bairro" placeholder="Bairro" class="p-2 border rounded-md w-full">
+                    </div>
+                  </div>
+                  <!-- Cidade e UF -->
+                  <div class="flex flex-col md:flex-row">
+                    <div class="flex flex-col w-full md:w-3/4 m-1">
+                      <label for="cep">Cidade</label>
+                      <input type="text" formControlName="cidade" placeholder="Cidade" class="p-2 border rounded-md">
+                    </div>
+                    <div class="flex flex-col w-full md:w-1/4 m-1">
+                      <label for="cep">Uf</label>
+                      <input type="text" formControlName="uf" placeholder="estado" class="p-2 border rounded-md">
+                    </div>
+                  </div>
+                  <!-- Botões -->
+                  <div class="mt-6 flex flex-col lg:flex-row gap-4 items-center justify-center">
+                    <button type="submit"
+                      (click)="createEndereco()"
+                      class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                      Salvar
+                    </button>
+                    <button type="button" (click)="adicionaEnderecoClick()"
+                      class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-700 transition">
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
             }
         </div>
     </section>

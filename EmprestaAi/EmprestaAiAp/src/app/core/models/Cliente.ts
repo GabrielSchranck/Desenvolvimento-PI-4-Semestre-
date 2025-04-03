@@ -12,6 +12,12 @@ export class Cliente {
 }
 
 export class EnderecoCliente{
+    id?: number;
     numero?: number;
     complemento?: string;
+    cep?: string;
+    rua?: string;
+    bairro?: string;
+    cidade?: string;
+    uf?: string;
 }

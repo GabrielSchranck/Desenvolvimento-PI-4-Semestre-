@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities.CEPs;
+using BookAPI.mappings;
 using BookAPI.Services.Enderecos;
 using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
@@ -47,8 +48,8 @@ namespace BookAPI.Controllers
             }
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult> CreateEndereco([FromBody] Endereco endereco)
+        [HttpPost("create")]
+        public async Task<ActionResult> CreateEndereco([FromBody] EnderecoDTO enderecoDTO)
         {
             try
             {
@@ -56,6 +57,8 @@ namespace BookAPI.Controllers
                 if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
 
                 int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
 
                 await _enderecoService.CreateEnderecoCliente(endereco, clienteId);
 

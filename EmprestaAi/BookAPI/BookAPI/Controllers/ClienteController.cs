@@ -8,6 +8,10 @@ using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
+using BookAPI.Entities.CEPs;
 
 namespace BookAPI.Controllers
 {
@@ -60,22 +64,26 @@ namespace BookAPI.Controllers
 
             cliente.DataNascimento = DateTime.Parse(cliente.DataNascimento.ToString("yyyy-MM-dd"));
 
-            var enderecosList = await _clienteService.GetClienteEnderecosAsync(clienteId);
+            var enderecosList = (await _clienteService.GetClienteEnderecosAsync(clienteId)).ToList();
 
-            var enderecoCliente = enderecosList.Select(endereco => new
+            var enderecosCliente = new List<EnderecoDTO>();
+
+            foreach (var endereco in enderecosList)
             {
-                endereco.Id,
-                endereco.CodigoCep,
-                endereco.Bairro,
-                endereco.Cidade,
-                endereco.Uf,
-                endereco.Logradouro,
-                EnderecosList = endereco.EnderecosCliente.Select(enderecoCliente => new
+                var enderecoDTO = new EnderecoDTO
                 {
-                    enderecoCliente.Id,
-                    enderecoCliente.Numero,
-                }).ToList()
-            }).ToList();
+                    Id = endereco.Id,
+                    Rua = endereco.Logradouro,
+                    Bairro = endereco.Bairro,
+                    Cidade = endereco.Cidade,
+                    Uf = endereco.Uf,
+                    Cep = endereco.CodigoCep,
+                    Complemento = endereco.EnderecosCliente.FirstOrDefault().Complemento,
+                    Numero = endereco.EnderecosCliente.FirstOrDefault().Numero
+                };
+
+                enderecosCliente.Add(enderecoDTO);
+            }
 
             return Ok(new
             {
@@ -90,7 +98,7 @@ namespace BookAPI.Controllers
                     cliente.Contato,
                     cliente.DataNascimento
                 },
-                enderecos = enderecoCliente
+                enderecos = enderecosCliente
             });
         }
 
@@ -163,8 +171,14 @@ namespace BookAPI.Controllers
             try
             {
                 if (enderecoDTO == null) return BadRequest("Adicone um endereço válido");
+
+                int clienteId = (int)await _clienteService.GetClienteIdByTokenAsync(Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last());
+                if (clienteId == 0) return BadRequest("Cliente não encontrado");
+
                 var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
-                _enderecoRepository.CreateAsync(endereco);
+                await _enderecoRepository.CreateAsync(endereco);
+
+                await _clienteService.CreateEnderecoClienteAsync(endereco, clienteId);
 
                 return Ok();
 

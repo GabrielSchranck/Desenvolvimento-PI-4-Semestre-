@@ -19,6 +19,11 @@ namespace BookAPI.Repositories.Clientes
             await _context.Clientes.AddAsync(cliente);
             await _context.SaveChangesAsync();
         }
+        public async Task CreateEnderecoCliente(EnderecoCliente enderecoCliente)
+        {
+            await _context.EnderecosClientes.AddAsync(enderecoCliente);
+            await _context.SaveChangesAsync();
+        }
         public async Task<IEnumerable<Cliente>> GetAllClientAsync()
         {
             return await _context.Clientes.ToListAsync();
@@ -45,7 +50,7 @@ namespace BookAPI.Repositories.Clientes
 		{
 			return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
 		}
-        public async Task<IEnumerable<Entities.CEPs.Endereco>> GetClienteEnderecosAsync(int clienteId)
+        public async Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId)
         {
             return await _context.Enderecos.Where(c => c.EnderecosCliente.Any(e => e.ClienteId == clienteId)).Include(c => c.EnderecosCliente).ToListAsync();
         }

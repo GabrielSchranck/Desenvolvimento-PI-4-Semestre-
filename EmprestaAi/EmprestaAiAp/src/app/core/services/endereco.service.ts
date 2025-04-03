@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Endereco } from '../models/Endereco';
 import { environment } from '../../../../environments/environments';
 
@@ -24,7 +24,25 @@ export class EnderecoService {
     return this.httpCliente.get<Endereco>(apiUrl, httpOptions)
   } 
 
-  public async CreateEnderecoCliente(): Promise<void>{
-    
+  public CreateEnderecoCliente(endereco: Endereco): Observable<void> {
+    const apiUrl = `${this.url}/create`;
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        return throwError(() => new Error('Token de autenticação não encontrado.'));
+    }
+
+    console.log("Passou aqui")
+
+    const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        })
+    };
+
+    console.log("Tentou comunicar na api")
+
+    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
   }
 }
