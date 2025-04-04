@@ -26,7 +26,7 @@ export class ClienteService {
 
   GetByToken(): Observable<any> {
     
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken'); 
     
     if (!token) {
       return throwError(() => new Error('Token de autenticação não encontrado.'));

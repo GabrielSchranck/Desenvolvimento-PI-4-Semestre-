@@ -43,12 +43,12 @@ export class RegistroComponent implements OnInit{
   };
   opcoesGenero: string[] = ["Masculino", "Feminino", "Outro"];
 
-  cpfInvalid(control: any){
+  public cpfInvalid(control: any){
     const isValid = cpf.isValid(control.value);
     return isValid ? null : { invalidCpf: true }
   }
 
-  CadastrarCliente(): void{
+  public CadastrarCliente(): void{
 
     if(this.formularioRegistro.invalid){
       this.formularioRegistro.markAllAsTouched();
@@ -78,7 +78,7 @@ export class RegistroComponent implements OnInit{
     });
   }
 
-  applyApiErrorsToForm(): void{
+  public applyApiErrorsToForm(): void{
     for(const field in this.apiErrors){
       const control = this.formularioRegistro.get(field);
       if(control){

@@ -12,5 +12,11 @@ export class Cliente {
 }
 
 export class Endereco{
-
+    Cep?: string;
+    Numero?: number;
+    Rua?: string;
+    Complemento?: string;
+    Bairro?: string;
+    Cidade?: string;
+    Uf?: string;
 }
