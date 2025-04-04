@@ -94,7 +94,7 @@
                             <p class="font-semibold text-gray-700">{{ endereco.rua }}, {{ endereco.numero }}</p>
                             <p class="text-sm text-gray-500">CEP: {{ endereco.cep }}</p>
                         </div>
-        
+
                         <div class="flex gap-3">
                             <!-- Botão Editar -->
                             <button
@@ -106,10 +106,10 @@
                                     <path d="M13.586 3.586a2 2 0 112.828 2.828L6.414 16H3v-3.414l10-10z" />
                                 </svg>
                             </button>
-        
+
                             <!-- Botão Excluir (Lixeira Azul) -->
                             <button
-                                
+                                (click)="DeletarEndereco(endereco)"
                                 class="text-blue-600 hover:text-blue-800 transition-colors"
                                 title="Excluir"
                             >
@@ -121,13 +121,13 @@
                     </div>
                 </div>
             }
-        
+
             @empty {
                 <p class="text-gray-500 text-center py-4">Nenhum endereço cadastrado</p>
             }
           </div>
-        
-        
+
+
 
 
                       <!-- Botão para abrir o modal -->
@@ -160,7 +160,7 @@
                 </h2>
 
                 <!-- Formulário -->
-                <form [formGroup]="formularioEndereco" (ngSubmit)="createEndereco()" class="space-y-4">
+                <form [formGroup]="formularioEndereco" (ngSubmit)="OperacoesEndereco()" class="space-y-4">
                   <!-- Cep e número -->
                   <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col w-full">

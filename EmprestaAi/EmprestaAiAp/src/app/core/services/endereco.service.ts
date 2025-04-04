@@ -45,4 +45,22 @@ export class EnderecoService {
 
     return retorno;
   }
+
+  public DeleteEnderecoCliente(endereco: Endereco): Observable<void> {
+    const apiUrl = `${this.url}/delete`;
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        return throwError(() => new Error('Token de autenticação não encontrado.'));
+    }
+
+    const httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        })
+    };
+
+    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
+  }
 }

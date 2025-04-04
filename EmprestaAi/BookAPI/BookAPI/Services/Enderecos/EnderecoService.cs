@@ -1,6 +1,7 @@
 ﻿using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
 using BookAPI.Repositories.Enderecos;
+using BookModels.DTOs.Clientes;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 
@@ -119,5 +120,22 @@ namespace BookAPI.Services.Enderecos
                 });
             }
         }
-    }
+
+		public async Task UpdateEnderecoClienteAsync(Endereco endereco, int clienteId)
+		{
+            foreach(var enderecoCliente in endereco.EnderecosCliente)
+            {
+                enderecoCliente.ClienteId = clienteId;
+            }
+		}
+
+		public async Task DeleteEnderecoClienteAsync(Endereco endereco, int clientId)
+		{
+			foreach(var enderecoCliente in endereco.EnderecosCliente)
+            {
+                enderecoCliente.ClienteId = clientId;
+				await _enderecoRepository.DeleteEnderecoClienteAsync (enderecoCliente);
+			}
+		}
+	}
 }

@@ -23,6 +23,7 @@ export class PerfilComponent implements OnInit{
   enderecos: EnderecoCliente[] = [];
   cep: string = "";
   editarPerfil: boolean = false;
+  deletarEndereco: boolean = false;
   modalAberto: boolean = false;
   possuiEnderecos: boolean = false;
   adicionaEndereco: boolean = false;
@@ -42,14 +43,15 @@ export class PerfilComponent implements OnInit{
   }
 
   public editarEndereco(endereco: EnderecoCliente): void {
-    // Sua lógica para edição aqui
-    console.log('Editando endereço:', endereco);
+    this.modalAberto = true;
+    this.editarPerfil = true;
+    this.formularioEndereco.patchValue(endereco);
   }
 
-  abrirModalEndereco(endereco: any = null) {
+  public abrirModalEndereco(endereco: any = null) {
     this.modalAberto = true;
     this.editarPerfil = !!endereco;
-  
+
     if (endereco) {
       this.formularioEndereco.patchValue(endereco);
     } else {
@@ -73,6 +75,8 @@ export class PerfilComponent implements OnInit{
 
   private CreateFormEndereco(){
     this.formularioEndereco = this.formBuilder.group({
+      id: [''],
+      enderecoId: [''],
       cep: [''],
       numero: [''],
       rua: [''],
@@ -86,7 +90,6 @@ export class PerfilComponent implements OnInit{
   private GetUserData(): void {
     this.clienteService.GetByToken().subscribe({
       next: (dados) => {
-        console.log("Dados recebidos:", dados);
         this.cliente = dados.cliente;
         this.enderecos = dados.enderecos;
 
@@ -142,31 +145,73 @@ export class PerfilComponent implements OnInit{
       }
   }
 
-  public createEndereco(): void {
-    const enderecoCliente: Endereco = this.formularioEndereco?.value;
-
-    this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe({
-      next: (retorno) => {
-        Swal.fire({
-          title: "Sucesso!",
-          text: "O endereço foi cadastrado.",
-          icon: "success",
-          confirmButtonText: "Ok"
+  public DeletarEndereco(enderecoCliente: Endereco): void{
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Deseja realmente excluir o endereço?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.enderecoService.DeleteEnderecoCliente(enderecoCliente).subscribe({
+          next: (retorno) => {
+            Swal.fire({
+              title: "Sucesso!",
+              text: "O endereço foi excluído.",
+              icon: "success",
+              confirmButtonText: "Ok"
+            });
+            this.GetUserData();
+          },
+          error: (error) => {
+            Swal.fire({
+              title: "Erro!",
+              text: "Erro ao comunicar com o servidor.",
+              icon: "error",
+              confirmButtonText: "Ok"
+            });
+            console.error("Erro ao excluir endereço:", error);
+          }
         });
-        this.modalAberto = false;
-        this.GetUserData();
-      },
-      error: (error) => {
-        Swal.fire({
-          title: "Erro!",
-          text: "Erro ao comunicar com o servidor.",
-          icon: "error",
-          confirmButtonText: "Ok"
-        });
-        this.modalAberto = false;
-        console.error("Erro ao cadastrar endereço:", error);
       }
     });
+  }
+
+  public OperacoesEndereco(): void {
+    const enderecoCliente: Endereco = this.formularioEndereco?.value;
+
+    if(this.editarPerfil){
+
+    }
+    else{
+      this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe({
+        next: (retorno) => {
+          Swal.fire({
+            title: "Sucesso!",
+            text: "O endereço foi cadastrado.",
+            icon: "success",
+            confirmButtonText: "Ok"
+          });
+          this.modalAberto = false;
+          this.GetUserData();
+        },
+        error: (error) => {
+          Swal.fire({
+            title: "Erro!",
+            text: "Erro ao comunicar com o servidor.",
+            icon: "error",
+            confirmButtonText: "Ok"
+          });
+          this.modalAberto = false;
+          console.error("Erro ao cadastrar endereço:", error);
+        }
+      });
+    }
+
   }
 
   public async getEnderecoViaCep(): Promise<void> {

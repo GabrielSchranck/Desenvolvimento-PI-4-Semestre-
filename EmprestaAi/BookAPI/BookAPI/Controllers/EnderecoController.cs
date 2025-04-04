@@ -70,5 +70,47 @@ namespace BookAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+        [HttpPost("update")]
+        public async Task<ActionResult> UpdateEndereco([FromBody] EnderecoDTO enderecoDTO)
+        {
+            try
+            {
+				var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+				if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+				int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+				var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
+
+                await _enderecoService.UpdateEnderecoClienteAsync(endereco, clienteId);
+
+				return Ok();
+			}
+			catch (Exception)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+			}
+		}
+
+        [HttpPost("delete")]
+        public async Task<ActionResult> DeleteEnderecoCliente([FromBody] EnderecoDTO enderecoDTO)
+        {
+            try
+            {
+				var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+				if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+				int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+				var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
+
+				await _enderecoService.DeleteEnderecoClienteAsync(endereco, clienteId);
+
+				return Ok(new { message = "Endereço deletado com sucesso" });
+			}
+			catch (Exception)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+			}
+		}
     }
 }

@@ -74,7 +74,8 @@ namespace BookAPI.Controllers
                 {
 					var enderecoDTO = new EnderecoDTO
 					{
-						Id = endereco.Id,
+						Id = enderecoCliente.Id,
+                        EnderecoId = endereco.Id,
 						Rua = endereco.Logradouro,
 						Bairro = endereco.Bairro,
 						Cidade = endereco.Cidade,
