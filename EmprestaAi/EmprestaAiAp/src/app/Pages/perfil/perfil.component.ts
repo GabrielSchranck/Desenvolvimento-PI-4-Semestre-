@@ -23,6 +23,7 @@ export class PerfilComponent implements OnInit{
   enderecos: EnderecoCliente[] = [];
   cep: string = "";
   editarPerfil: boolean = false;
+  modalAberto: boolean = false;
   possuiEnderecos: boolean = false;
   adicionaEndereco: boolean = false;
 
@@ -43,6 +44,21 @@ export class PerfilComponent implements OnInit{
   public editarEndereco(endereco: EnderecoCliente): void {
     // Sua lógica para edição aqui
     console.log('Editando endereço:', endereco);
+  }
+
+  abrirModalEndereco(endereco: any = null) {
+    this.modalAberto = true;
+    this.editarPerfil = !!endereco;
+  
+    if (endereco) {
+      this.formularioEndereco.patchValue(endereco);
+    } else {
+      this.formularioEndereco.reset();
+    }
+  }
+
+  public fecharModalEndereco() {
+    this.modalAberto = false;
   }
 
   private CreateFormPerfil(): void{
@@ -137,7 +153,7 @@ export class PerfilComponent implements OnInit{
           icon: "success",
           confirmButtonText: "Ok"
         });
-        this.adicionaEndereco = false;
+        this.modalAberto = false;
         this.GetUserData();
       },
       error: (error) => {
@@ -147,6 +163,7 @@ export class PerfilComponent implements OnInit{
           icon: "error",
           confirmButtonText: "Ok"
         });
+        this.modalAberto = false;
         console.error("Erro ao cadastrar endereço:", error);
       }
     });
