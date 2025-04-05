@@ -15,7 +15,7 @@ import { Cliente } from '../../core/models/Cliente';
 export class LoginComponent implements OnInit{
 
   formularioLogin: any;
-  apiError: string = "abacaxi";
+  apiError: string = "";
   isLoading: boolean = false;
 
   public validacoes = {
@@ -44,6 +44,8 @@ export class LoginComponent implements OnInit{
       return;
     }
 
+    this.apiError = '';
+
     this.isLoading = true;
     const cliente: Cliente = this.formularioLogin.value;
 
@@ -62,7 +64,6 @@ export class LoginComponent implements OnInit{
       error: (err) => {
         this.apiError = err;
         this.isLoading = false;
-        this.applyApiErrorsToForm();
       }
     });
   }

@@ -17,6 +17,9 @@
                 [src]="'useracess/email.png'"></app-inputs>
 
             <div class="error-message">
+                @if (apiError !== '') {
+                    <small class="text-red-500 font-semibold">{{apiError}}</small>
+                }
                 @if (formularioLogin.get('email')?.touched) {
                     @if (formularioLogin.get('email')?.hasError('required')) {
                         <small class="text-red-500 font-semibold">{{validacoes['required']('O email')}}</small>
