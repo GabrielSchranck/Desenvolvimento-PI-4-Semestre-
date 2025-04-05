@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service.service';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -14,12 +15,20 @@ export class NavbarComponent implements OnInit {
 
   constructor(private auth: AuthService, private router: Router){}
 
-  ngOnInit(): void {
-    this.logado = this.isLoggedIn();
+  async ngOnInit(): Promise<void> {
+    this.logado = await this.isLoggedIn();
+    console.log("Estado = " + this.logado);
   }
-
-  isLoggedIn(): boolean{
-    return this.auth.isLoggedIn();
+  
+  private async isLoggedIn(): Promise<boolean> {
+    try {
+      const logado = await firstValueFrom(this.auth.isLoggedIn());
+      console.log(logado);
+      return logado;
+    } catch (error) {
+      console.error("Erro ao verificar login:", error);
+      return false;
+    }
   }
 
   logout(): void{

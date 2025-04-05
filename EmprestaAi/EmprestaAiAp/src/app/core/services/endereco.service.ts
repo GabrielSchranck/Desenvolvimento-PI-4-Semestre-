@@ -1,14 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import { Endereco } from '../models/Endereco';
 import { environment } from '../../../../environments/environments';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type' : 'application/json'
-  })
-};
 
 @Injectable({
   providedIn: 'root'
@@ -19,48 +13,66 @@ export class EnderecoService {
 
   constructor(private httpCliente: HttpClient) { }
 
+  private getHttpOptions(): { headers: HttpHeaders } {
+    const token = localStorage.getItem('authToken');
+  
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado.');
+    }
+  
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return { headers };
+  }
+
+  private getHttpOptionsWithBody(body: any): any {
+    const token = localStorage.getItem('authToken');
+  
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado.');
+    }
+  
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return {
+      headers,
+      body 
+    };
+  }
+  
   public async GetEnderecoByViaCep(cep:string): Promise<Observable<Endereco>>{
-    const apiUrl = `${this.url}/getViaCep?cep=${cep}`
+    const apiUrl = `${this.url}/getViaCep?cep=${cep}`;
+    const httpOptions = this.getHttpOptions();
+
     return this.httpCliente.get<Endereco>(apiUrl, httpOptions)
   }
 
   public CreateEnderecoCliente(endereco: Endereco): Observable<void> {
     const apiUrl = `${this.url}/create`;
+    const httpOptions = this.getHttpOptions();
 
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        return throwError(() => new Error('Token de autenticação não encontrado.'));
-    }
-
-    const httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        })
-    };
-
-    const retorno = this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
-
-    console.log(retorno)
-
-    return retorno;
+    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);;
   }
 
   public DeleteEnderecoCliente(endereco: Endereco): Observable<void> {
     const apiUrl = `${this.url}/delete`;
+    const httpOptions = this.getHttpOptionsWithBody(endereco);
+  
+    return this.httpCliente.request<void>('DELETE', apiUrl, httpOptions).pipe(
+      map(() => void 0)
+    );
+  }
+  
+  public UpdateEnderecoCliente(endereco: Endereco): Observable<any>{
+    const apiUrl = `${this.url}/update`;
+    const httpOptions = this.getHttpOptions();
 
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        return throwError(() => new Error('Token de autenticação não encontrado.'));
-    }
-
-    const httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        })
-    };
-
-    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);
+    return this.httpCliente.put<Endereco>(apiUrl, endereco, httpOptions);
   }
 }

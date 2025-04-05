@@ -92,7 +92,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="font-semibold text-gray-700">{{ endereco.rua }}, {{ endereco.numero }}</p>
-                            <p class="text-sm text-gray-500">CEP: {{ endereco.cep }}</p>
+                            <p class="text-sm text-gray-500">CEP: {{ endereco.cep }} - {{ endereco.cidade }}/{{ endereco.uf }}</p>
                         </div>
 
                         <div class="flex gap-3">
@@ -126,9 +126,6 @@
                 <p class="text-gray-500 text-center py-4">Nenhum endereço cadastrado</p>
             }
           </div>
-
-
-
 
                       <!-- Botão para abrir o modal -->
           <div class="flex items-center justify-center w-full">

@@ -10,6 +10,7 @@ namespace BookAPI.Repositories.Enderecos
         Task CreateEnderecoClienteAsync(EnderecoCliente enderecoCliente);
         Task<bool> FindEnderecoClienteAsync(EnderecoCliente enderecoCliente);
         Task DeleteEnderecoClienteAsync(EnderecoCliente enderecoCliente);
-        Task UpdateEnderecoAsync(Endereco endereco);
+        Task UpdateEnderecoAsync(Endereco endereco, int clienteId);
+        Task<bool> CepExiste(string cep);
     }
 }

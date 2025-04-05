@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service.service';
 
 @Component({
@@ -9,13 +9,15 @@ import { AuthService } from '../../core/services/auth-service.service';
   styleUrl: './user-info.component.css'
 })
 export class UserInfoComponent {
-  router: any;
 
-  constructor(private auth: AuthService){}
+  constructor(private auth: AuthService, private router: Router) {}
 
   public logout(): void{
-    console.log("Entrou aqui")
     this.auth.logout();
+    this.NavegateToLogin();
+  }
+
+  public NavegateToLogin(): void{
     this.router.navigate(['/login']);
   }
 }
