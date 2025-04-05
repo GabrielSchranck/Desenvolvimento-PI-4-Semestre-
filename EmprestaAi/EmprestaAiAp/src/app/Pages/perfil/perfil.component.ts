@@ -93,13 +93,9 @@ export class PerfilComponent implements OnInit{
         this.cliente = dados.cliente;
         this.enderecos = dados.enderecos;
 
-        console.log(this.cliente)
-
         if (this.cliente.DataNascimento) {
           this.cliente.DataNascimento = this.cliente.DataNascimento.split("T")[0];
         }
-
-        console.log(this.cliente.DataNascimento)
 
         this.formularioPerfil.patchValue(this.cliente);
       },
@@ -133,8 +129,8 @@ export class PerfilComponent implements OnInit{
                       confirmButtonText: "Ok"
                     });
                     this.editarPerfil = false;
+                    this.GetUserData();
                   },
-
                   (erro) => {
                     console.log("Erro ao atualizar cliente" + erro)
                     this.editarPerfil = false;
@@ -185,7 +181,36 @@ export class PerfilComponent implements OnInit{
     const enderecoCliente: Endereco = this.formularioEndereco?.value;
 
     if(this.editarPerfil){
+      Swal.fire({
+        title: "Tem certeza?",
+        text: "Deseja realmente alterar os dados do endereço?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, editar!",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            this.enderecoService.UpdateEnderecoCliente(enderecoCliente).subscribe(
+              (sucesso) => {
+                Swal.fire({
+                  title: "Sucesso!",
+                  text: "Os dados do endereço foram atualizados.",
+                  icon: "success",
+                  confirmButtonText: "Ok"
+                });
+                this.fecharModalEndereco();
+                this.GetUserData();
+              },
 
+              (erro) => {
+                console.log("Erro ao atualizar endereço" + erro)
+                this.editarPerfil = false;
+              }
+            );
+        }
+    });
     }
     else{
       this.enderecoService.CreateEnderecoCliente(enderecoCliente).subscribe({

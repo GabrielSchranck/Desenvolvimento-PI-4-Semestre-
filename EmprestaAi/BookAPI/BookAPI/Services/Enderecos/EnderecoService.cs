@@ -123,11 +123,8 @@ namespace BookAPI.Services.Enderecos
 
 		public async Task UpdateEnderecoClienteAsync(Endereco endereco, int clienteId)
 		{
-            foreach(var enderecoCliente in endereco.EnderecosCliente)
-            {
-                enderecoCliente.ClienteId = clienteId;
-            }
-		}
+            await _enderecoRepository.UpdateEnderecoAsync(endereco, clienteId);
+        }
 
 		public async Task DeleteEnderecoClienteAsync(Endereco endereco, int clientId)
 		{
