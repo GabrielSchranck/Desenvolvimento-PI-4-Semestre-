@@ -1,3 +1,31 @@
 <app-user-info>
-    
+  <div class="w-full max-w-4xl mx-auto mt-6 px-4">
+
+    <!-- Cabeçalhos -->
+    <div>
+      <h1 class="text-xl font-semibold text-blue-600">Minha Carteira</h1>
+      <hr>
+    </div>
+
+    <div class="bg-white shadow-sm rounded-md p-6 flex justify-between items-center w-full max-w-4xl mx-auto mt-6">
+      <div>
+        <p class="text-gray-500 text-sm">Crédito disponível</p>
+        <p class="text-3xl font-bold text-blue-600">R$ {{ saldoDisponivel | number:'1.2-2' }}</p>
+      </div>
+      <button type="button" class="text-blue-600 border border-blue-600 hover:bg-blue-50 font-semibold px-2 md:px-4 py-1 md:py-2 rounded transition">
+        RESGATAR GIFT CARD
+      </button>
+    </div>
+
+    <div class="mt-5">
+      <h2 class="text-xl font-semibold text-blue-600">Cartões</h2>
+      @for (cartao of cartoes; track cartao.id) {
+
+      }
+      @empty {
+        <p class="text-gray-500 text-sm">Nenhum cartão encontrado.</p>
+      }
+    </div>
+
+  </div>
 </app-user-info>

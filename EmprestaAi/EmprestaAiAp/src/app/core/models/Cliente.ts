@@ -8,7 +8,7 @@ export class Cliente {
     Idade?: number;
     DataNascimento?: string;
     Senha?: string;
-    Enderecos?: EnderecoCliente[];  
+    Enderecos?: EnderecoCliente[];
 }
 
 export class EnderecoCliente{
@@ -20,4 +20,14 @@ export class EnderecoCliente{
     bairro?: string;
     cidade?: string;
     uf?: string;
+}
+
+export class Cartao{
+  id?: number;
+  clienteId?: number;
+  numeroCartao?: string;
+  numeroImpresso?: string;
+  validade?: string;
+  cvv?: string;
+  bandeira?: string;
 }

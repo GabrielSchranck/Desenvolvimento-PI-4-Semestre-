@@ -3,19 +3,22 @@ using BookAPI.Entities.Clientes;
 using BookAPI.Repositories.Clientes;
 using BookAPI.Services.Enderecos;
 using BookAPI.Services.Token;
+using BookModels.DTOs.Clientes;
 
 namespace BookAPI.Services.Clientes
 {
     public class ClienteService : IClienteService
     {
         private readonly IClienteRepository _clienteRepository;
+        
 
         public ClienteService(IClienteRepository clienteRepository)
         {
             _clienteRepository = clienteRepository;
         }
 
-        public async Task CreateEnderecoClienteAsync(Endereco endereco, int clienteId)
+		//Endereços do cliente
+		public async Task CreateEnderecoClienteAsync(Endereco endereco, int clienteId)
         {
             var result = endereco.EnderecosCliente.FirstOrDefault();
 
@@ -30,16 +33,16 @@ namespace BookAPI.Services.Clientes
 
             await _clienteRepository.CreateEnderecoCliente(enderecoCliente);
         }
-
-        public Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId)
+		public Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId)
         {
             return _clienteRepository.GetClienteEnderecosAsync(clienteId);
         }
 
+        //Cliente
         public async Task<int> GetClienteIdByTokenAsync(string token)
         {
             if (string.IsNullOrEmpty(token)) return 0;
             return (int)await TokenService.GetClientIdFromToken(token);
         }
-    }
+	}
 }

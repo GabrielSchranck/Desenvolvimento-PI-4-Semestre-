@@ -58,10 +58,12 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+builder.Services.AddScoped<ICartaoClienteRepository, CartaoClienteRepository>();
 
 //Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
+builder.Services.AddScoped<ICartaoClienteService, CartaoClienteService>();
 
 var key = Encoding.ASCII.GetBytes(Key.Secret);
 

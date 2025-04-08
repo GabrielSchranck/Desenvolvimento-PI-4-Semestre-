@@ -110,5 +110,19 @@ namespace BookAPI.mappings
 
 			return cep;
         }
+
+		public static CartaoCliente ConverterCartaoDTOParaCartaoCliente(this CartaoClienteDTO cartaoClienteDTO)
+		{
+			return new CartaoCliente
+			{
+				Id = cartaoClienteDTO.Id,
+				ClienteId = cartaoClienteDTO.ClienteId,
+				NumeroCartao = cartaoClienteDTO.NumeroCartao,
+				NomeImpresso = cartaoClienteDTO.NomeImpresso,
+				Validade = cartaoClienteDTO.Validade,
+				Cvv = cartaoClienteDTO.Cvv,
+				Bandeira = cartaoClienteDTO.Bandeira,
+			};
+		}
 	}
 }

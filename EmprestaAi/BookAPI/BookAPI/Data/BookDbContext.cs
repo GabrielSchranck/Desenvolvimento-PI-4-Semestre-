@@ -15,7 +15,7 @@ namespace BookAPI.Data
         }
 
         public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Entities.Clientes.EnderecoCliente> EnderecosClientes { get; set; }
+        public DbSet<EnderecoCliente> EnderecosClientes { get; set; }
         public DbSet<Historico> Historicos { get; set; }
         public DbSet<ItemHistorico> ItensHistoricos { get; set; }
         public DbSet<Livro> Livros { get; set; }
@@ -23,9 +23,10 @@ namespace BookAPI.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<FotoLivro> FotosLivros { get; set; }
         public DbSet<ClienteLivro> ClientesLivros { get; set; }
-        public DbSet<Entities.CEPs.Endereco> Enderecos { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
+		public DbSet<CartaoCliente> CartoesClientes { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<ItemHistorico>()
 				.HasKey(ih => ih.Id);

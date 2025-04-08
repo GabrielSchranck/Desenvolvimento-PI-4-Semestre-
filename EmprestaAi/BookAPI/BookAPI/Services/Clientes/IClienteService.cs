@@ -1,5 +1,6 @@
 ﻿using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
+using BookModels.DTOs.Clientes;
 
 namespace BookAPI.Services.Clientes
 {

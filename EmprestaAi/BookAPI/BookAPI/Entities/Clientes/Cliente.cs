@@ -42,5 +42,6 @@ namespace BookAPI.Entities.Clientes
         public ICollection<EnderecoCliente> Enderecos { get; set; } = new List<EnderecoCliente>();
         public ICollection<ClienteLivro> ClientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<Historico> Historicos { get; set; } = new List<Historico>();
-    }
+        public ICollection<CartaoCliente> CartaoClientes { get; set; } = new List<CartaoCliente>();
+	}
 }
