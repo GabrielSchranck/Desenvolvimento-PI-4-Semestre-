@@ -53,10 +53,10 @@ export class CarteiraService {
     return this.httpCliente.get<any>(apiUrl, httpOptions);
   }
 
-  // public async CreateCartao(cartao: Cartao): Promise<Observable<void>> {
-  //   const apiUrl = `${this.url}/create`;
-  //   const httpOptions = this.getHttpOptionsWithBody(cartao);
+  public async CreateCartao(cartao: Cartao): Promise<Observable<void>>{
+    const apiUrl = `${this.url}/create`;
+    const httpOptions = this.getHttpOptions();
 
-  //   return this.httpCliente.post<void>(apiUrl, cartao, httpOptions);
-  // }
+    return this.httpCliente.post<void>(apiUrl, cartao, httpOptions);
+  }
 }

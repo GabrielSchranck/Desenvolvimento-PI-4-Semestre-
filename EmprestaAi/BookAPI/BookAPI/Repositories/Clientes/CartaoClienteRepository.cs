@@ -28,8 +28,15 @@ namespace BookAPI.Repositories.Clientes
 
 		public async Task<IEnumerable<CartaoCliente>> GetAllAsync(int clienteId)
 		{
-			return await this._dbContext.CartoesClientes.Where(c => c.ClienteId == clienteId).ToListAsync();
-		}
+			var cartaoCliente =  await this._dbContext.CartoesClientes.Where(c => c.ClienteId == clienteId).ToListAsync();
+
+			if(cartaoCliente.Count != 0)
+			{
+				return cartaoCliente;
+			}
+
+            return null;
+        }
 
 		public async Task<CartaoCliente> GetByIdAsync(int cartaoId)
 		{

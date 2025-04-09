@@ -7,6 +7,8 @@ import { LivrosComponent } from './Pages/livros/livros.component';
 import { CarrinhoComponent } from './Pages/carrinho/carrinho.component';
 import { FavoritosComponent } from './Pages/favoritos/favoritos.component';
 import { FinanceiroComponent } from './Pages/financeiro/financeiro.component';
+import { GoogleSingInComponent } from './Pages/google-sing-in/google-sing-in.component';
+
 
 export const routes: Routes = [
     { path: "", component: HomeComponent },
@@ -16,5 +18,6 @@ export const routes: Routes = [
     { path: "livros", component: LivrosComponent },
     { path: "login", component: LoginComponent },
     { path: "perfil", component: PerfilComponent },
-    { path: "register", component: RegisterComponent }
+    { path: "register", component: RegisterComponent },
+    { path: "googleSingIn", component: GoogleSingInComponent}
 ];

@@ -55,9 +55,9 @@ export class EnderecoService {
 
   public CreateEnderecoCliente(endereco: Endereco): Observable<void> {
     const apiUrl = `${this.url}/create`;
-    const httpOptions = this.getHttpOptions();
+    const httpOptions = this.getHttpOptionsWithBody(endereco);
 
-    return this.httpCliente.post<void>(apiUrl, endereco, httpOptions);;
+    return this.httpCliente.post<void>(apiUrl, httpOptions);;
   }
 
   public DeleteEnderecoCliente(endereco: Endereco): Observable<void> {
