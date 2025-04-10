@@ -90,7 +90,7 @@ namespace BookAPI.mappings
 		{
 			var cep = new Endereco
 			{
-				Id = enderecoDTO.EnderecoId,
+				Id = enderecoDTO.EnderecoId ?? 0,
 				CodigoCep = enderecoDTO.Cep,
                 Bairro = enderecoDTO.Bairro,
                 Cidade = enderecoDTO.Cidade,
@@ -100,10 +100,10 @@ namespace BookAPI.mappings
                 {
                     new EnderecoCliente
 					{
-						Numero = enderecoDTO.Numero,
-                        ClienteId = enderecoDTO.ClienteId,
+						Numero = enderecoDTO.Numero ?? 0,
+						ClienteId = enderecoDTO.ClienteId ?? 0,
                         Complemento = enderecoDTO.Complemento,
-						Id = enderecoDTO.Id,
+						Id = enderecoDTO.Id ?? 0,
                     }
                 }
             };

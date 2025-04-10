@@ -48,8 +48,8 @@ namespace BookAPI.Controllers
             }
         }
 
-        [HttpPost("create")]
-        public async Task<ActionResult> CreateEndereco([FromBody] EnderecoDTO enderecoDTO)
+		[HttpPost("create")]
+        public async Task<ActionResult> CreateEndereco([FromBody] EnderecoDTO endereco)
         {
             try
             {
@@ -58,9 +58,9 @@ namespace BookAPI.Controllers
 
                 int clienteId = (int)await TokenService.GetClientIdFromToken(token);
 
-                var endereco = enderecoDTO.ConverterEnderecoDTOParaEndereco();
+                var enderecoConvertido = endereco.ConverterEnderecoDTOParaEndereco();
 
-                await _enderecoService.CreateEnderecoCliente(endereco, clienteId);
+                await _enderecoService.CreateEnderecoCliente(enderecoConvertido, clienteId);
 
 				return Ok(new { message = "Endereço cadastrado com sucesso" });
 
