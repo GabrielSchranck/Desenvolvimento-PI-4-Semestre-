@@ -8,11 +8,11 @@ namespace BookModels.DTOs.Clientes
 {
     public class CartaoClienteDTO
     {
-		public int Id { get; set; }
-		public int ClienteId { get; set; }
+		public int? Id { get; set; } = 0;
+		public int? ClienteId { get; set; } = 0;
 		public string? NumeroCartao { get; set; } = string.Empty;
 		public string? NomeImpresso { get; set; } = string.Empty;
-		public DateTime Validade { get; set; }
+		public string? Validade { get; set; } = string.Empty;
 		public string? Cvv { get; set; } = string.Empty;
 		public string? Bandeira { get; set; } = string.Empty;
 	}

@@ -23,10 +23,10 @@ export class EnderecoCliente{
 }
 
 export class Cartao{
-  id?: number;
-  clienteId?: number;
+  id?: number = 0;
+  clienteId?: number = 0;
   numeroCartao?: string;
-  numeroImpresso?: string;
+  nomeImpresso?: string;
   validade?: string;
   cvv?: string;
   bandeira?: string;

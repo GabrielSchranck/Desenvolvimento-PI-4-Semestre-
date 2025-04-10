@@ -6,7 +6,7 @@
 		public int ClienteId { get; set; }
 		public string? NumeroCartao { get; set; } = string.Empty;
 		public string? NomeImpresso { get; set; } = string.Empty;
-		public DateTime Validade { get; set; }
+		public string Validade { get; set; } = string.Empty;
 		public string? Cvv { get; set; } = string.Empty;
 		public string? Bandeira { get; set; } = string.Empty;
 

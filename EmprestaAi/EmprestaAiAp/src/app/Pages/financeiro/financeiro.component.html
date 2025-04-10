@@ -17,29 +17,61 @@
       </button>
     </div>
 
-    <div class="mt-5">
-      <h2 class="text-xl font-semibold text-blue-600">Cartões</h2>
-      @for (cartao of cartoes; track cartao.id) {
+    <div class="mt-5 flex flex-col items-center md:justofy-start md:items-start">
+      <div class="flex flex-row w-full justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-blue-600">Cartões</h2>
 
-      }
-      @empty {
-        <p class="text-gray-500 text-sm">Nenhum cartão encontrado.</p>
-      }
-    </div>
+        <div class="flex justify-start sm:justify-center">
+          <button
+            type="button"
+            (click)="AlteraModal()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center gap-2 hover:cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Adicionar cartão
+          </button>
+        </div>
+      </div>
+      <div class="relative w-full mx-auto px-4">
 
-    <div class="mt-4">
-      <button
-        type="button"
-        (click)="AlteraModal()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center gap-2 hover:cursor-pointer"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-        Adicionar cartão
-      </button>
+        <!-- Carrossel de Cartões -->
+        <div #carousel class="flex gap-4 overflow-x-auto scroll-smooth no-scrollbar py-2">
+          @for (cartao of cartoes; track cartao.id) {
+            <div
+              class="min-w-[18rem] h-40 bg-white border border-blue-300 rounded-xl p-5 shadow hover:shadow-lg transition-shadow duration-300 flex-shrink-0 flex flex-col justify-between relative"
+            >
+              <div>
+                <div class="text-lg tracking-widest font-semibold text-gray-800 text-start">
+                  {{ cartao.numeroCartao }}
+                </div>
+                <div class="text-sm mt-2 uppercase font-medium text-gray-700 text-left">
+                  {{ cartao.nomeImpresso }}
+                </div>
+                <div class="flex justify-start gap-20 text-sm text-gray-600 mt-1">
+                  <span>{{ cartao.validade }}</span>
+                </div>
+              </div>
+
+              <button
+                (click)="excluirCartao(cartao)"
+                class="text-red-500 text-sm hover:underline mt-4 self-start"
+              >
+                Remover
+              </button>
+            </div>
+          }
+          @empty {
+            <p class="text-gray-500 text-sm">Nenhum cartão encontrado.</p>
+          }
+
+        </div>
+      </div>
+
+
+
     </div>
-    
 
     @if (modalAberto) {
       <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -47,7 +79,7 @@
           <!-- Lado esquerdo: Formulário -->
           <div class="w-1/2 flex flex-col">
             <h2 class="text-xl font-semibold mb-4">Adicionar Cartão</h2>
-            
+
             <form [formGroup]="formularioCartao" class="space-y-6">
               <!-- Número do cartão -->
               <div class="relative">
@@ -58,26 +90,26 @@
                   id="numeroCartao"
                   type="text"
                   formControlName="numeroCartao"
-                  maxlength="19" 
+                  maxlength="19"
                   class="w-full border border-blue-500 text-blue-700 rounded-md px-3 pt-4 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  (input)="formatarCartao()"
+                  (input)="formatarNumeroCartao()"
                 />
               </div>
-              
-      
+
+
               <!-- Nome impresso -->
               <div class="relative">
-                <label for="numeroImpresso" class="absolute -top-2 left-3 bg-white text-blue-600 px-1 text-sm font-medium z-10">
+                <label for="nomeImpresso" class="absolute -top-2 left-3 bg-white text-blue-600 px-1 text-sm font-medium z-10">
                   Nome impresso no cartão
                 </label>
                 <input
-                  id="numeroImpresso"
+                  id="nomeImpresso"
                   type="text"
-                  formControlName="numeroImpresso"
-                  class="w-full border border-blue-500 text-blue-700 rounded-md px-3 pt-4 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  formControlName="nomeImpresso"
+                  class="w-full border border-blue-500 text-blue-700 rounded-md px-3 pt-4 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
                 />
               </div>
-      
+
               <!-- Validade e CVV -->
               <div class="flex gap-4">
                 <div class="relative w-1/2">
@@ -88,6 +120,7 @@
                     id="validade"
                     type="text"
                     formControlName="validade"
+                    (input)="formatarDataValidade()"
                     class="w-full border border-blue-500 text-blue-700 rounded-md px-3 pt-4 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -98,12 +131,16 @@
                   <input
                     id="cvv"
                     type="text"
+                    maxlength="3"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                     formControlName="cvv"
                     class="w-full border border-blue-500 text-blue-700 rounded-md px-3 pt-4 pb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+
                 </div>
               </div>
-      
+
               <!-- Botões -->
               <div class="flex gap-4 mt-6">
                 <button
@@ -113,7 +150,7 @@
                 >
                   Salvar
                 </button>
-              
+
                 <button
                   class="flex-1 bg-red-500 text-white rounded-md hover:bg-red-600 shadow transition duration-300 py-2 px-4"
                   (click)="AlteraModal()"
@@ -121,10 +158,10 @@
                   Fechar
                 </button>
               </div>
-              
+
             </form>
           </div>
-      
+
           <!-- Lado direito: Pré-visualização do cartão -->
           <div class="w-full md:w-1/2 flex items-center justify-center">
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-3xl shadow-2xl w-full p-8 max-w-md h-56 md:h-64 flex flex-col justify-between">
@@ -134,12 +171,12 @@
                   {{ formularioCartao.get('numeroCartao')?.value || '•••• •••• •••• ••••' }}
                 </p>
               </div>
-          
+
               <div class="flex justify-between items-end text-xs md:text-sm">
                 <div>
                   <p class="mb-1">Nome</p>
                   <p class="uppercase font-medium">
-                    {{ formularioCartao.get('numeroImpresso')?.value || 'NOME IMPRESSO' }}
+                    {{ formularioCartao.get('nomeImpresso')?.value || 'NOME IMPRESSO' }}
                   </p>
                 </div>
                 <div class="text-right">
@@ -151,13 +188,8 @@
               </div>
             </div>
           </div>
-          
-
         </div>
       </div>
-      
     }
-    
-
   </div>
 </app-user-info>

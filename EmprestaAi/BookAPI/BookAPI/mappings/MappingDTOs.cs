@@ -115,8 +115,8 @@ namespace BookAPI.mappings
 		{
 			return new CartaoCliente
 			{
-				Id = cartaoClienteDTO.Id,
-				ClienteId = cartaoClienteDTO.ClienteId,
+				Id = cartaoClienteDTO.Id ?? 0,
+				ClienteId = cartaoClienteDTO.ClienteId ?? 0,
 				NumeroCartao = cartaoClienteDTO.NumeroCartao,
 				NomeImpresso = cartaoClienteDTO.NomeImpresso,
 				Validade = cartaoClienteDTO.Validade,

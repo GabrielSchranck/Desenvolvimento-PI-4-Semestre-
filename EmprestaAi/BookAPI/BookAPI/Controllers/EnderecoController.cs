@@ -27,11 +27,12 @@ namespace BookAPI.Controllers
 
             try
             {
+
                 var endereco = await _enderecoService.GetEnderecoByApi(cep);
 
-                if (endereco.Cidade == null)
+                if (endereco == null)
                 {
-                    return BadRequest("Não foi possível encontrar um endereço");
+                    return BadRequest("Não foi possível encontrar o endereço");
                 }
                 return Ok(new
                 {

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -58,5 +58,14 @@ export class CarteiraService {
     const httpOptions = this.getHttpOptions();
 
     return this.httpCliente.post<void>(apiUrl, cartao, httpOptions);
+  }
+
+  public async DeleteCartao(cartao: Cartao): Promise<Observable<void>>{
+    const apiUrl = `${this.url}/delete`;
+    const httpOptions = this.getHttpOptionsWithBody(cartao);
+
+    return this.httpCliente.request<void>('DELETE', apiUrl, httpOptions).pipe(
+      map(() => void 0)
+    );
   }
 }
