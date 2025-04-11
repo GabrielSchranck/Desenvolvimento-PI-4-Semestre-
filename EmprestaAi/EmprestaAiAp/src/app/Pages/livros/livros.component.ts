@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
+import { LivrosDTO } from '../../core/models/Livros';
 
 @Component({
   selector: 'app-livros',
@@ -8,5 +9,6 @@ import { UserInfoComponent } from "../../MainPages/user-info/user-info.component
   styleUrl: './livros.component.css'
 })
 export class LivrosComponent {
-
+  livros: LivrosDTO[] = [];
+  livrosEmprestados: LivrosDTO[] = [];
 }

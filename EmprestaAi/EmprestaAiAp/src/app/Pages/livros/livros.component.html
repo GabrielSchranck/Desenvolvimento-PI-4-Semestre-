@@ -1,3 +1,32 @@
 <app-user-info>
-    
+    <div class="w-full max-w-4xl mx-auto px-4 mt-6">
+      <div>
+        <h1 class="text-xl font-semibold text-blue-600">Meus livros</h1>
+        <hr>
+      </div>
+
+      <!-- Livros -->
+      <div>
+        @for (item of livros; track $index) {
+
+        }
+        @empty {
+          <div class="flex flex-col mt-4 h-64">
+            <p class="text-gray-500">Nenhum livro encontrado.</p>
+          </div>
+        }
+      </div>
+
+      <!-- Livros emprestados -->
+      <div>
+        @for (item of livrosEmprestados; track $index) {
+
+        }
+        @empty {
+          <div class="flex flex-col mt-4 h-64">
+            <p class="text-gray-500">Nenhum livro emprestado.</p>
+          </div>
+        }
+      </div>
+    </div>
 </app-user-info>
