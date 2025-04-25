@@ -27,7 +27,6 @@ namespace BookAPI.Controllers
 
             try
             {
-
                 var endereco = await _enderecoService.GetEnderecoByApi(cep);
 
                 if (endereco == null)

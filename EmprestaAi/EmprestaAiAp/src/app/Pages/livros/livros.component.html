@@ -1,12 +1,23 @@
 <app-user-info>
     <div class="w-full max-w-4xl mx-auto px-4 mt-6">
-      <div>
+      <div class="flex justify-between items-center border-b border-gray-300 pb-4 w-full">
         <h1 class="text-xl font-semibold text-blue-600">Meus livros</h1>
-        <hr>
+        <div>
+          <button
+            type="button"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow-md hover:shadow-lg transition duration-200"
+          >
+            📖 Adicionar Livro
+          </button>
+        </div>
+
+
       </div>
 
+      <hr>
+
       <!-- Livros -->
-      <div>
+      <div class="flex flex rows flex-wrap gap-4 mt-4">
         @for (item of livros; track $index) {
 
         }
@@ -15,6 +26,7 @@
             <p class="text-gray-500">Nenhum livro encontrado.</p>
           </div>
         }
+
       </div>
 
       <!-- Livros emprestados -->

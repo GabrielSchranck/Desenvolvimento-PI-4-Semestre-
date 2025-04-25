@@ -13,9 +13,46 @@ namespace BookAPI.Repositories.Livros
 			this._dbContext = dbContext;
         }
 
-        public async Task<Livro> GetItem(int id)
+		public async Task CreateAsync(Livro livro)
 		{
-			return await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == id);
+			if(livro != null)
+			{
+				await _dbContext.AddAsync(livro);
+				await _dbContext.SaveChangesAsync();
+			}
+		}
+
+		public async Task DeleteAsync(Livro livro)
+		{
+			if(livro != null)
+			{
+				_dbContext.Remove(livro);
+				await _dbContext.SaveChangesAsync();
+			}
+		}
+
+		public async Task<IEnumerable<Livro>> GetAllAsync()
+		{
+			return await _dbContext.Livros.ToListAsync();
+		}
+
+		public async Task UpdateAsync(Livro livro)
+		{
+			if(livro != null)
+			{
+				var newBook = await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == livro.Id);
+
+				if(newBook != null)
+				{
+					newBook.Valor = livro.Valor;
+					newBook.Quantidade = livro.Quantidade;
+					newBook.Custo = livro.Custo;
+
+					_dbContext.Livros.Update(newBook);
+
+					await _dbContext.SaveChangesAsync();
+				}
+			}
 		}
 	}
 }

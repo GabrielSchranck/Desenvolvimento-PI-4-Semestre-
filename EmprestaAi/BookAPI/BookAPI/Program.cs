@@ -4,6 +4,7 @@ using BookAPI.Repositories.Enderecos;
 using BookAPI.Repositories.Livros;
 using BookAPI.Services.Clientes;
 using BookAPI.Services.Enderecos;
+using BookAPI.Services.Livros;
 using BookAPI.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,7 @@ builder.Services.AddScoped<ICartaoClienteRepository, CartaoClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<ICartaoClienteService, CartaoClienteService>();
+builder.Services.AddScoped<ILivroServices, LivroServices>();
 
 var key = Encoding.ASCII.GetBytes(Key.Secret);
 

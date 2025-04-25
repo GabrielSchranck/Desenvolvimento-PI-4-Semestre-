@@ -4,6 +4,9 @@ namespace BookAPI.Repositories.Livros
 {
 	public interface ILivroRepository
 	{
-		Task<Livro> GetItem(int id);
+		Task<IEnumerable<Livro>> GetAllAsync();
+		Task CreateAsync(Livro livro);
+		Task UpdateAsync(Livro livro);
+		Task DeleteAsync(Livro livro);
 	}
 }

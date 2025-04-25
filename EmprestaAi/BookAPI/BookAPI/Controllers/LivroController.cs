@@ -1,33 +1,21 @@
 ﻿using BookAPI.mappings;
 using BookAPI.Repositories.Livros;
+using BookAPI.Services.Livros;
 using BookModels.DTOs.Livros;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookAPI.Controllers
 {
+	[Authorize]
 	[Route("api/[Controller]")]
 	[ApiController]
 	public class LivroController : ControllerBase
 	{
-		private readonly ILivroRepository _repository;
+		private readonly ILivroServices livroServices;
 
-		[HttpGet("{id:int}")]
-		public async Task<ActionResult<LivroDTO>> GetItem(int id)
-		{
-			try
-			{
-				var livro = await _repository.GetItem(id);
+		//Crud
 
-				if (livro == null) return NotFound();
-
-				var livroDTO = livro.ConverterLivroParaLivroDTO();
-
-				return Ok(livroDTO);
-			}
-			catch(Exception)
-			{
-				return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
-			}
-		}
+		
 	}
 }

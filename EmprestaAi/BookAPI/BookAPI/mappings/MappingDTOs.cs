@@ -92,24 +92,24 @@ namespace BookAPI.mappings
 			{
 				Id = enderecoDTO.EnderecoId ?? 0,
 				CodigoCep = enderecoDTO.Cep,
-                Bairro = enderecoDTO.Bairro,
-                Cidade = enderecoDTO.Cidade,
-                Uf = enderecoDTO.Uf,
-                Logradouro = enderecoDTO.Rua,
-                EnderecosCliente = new List<EnderecoCliente>
-                {
-                    new EnderecoCliente
+				Bairro = enderecoDTO.Bairro,
+				Cidade = enderecoDTO.Cidade,
+				Uf = enderecoDTO.Uf,
+				Logradouro = enderecoDTO.Rua,
+				EnderecosCliente = new List<EnderecoCliente>
+				{
+					new EnderecoCliente
 					{
 						Numero = enderecoDTO.Numero ?? 0,
 						ClienteId = enderecoDTO.ClienteId ?? 0,
-                        Complemento = enderecoDTO.Complemento,
+						Complemento = enderecoDTO.Complemento,
 						Id = enderecoDTO.Id ?? 0,
-                    }
-                }
-            };
+					}
+				}
+			};
 
 			return cep;
-        }
+		}
 
 		public static CartaoCliente ConverterCartaoDTOParaCartaoCliente(this CartaoClienteDTO cartaoClienteDTO)
 		{
@@ -122,6 +122,18 @@ namespace BookAPI.mappings
 				Validade = cartaoClienteDTO.Validade,
 				Cvv = cartaoClienteDTO.Cvv,
 				Bandeira = cartaoClienteDTO.Bandeira,
+			};
+		}
+		public static Livro ConverteLivroDTOParaLivro(this LivroDTO LivroDTO)
+		{
+			return new Livro
+			{
+				Id = LivroDTO.Id ?? 0,
+				AutorId = LivroDTO.AutorId ?? 0,
+				Titulo = LivroDTO.Titulo ?? "",
+				Custo = LivroDTO.Custo ?? 0,
+				QtdPaginas = LivroDTO.QtdPaginas ?? 0,
+				Quantidade = LivroDTO.Quantidade ?? 0,
 			};
 		}
 	}
