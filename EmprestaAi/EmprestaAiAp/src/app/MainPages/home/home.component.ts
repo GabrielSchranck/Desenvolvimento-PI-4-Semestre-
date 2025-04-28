@@ -11,6 +11,7 @@ import { CardsComponent } from "../../Shered/cards/cards.component";
 export class HomeComponent implements OnInit, OnDestroy {
   currentSlide = 0;
   private slideInterval: any;
+  dropdownOpen = false;
 
   ngOnInit() {
     this.startSlideShow();
@@ -27,4 +28,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.currentSlide = (this.currentSlide + 1) % 4;
     }, 5000);
   }
+
+  public toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
 }

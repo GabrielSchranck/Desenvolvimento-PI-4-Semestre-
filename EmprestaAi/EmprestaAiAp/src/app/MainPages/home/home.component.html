@@ -34,24 +34,52 @@
 
   <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
 
-  <div class="flex items-center justify-center py-4 md:py-8 flex-wrap">
-    <button type="button" class="text-blue-700 hover:text-white border border-blue-600 bg-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3">All categories</button>
-    <button type="button" class="text-gray-900 border border-white hover:border-gray-200 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3">Shoes</button>
-    <button type="button" class="text-gray-900 border border-white hover:border-gray-200 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3">Bags</button>
-    <button type="button" class="text-gray-900 border border-white hover:border-gray-200 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3">Electronics</button>
-    <button type="button" class="text-gray-900 border border-white hover:border-gray-200 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3">Gaming</button>
+  <div class="flex items-center justify-center py-2 md:py-8 flex-wrap gap-4">
+
+    <button type="button"
+      class="text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center">
+      Série
+    </button>
+
+    <button type="button"
+      class="text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center">
+      Solo
+    </button>
+
+    <div class="relative">
+      <button type="button"
+        class="flex items-center justify-between w-full md:w-auto text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center"
+        (click)="toggleDropdown()">
+        Selecionar categoria
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+
+      @if (dropdownOpen) {
+        <div class="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg">
+          <ul class="py-2 text-sm text-gray-700">
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Fantasia</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Romance</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Terror</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Ficção científica</a></li>
+          </ul>
+        </div>
+      }
+
+    </div>
   </div>
 
-  <div class="px-8 py-6">
-    <h2 class="text-3xl font-extrabold text-white px-8 py-4">Livros mais vendidos</h2>
+  <div class="bg-gray-100 p-8">
+    <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros mais vendidos</h2>
+
+    <app-cards></app-cards>
+
+    <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros de romance</h2>
 
     <app-cards></app-cards>
   </div>
 
-  <div class="px-8 py-4">
-    <h2 class="text-3xl font-extrabold text-white px-8 py-6">Livros de romance</h2>
-
-    <app-cards></app-cards>
-  </div>
 
 </main>
