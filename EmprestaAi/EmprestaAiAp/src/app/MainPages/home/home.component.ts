@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavbarComponent } from "../../Shered/navbar/navbar.component";
+import { CardsComponent } from "../../Shered/cards/cards.component";
 
 @Component({
   selector: 'app-home',
-  imports: [NavbarComponent],
+  imports: [NavbarComponent, CardsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

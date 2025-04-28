@@ -1,0 +1,63 @@
+<div class="relative w-full mx-auto px-4">
+  @if (!isMobile) {
+    <button (click)="scrollManual(-cardWidth)"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/80 text-white p-3 rounded-full hover:bg-black transition-all duration-200 shadow-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+  }
+
+  <div #cardContainer
+       class="flex overflow-x-auto scroll-smooth snap-x pb-8 hide-scrollbar cursor-grab active:cursor-grabbing select-none"
+       (mousedown)="onMouseDown($event)"
+       (touchstart)="onMouseDown($event)"
+       (mousemove)="onMouseMove($event)"
+       (touchmove)="onMouseMove($event)"
+       (mouseup)="onMouseUp()"
+       (mouseleave)="onMouseUp()"
+       (touchend)="onMouseUp()">
+
+    <div class="flex gap-6 px-4">
+      @for (card of cards; track card.id) {
+        <div class="snap-start flex-shrink-0 w-[300px] md:w-[350px] bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-all duration-200">
+          <div class="relative w-full h-48 md:h-56 bg-gray-100 overflow-hidden">
+            <img [src]="card.image" [alt]="card.title"
+                 class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+          </div>
+
+          <div class="p-5 md:p-6">
+            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 line-clamp-1">{{ card.title }}</h3>
+            <p class="text-gray-600 text-sm mb-2">{{ card.author }}</p>
+
+            <div class="flex items-center mb-3">
+              @for (star of [1,2,3,4,5]; track star) {
+                <span class="text-yellow-400 text-lg" [class.text-gray-300]="star > card.rating">★</span>
+              }
+              <span class="ml-2 text-sm text-gray-500">({{ card.rating }}.0)</span>
+            </div>
+
+            <p class="text-xl font-bold text-blue-700 mb-3">{{ card.price }}</p>
+
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+              {{ card.description }}
+            </p>
+
+            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 px-4 transition-colors duration-200">
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (!isMobile) {
+    <button (click)="scrollManual(cardWidth)"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/80 text-white p-3 rounded-full hover:bg-black transition-all duration-200 shadow-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  }
+</div>
