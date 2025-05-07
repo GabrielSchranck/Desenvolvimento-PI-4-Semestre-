@@ -74,10 +74,10 @@
     </div>
 
     @if (modalAberto) {
-      <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black/50 flex flex-col md:flex-row items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl flex flex-row gap-8">
           <!-- Lado esquerdo: Formulário -->
-          <div class="w-1/2 flex flex-col">
+          <div class="w-full md:w-1/2 flex flex-col">
             <h2 class="text-xl font-semibold mb-4">Adicionar Cartão</h2>
 
             <form [formGroup]="formularioCartao" class="space-y-6">

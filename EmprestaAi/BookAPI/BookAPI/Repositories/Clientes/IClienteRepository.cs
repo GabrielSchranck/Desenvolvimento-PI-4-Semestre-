@@ -9,6 +9,7 @@ namespace BookAPI.Repositories.Clientes
         Task<IEnumerable<Cliente>> GetAllClientAsync();
         Task<bool> GetByCpfAsync(string cpf);
         Task<bool> GetByEmailAsync(string email);
+        Task<Cliente> GetClienteByEmailAsync(string email);
         Task<Cliente> Login(string email, string senha);
         Task<Cliente> GetByIdAsync(int id);
         Task Update(Cliente cliente);

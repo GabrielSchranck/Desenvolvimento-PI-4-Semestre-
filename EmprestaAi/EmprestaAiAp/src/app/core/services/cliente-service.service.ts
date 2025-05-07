@@ -101,4 +101,11 @@ export class ClienteService {
     const apiUrl = `${this.url}/${id}`;
     return this.http.delete<number>(apiUrl, httpOptions);
   }
+
+  loginWithGoogle(idToken: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(
+      `${this.url}/google-login`,
+      { idToken }
+    );
+  }
 }
