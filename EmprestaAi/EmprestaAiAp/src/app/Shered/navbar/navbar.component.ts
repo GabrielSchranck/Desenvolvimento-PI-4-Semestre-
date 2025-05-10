@@ -12,21 +12,19 @@ import { firstValueFrom, Observable } from 'rxjs';
 export class NavbarComponent implements OnInit {
 
   logado: boolean = false;
+  nomeCliente: string = "Nome do cliente";
 
   constructor(private auth: AuthService, private router: Router){}
 
   async ngOnInit(): Promise<void> {
     this.logado = await this.isLoggedIn();
-    console.log("Estado = " + this.logado);
   }
   
   private async isLoggedIn(): Promise<boolean> {
     try {
       const logado = await firstValueFrom(this.auth.isLoggedIn());
-      console.log(logado);
       return logado;
     } catch (error) {
-      console.error("Erro ao verificar login:", error);
       return false;
     }
   }

@@ -276,7 +276,6 @@ export class PerfilComponent implements OnInit{
   }
 
   public adicionaEnderecoClick(): void{
-
     this.formularioEndereco.patchValue({
       cep: "",
       rua: "",
