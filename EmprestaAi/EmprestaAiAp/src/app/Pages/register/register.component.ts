@@ -5,10 +5,11 @@ import { ClienteService } from '../../core/services/cliente-service.service';
 import { Router, RouterModule } from '@angular/router';
 import { Cliente } from '../../core/models/Cliente';
 import { cpf } from 'cpf-cnpj-validator';
+import { InputsComponent } from '../../Shered/inputs/inputs.component';
 
 @Component({
   selector: 'app-register',
-  imports: [UserAcessComponent, ReactiveFormsModule, RouterModule],
+  imports: [UserAcessComponent, ReactiveFormsModule, RouterModule, InputsComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
