@@ -7,10 +7,11 @@ import Swal from 'sweetalert2';
 import { EnderecoService } from '../../core/services/endereco.service';
 import { Endereco } from '../../core/models/Endereco';
 import { CommonModule } from '@angular/common';
+import { InputsComponent } from '../../Shered/inputs/inputs.component';
 
 @Component({
   selector: 'app-perfil',
-  imports: [UserInfoComponent, ReactiveFormsModule, CommonModule],
+  imports: [UserInfoComponent, ReactiveFormsModule, CommonModule, InputsComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
@@ -276,7 +277,6 @@ export class PerfilComponent implements OnInit{
   }
 
   public adicionaEnderecoClick(): void{
-
     this.formularioEndereco.patchValue({
       cep: "",
       rua: "",

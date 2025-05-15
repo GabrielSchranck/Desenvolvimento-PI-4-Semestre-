@@ -7,11 +7,15 @@ using BookAPI.Services.Clientes;
 using BookAPI.Services.Token;
 using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Google.Apis.Auth;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using BookAPI.Entities.CEPs;
+using Optivem.Framework.Core.Domain;
+using Optivem.Framework.Core.Common.Http;
 
 namespace BookAPI.Controllers
 {
@@ -24,12 +28,14 @@ namespace BookAPI.Controllers
         private IAutenticadorClienteService _autenticadorClienteService;
         private IEnderecoRepository _enderecoRepository;
         private IClienteService _clienteService;
+        private readonly IConfiguration _configuration;
 
-        public ClienteController(IClienteRepository repository, IClienteService clienteService)
+        public ClienteController(IClienteRepository repository, IClienteService clienteService, IConfiguration configuration)
         {
             _repository = repository;
             _clienteService = clienteService;
             _autenticadorClienteService = new AutenticadorClienteService(this._repository);
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -70,23 +76,23 @@ namespace BookAPI.Controllers
 
             foreach (var endereco in enderecosList)
             {
-                foreach(var enderecoCliente in endereco.EnderecosCliente)
+                foreach (var enderecoCliente in endereco.EnderecosCliente)
                 {
-					var enderecoDTO = new EnderecoDTO
-					{
-						Id = enderecoCliente.Id,
+                    var enderecoDTO = new EnderecoDTO
+                    {
+                        Id = enderecoCliente.Id,
                         EnderecoId = endereco.Id,
-						Rua = endereco.Logradouro,
-						Bairro = endereco.Bairro,
-						Cidade = endereco.Cidade,
-						Uf = endereco.Uf,
-						Cep = endereco.CodigoCep,
-						Complemento = enderecoCliente.Complemento,
-						Numero = enderecoCliente.Numero
-					};
+                        Rua = endereco.Logradouro,
+                        Bairro = endereco.Bairro,
+                        Cidade = endereco.Cidade,
+                        Uf = endereco.Uf,
+                        Cep = endereco.CodigoCep,
+                        Complemento = enderecoCliente.Complemento,
+                        Numero = enderecoCliente.Numero
+                    };
 
-					enderecosCliente.Add(enderecoDTO);
-				}
+                    enderecosCliente.Add(enderecoDTO);
+                }
             }
 
             return Ok(new
@@ -100,8 +106,8 @@ namespace BookAPI.Controllers
                     cliente.Idade,
                     cliente.DDD,
                     cliente.Contato,
-					dataNascimento
-				},
+                    dataNascimento
+                },
                 enderecos = enderecosCliente
             });
         }
@@ -132,6 +138,50 @@ namespace BookAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+
+
+        [AllowAnonymous]
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest req)
+        {
+            if (string.IsNullOrEmpty(req.IdToken))
+                return BadRequest("idToken não informado.");
+
+            try
+            {
+                
+                var settings = new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new[] { _configuration["Authentication:Google:ClientId"] },
+                    IssuedAtClockTolerance = TimeSpan.FromMinutes(2)
+                };
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(req.IdToken, settings);
+
+                var cliente = await _repository.GetClienteByEmailAsync(payload.Email);
+
+                if (cliente == null)
+                {
+                    cliente = new Cliente
+                    {
+                        Nome = payload.Name,
+                        Email = payload.Email,
+
+                    };
+                    await _repository.Create(cliente);
+                }
+
+                var token = TokenService.GenerateToken(cliente);
+
+                return Ok(new { token = token.Token });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpPost("create")]
@@ -206,7 +256,7 @@ namespace BookAPI.Controllers
                 var cliente = clienteDTO.ConverterClienteDTOParaCliente();
                 cliente.Id = clienteId;
 
-                if(cliente == null) return BadRequest("Cliente não pode ser nulo");
+                if (cliente == null) return BadRequest("Cliente não pode ser nulo");
 
                 await _repository.Update(cliente);
 

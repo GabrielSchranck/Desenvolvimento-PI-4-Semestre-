@@ -50,6 +50,12 @@ namespace BookAPI.Repositories.Clientes
 		{
 			return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
 		}
+
+        public Task<Cliente> GetClienteByEmailAsync(string email)
+        {
+            return _context.Clientes.FirstOrDefaultAsync(c => c.Email == email);
+        }
+
         public async Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId)
         {
             return await _context.Enderecos.Where(c => c.EnderecosCliente.Any(e => e.ClienteId == clienteId)).Include(c => c.EnderecosCliente).ToListAsync();

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { NavbarComponent } from "../../Shered/navbar/navbar.component";
 
 @Component({
-  selector: 'app-exibe-livro',
+  selector: 'app-esquci-senha',
   imports: [NavbarComponent],
-  templateUrl: './exibe-livro.component.html',
-  styleUrl: './exibe-livro.component.css'
+  templateUrl: './esquci-senha.component.html',
+  styleUrl: './esquci-senha.component.css'
 })
-export class ExibeLivroComponent {
+export class EsquciSenhaComponent {
 
 }
