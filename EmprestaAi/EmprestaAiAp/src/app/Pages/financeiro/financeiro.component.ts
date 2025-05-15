@@ -91,29 +91,15 @@ export class FinanceiroComponent implements OnInit {
 
   public formatarNumeroCartao(): void{
     let valor = this.formularioCartao.get('numeroCartao')?.value || '';
-
-    console.log("teste")
-
-    // Remove tudo que não for número
-    valor = valor.replace(/\D/g, '').substring(0, 16); // limita a 16 dígitos
-
-    // Adiciona espaço a cada 4 dígitos
+    valor = valor.replace(/\D/g, '').substring(0, 16);
     const formatado = valor.match(/.{1,4}/g)?.join(' ') || '';
-
-    // Atualiza o valor sem emitir evento (pra não causar loop ou trigger de validação)
     this.formularioCartao.get('numeroCartao')?.setValue(formatado, { emitEvent: false });
   }
 
   public formatarDataValidade(): void{
     let valor = this.formularioCartao.get('validade')?.value || '';
-
-    // Remove tudo que não for número
-    valor = valor.replace(/\D/g, '').substring(0, 4); // limita a 4 dígitos
-
-    // Adiciona espaço a cada 2 dígitos
+    valor = valor.replace(/\D/g, '').substring(0, 4);
     const formatado = valor.match(/.{1,2}/g)?.join('/') || '';
-
-    // Atualiza o valor sem emitir evento (pra não causar loop ou trigger de validação)
     this.formularioCartao.get('validade')?.setValue(formatado, { emitEvent: false });
   }
 
