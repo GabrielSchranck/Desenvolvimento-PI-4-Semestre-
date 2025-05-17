@@ -54,7 +54,7 @@ namespace BookAPI.Controllers
 				int clienteId = (int)await TokenService.GetClientIdFromToken(token);
 				var cartoes = await _cartaoClienteService.GetCartoesClienteAsync(clienteId);
 
-				if (cartoes == null) return BadRequest("Nenhum cartão encontrado");
+				if (cartoes == null) return Ok("Nenhum cartão encontrado");
 
 				return Ok(new
 				{
