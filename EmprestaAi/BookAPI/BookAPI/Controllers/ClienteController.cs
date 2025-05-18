@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using BookAPI.Entities.CEPs;
 using Optivem.Framework.Core.Domain;
 using Optivem.Framework.Core.Common.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Controllers
 {
@@ -150,7 +151,7 @@ namespace BookAPI.Controllers
 
             try
             {
-                
+
                 var settings = new GoogleJsonWebSignature.ValidationSettings
                 {
                     Audience = new[] { _configuration["Authentication:Google:ClientId"] },
@@ -205,6 +206,11 @@ namespace BookAPI.Controllers
                     cliente.Idade = await _autenticadorClienteService.GetIdadeAsync(cliente.DataNascimento);
 
                 await _repository.Create(cliente);
+
+                var verifyToken = Guid.NewGuid().ToString();
+                cliente.EmailConfirmado = false;
+
+                await _clienteService.SendEmail(verifyToken, _configuration, cliente);
 
                 var token = TokenService.GenerateToken(cliente);
 
@@ -267,5 +273,18 @@ namespace BookAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+        [HttpPost("verificar-email")]
+        public async Task<IActionResult> VerificarEmail([FromBody] string token)
+        {
+            var cliente = await _clienteService.FindByToken(token);
+
+            if (cliente == null)
+                return NotFound("Token inválido");
+
+            return Ok("E-mail verificado com sucesso.");
+        }
+
+
     }
 }

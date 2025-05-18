@@ -16,5 +16,6 @@ namespace BookModels.DTOs.Livros
 		public decimal? Custo { get; set; }
 		public int? QtdPaginas { get; set; }
 		public int? Quantidade { get; set; }
-	}
+        public string? UriImagemLivro { get; set; }
+    }
 }

@@ -9,5 +9,7 @@ namespace BookAPI.Services.Clientes
         Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId);
         Task<int> GetClienteIdByTokenAsync(string token);
         Task CreateEnderecoClienteAsync(Endereco endereco, int clienteId);
+        Task SendEmail(string token, IConfiguration configuration, Cliente cliente);
+        Task<Cliente> FindByToken(string token);
     }
 }

@@ -11,5 +11,7 @@ namespace BookAPI.Services.Livros
 		Task<IEnumerable<Livro>> GetAll(int clienteId);
 		Task Update(LivroDTO livroDTO);
 		Task Delete(LivroDTO livroDTO);
-	}
+		Task<FotoLivro> GetImgBook(string titulo);
+
+    }
 }
