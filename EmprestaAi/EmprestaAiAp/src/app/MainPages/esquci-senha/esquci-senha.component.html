@@ -1,9 +1,28 @@
-<main class="bg-gray-100 w-full p-0 m-0">
-    <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
-  
-    <div class="flex items-center justify-center py-2 md:py-8 flex-wrap gap-4">
-        <h1>Teste</h1>
-    </div>
+<main class="w-full min-h-screen p-0 m-0 bg-white sm:bg-gray-100">
+  <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
 
-  </main>
-  
+  <div class="flex items-center justify-center py-8 md:py-36 px-4 sm:px-0">
+    <div class="w-full sm:max-w-md sm:rounded-3xl sm:shadow-lg sm:bg-white p-6 min-h-full">
+      <div class="mb-6">
+        <h1 class="text-blue-700 text-2xl sm:text-3xl font-bold mb-2">Recupere sua conta</h1>
+        <hr class="border-gray-300">
+      </div>
+
+      <div class="mb-6">
+        <p class="text-base sm:text-lg text-gray-700">Insira seu email para procurar sua conta.</p>
+        <input 
+          type="email" 
+          placeholder="Digite seu email"
+          class="w-full mt-4 px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        >
+      </div>
+
+      <hr class="border-gray-300 mb-4">
+
+      <div class="flex justify-end gap-4">
+        <button class="px-4 py-2 rounded-2xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Cancelar</button>
+        <button class="px-4 py-2 rounded-2xl bg-blue-600 text-white hover:bg-blue-700 transition">Recuperar</button>
+      </div>
+    </div>
+  </div>
+</main>
