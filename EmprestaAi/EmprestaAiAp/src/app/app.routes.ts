@@ -10,6 +10,7 @@ import { FinanceiroComponent } from './Pages/financeiro/financeiro.component';
 import { GoogleSingInComponent } from './Pages/google-sing-in/google-sing-in.component';
 import { ExibeLivroComponent } from './Pages/exibe-livro/exibe-livro.component';
 import { EsquciSenhaComponent } from './MainPages/esquci-senha/esquci-senha.component';
+import { CriaLivroComponent } from './Pages/cria-livro/cria-livro.component';
 
 
 export const routes: Routes = [
@@ -23,5 +24,6 @@ export const routes: Routes = [
     { path: "register", component: RegisterComponent },
     { path: "googleSingIn", component: GoogleSingInComponent},
     { path: "exibelivro", component: ExibeLivroComponent},
-    { path: "esqueciSenha", component: EsquciSenhaComponent}
+    { path: "esqueciSenha", component: EsquciSenhaComponent},
+    { path: "registraLivro", component: CriaLivroComponent}
 ];

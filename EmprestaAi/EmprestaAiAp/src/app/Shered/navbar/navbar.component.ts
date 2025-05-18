@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service.service';
 import { firstValueFrom, Observable } from 'rxjs';
+import { Cliente } from '../../core/models/Cliente';
+import { ClienteService } from '../../core/services/cliente-service.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,12 +14,16 @@ import { firstValueFrom, Observable } from 'rxjs';
 export class NavbarComponent implements OnInit {
 
   logado: boolean = false;
-  nomeCliente: string = "Nome do cliente";
+  nomeCliente: string = ""
 
-  constructor(private auth: AuthService, private router: Router){}
+  constructor(private auth: AuthService, private router: Router, private clienteService: ClienteService){}
 
   async ngOnInit(): Promise<void> {
     this.logado = await this.isLoggedIn();
+
+    if(this.logado){
+      await this.getClienteInfos();
+    }
   }
   
   private async isLoggedIn(): Promise<boolean> {
@@ -34,5 +40,24 @@ export class NavbarComponent implements OnInit {
     this.logado = false;
     this.router.navigate(['/login']);
   }
+
+  private getClienteInfos(): void {
+  this.clienteService.GetByToken().subscribe({
+    next: (dados) => {
+      const nomeCompleto: string = dados.cliente.nome?.trim() || '';
+      const partes = nomeCompleto.split(' ').filter(p => p.length > 0);
+
+      if (partes.length > 1) {
+        this.nomeCliente = `${partes[0]} ${partes[partes.length - 1]}`;
+      } else {
+        this.nomeCliente = partes[0] || '';
+      }
+    },
+    error: (error) => {
+      console.error("Erro ao selecionar clientes:", error);
+    }
+  });
+}
+
 
 }

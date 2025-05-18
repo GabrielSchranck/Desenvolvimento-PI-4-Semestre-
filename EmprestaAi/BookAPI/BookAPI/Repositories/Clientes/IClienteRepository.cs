@@ -15,5 +15,6 @@ namespace BookAPI.Repositories.Clientes
         Task Update(Cliente cliente);
         Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId);
         Task CreateEnderecoCliente(EnderecoCliente enderecoCliente);
+        Task<Cliente> FindByTokenAsync(string token);
     }
 }

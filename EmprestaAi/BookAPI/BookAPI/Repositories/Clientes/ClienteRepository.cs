@@ -24,6 +24,21 @@ namespace BookAPI.Repositories.Clientes
             await _context.EnderecosClientes.AddAsync(enderecoCliente);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Cliente> FindByTokenAsync(string token)
+        {
+            var cliente =  await _context.Clientes.FirstOrDefaultAsync(c => c.TokenConfirmacao == token);
+
+            if(cliente != null)
+            {
+                cliente.EmailConfirmado = true;
+                _context.Entry(cliente).Property(c => c.EmailConfirmado).IsModified = true;
+                _context.SaveChanges();
+                return cliente;
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<Cliente>> GetAllClientAsync()
         {
             return await _context.Clientes.ToListAsync();

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
-import { LivrosDTO } from '../../core/models/Livros';
+import { LivroDTO } from '../../core/models/Livros';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-livros',
@@ -9,6 +11,12 @@ import { LivrosDTO } from '../../core/models/Livros';
   styleUrl: './livros.component.css'
 })
 export class LivrosComponent {
-  livros: LivrosDTO[] = [];
-  livrosEmprestados: LivrosDTO[] = [];
+  livros: LivroDTO[] = [];
+  livrosEmprestados: LivroDTO[] = [];
+  abrirModal: boolean = false;
+
+  constructor(private router: Router, private formBuilder: FormBuilder){}
+
+  
+
 }

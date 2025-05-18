@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from "../../Shered/navbar/navbar.component";
+import { InputsComponent } from "../../Shered/inputs/inputs.component";
 
 @Component({
   selector: 'app-esquci-senha',

@@ -55,11 +55,17 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("../Environment.json", optional: true, reloadOnChange: true);
+
+
 //Repositories
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICartaoClienteRepository, CartaoClienteRepository>();
+builder.Services.AddScoped<ILivroImagemRepository, LivroImagemRepository>();
 
 //Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
