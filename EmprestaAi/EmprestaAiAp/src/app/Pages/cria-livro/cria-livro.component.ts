@@ -3,10 +3,11 @@ import { LivroDTO } from '../../core/models/Livros';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from "../../Shered/navbar/navbar.component";
 import { LivroService } from '../../core/services/livro.service';
+import { InputsComponent } from '../../Shered/inputs/inputs.component';
 
 @Component({
   selector: 'app-cria-livro',
-  imports: [ReactiveFormsModule, NavbarComponent],
+  imports: [ReactiveFormsModule, NavbarComponent, InputsComponent],
   templateUrl: './cria-livro.component.html',
   styleUrl: './cria-livro.component.css'
 })

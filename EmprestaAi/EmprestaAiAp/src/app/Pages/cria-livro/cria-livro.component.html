@@ -14,84 +14,69 @@
   <section class="flex-1 px-4 md:px-12 lg:px-24 py-8">
     <form
       [formGroup]="formularioLivro"
-      class="w-full max-w-full bg-white px-4 md:px-8 lg:px-12 py-6 md:py-10 space-y-8 mx-auto"
+      class="w-full max-w-4xl bg-white px-4 md:px-8 lg:px-12 py-6 md:py-10 space-y-8 mx-auto rounded-xl"
     >
-      <div class="flex flex-col lg:flex-row gap-6">
+      <h2 class="text-2xl font-bold text-[#3596D2] mb-6">Cadastro de Livro</h2>
+      <div class="flex flex-col lg:flex-row gap-8">
         <div class="flex-1 space-y-6">
-          <div>
-            <label for="titulo" class="block text-base font-semibold text-gray-800 mb-1">Título do livro</label>
-            <input
-              type="text"
-              id="titulo"
-              formControlName="titulo"
-              placeholder="Digite o título do livro"
-              required
-              class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          <div class="space-y-4">
+            <app-inputs
+              [label]="'Título do livro'"
+              [control]="formularioLivro.get('titulo')!"
+              [type]="'text'"
+              [placeholder]="'Digite o título do livro'"
+              [name]="'titulo'"
+              [required]="true"
               (focusout)="BuscaLivrosInfo()"
-            />
+            ></app-inputs>
           </div>
-          <div>
-            <label for="valor" class="block text-base font-semibold text-gray-800 mb-1">Valor</label>
-            <div class="relative">
-              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
-              <input
-                type="number"
-                id="valor"
-                formControlName="valor"
-                placeholder="0,00"
-                required
-                min="0"
-                step="0.01"
-                class="w-full pl-10 rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+          <div class="space-y-4">
+            <app-inputs
+              [label]="'Valor (R$)'"
+              [control]="formularioLivro.get('valor')!"
+              [type]="'number'"
+              [placeholder]="'0,00'"
+              [name]="'valor'"
+              [required]="true"
+            ></app-inputs>
           </div>
-          <div>
-            <label for="valor" class="block text-base font-semibold text-gray-800 mb-1">Custo</label>
-            <div class="relative">
-              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
-              <input
-                type="number"
-                id="valor"
-                formControlName="custo"
-                placeholder="0,00"
-                required
-                min="0"
-                step="0.01"
-                class="w-full pl-10 rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+          <div class="space-y-4">
+            <app-inputs
+              [label]="'Custo (R$)'"
+              [control]="formularioLivro.get('custo')!"
+              [type]="'number'"
+              [placeholder]="'0,00'"
+              [name]="'custo'"
+              [required]="true"
+            ></app-inputs>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="quantidade" class="block text-base font-semibold text-gray-800 mb-1">Quantidade</label>
-              <input
-                type="number"
-                id="quantidade"
-                formControlName="quantidade"
-                placeholder="0"
-                required
-                min="0"
-                class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+            <div class="space-y-4">
+              <app-inputs
+                [label]="'Quantidade'"
+                [control]="formularioLivro.get('quantidade')!"
+                [type]="'number'"
+                [placeholder]="'0'"
+                [name]="'quantidade'"
+                [required]="true"
+              ></app-inputs>
             </div>
-            <div>
-              <label for="qtdPaginas" class="block text-base font-semibold text-gray-800 mb-1">Páginas</label>
-              <input
-                type="number"
-                id="qtdPaginas"
-                formControlName="qtdPaginas"
-                placeholder="0"
-                required
-                min="1"
-                class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+            <div class="space-y-4">
+              <app-inputs
+                [label]="'Páginas'"
+                [control]="formularioLivro.get('qtdPaginas')!"
+                [type]="'number'"
+                [placeholder]="'0'"
+                [name]="'qtdPaginas'"
+                [required]="true"
+              ></app-inputs>
             </div>
           </div>
         </div>
         <div class="w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64">
+            <label class="block text-base font-semibold text-[#3596D2] mb-2">Capa do Livro</label>
             <div
-                class="relative group w-full aspect-[2/3] rounded-2xl overflow-hidden border border-gray-300 
+                class="relative group w-full aspect-[2/3] rounded-2xl overflow-hidden border-2 border-[#3596D2] 
                     bg-gray-100 flex items-center justify-center transition-shadow duration-300 
                     hover:shadow-2xl"
             >
