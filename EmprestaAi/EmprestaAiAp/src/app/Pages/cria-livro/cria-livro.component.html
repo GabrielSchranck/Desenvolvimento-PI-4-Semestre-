@@ -1,0 +1,146 @@
+<style>
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+</style>
+
+<main class="p-0 m-0 min-h-screen flex flex-col">
+  <app-navbar class="w-full"></app-navbar>
+  <section class="flex-1 px-4 md:px-12 lg:px-24 py-8">
+    <form
+      [formGroup]="formularioLivro"
+      class="w-full max-w-full bg-white px-4 md:px-8 lg:px-12 py-6 md:py-10 space-y-8 mx-auto"
+    >
+      <div class="flex flex-col lg:flex-row gap-6">
+        <div class="flex-1 space-y-6">
+          <div>
+            <label for="titulo" class="block text-base font-semibold text-gray-800 mb-1">Título do livro</label>
+            <input
+              type="text"
+              id="titulo"
+              formControlName="titulo"
+              placeholder="Digite o título do livro"
+              required
+              class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              (focusout)="BuscaLivrosInfo()"
+            />
+          </div>
+          <div>
+            <label for="valor" class="block text-base font-semibold text-gray-800 mb-1">Valor</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
+              <input
+                type="number"
+                id="valor"
+                formControlName="valor"
+                placeholder="0,00"
+                required
+                min="0"
+                step="0.01"
+                class="w-full pl-10 rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+          <div>
+            <label for="valor" class="block text-base font-semibold text-gray-800 mb-1">Custo</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
+              <input
+                type="number"
+                id="valor"
+                formControlName="custo"
+                placeholder="0,00"
+                required
+                min="0"
+                step="0.01"
+                class="w-full pl-10 rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="quantidade" class="block text-base font-semibold text-gray-800 mb-1">Quantidade</label>
+              <input
+                type="number"
+                id="quantidade"
+                formControlName="quantidade"
+                placeholder="0"
+                required
+                min="0"
+                class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label for="qtdPaginas" class="block text-base font-semibold text-gray-800 mb-1">Páginas</label>
+              <input
+                type="number"
+                id="qtdPaginas"
+                formControlName="qtdPaginas"
+                placeholder="0"
+                required
+                min="1"
+                class="w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64">
+            <div
+                class="relative group w-full aspect-[2/3] rounded-2xl overflow-hidden border border-gray-300 
+                    bg-gray-100 flex items-center justify-center transition-shadow duration-300 
+                    hover:shadow-2xl"
+            >
+                <!-- Botões sobrepostos COM Z-INDEX ALTO -->
+                <div class="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                <!-- Excluir -->
+                <button
+                    type="button"
+                    class="p-1 bg-white rounded-full shadow hover:bg-red-100"
+                    title="Remover capa"
+                    (click)="DeletaImagem()"
+                >🗑️</button>
+                <!-- Adicionar/Trocar -->
+                <button
+                    type="button"
+                    class="p-1 bg-white rounded-full shadow hover:bg-blue-100"
+                    title="Adicionar/trocar capa"
+                >✏️</button>
+                </div>
+
+                <!-- Imagem com Z-INDEX MENOR -->
+                @if (formularioLivro.get('uriImagemLivro')?.value) {
+                <img
+                    [src]="formularioLivro.get('uriImagemLivro')?.value"
+                    alt="Imagem do livro"
+                    class="object-contain w-full h-full
+                        transform transition duration-300 ease-in-out
+                        hover:scale-105
+                        opacity-0 animate-fadeIn
+                        z-10 relative"
+                />
+                } @else {
+                <span class="text-gray-500 text-sm z-10 relative">Sem imagem</span>
+                }
+            </div>
+            </div>
+
+      </div>
+      <div class="flex justify-end space-x-4 mt-4">
+        <button
+          type="button"
+          class="bg-red-500 text-white rounded-lg px-5 py-2 hover:bg-red-600 transition"
+        >Cancelar</button>
+        <button
+          type="submit"
+          [disabled]="formularioLivro.invalid"
+          class="bg-indigo-600 text-white rounded-lg px-5 py-2 hover:bg-indigo-700 transition disabled:opacity-50"
+        >Salvar</button>
+      </div>
+    </form>
+  </section>
+</main>

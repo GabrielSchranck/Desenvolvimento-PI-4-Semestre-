@@ -1,0 +1,16 @@
+<main class="flex h-screen md:overflow-hidden">
+    <div class="hidden lg:flex lg:w-2/3 h-full md:bg-[#FCF9F3]">
+        <section class="h-full w-full flex justify-center items-center">
+            <img src="useracess/imgLogin.png" alt="teste" class="w-full h-full object-cover md:object-contain">
+        </section>
+    </div>
+  
+    <div class="flex items-center justify-center w-full lg:w-1/3 h-full">
+        <section class="flex-grow flex items-center justify-center h-full">
+            <div>
+                <ng-content></ng-content>
+            </div>
+        </section>
+        <router-outlet></router-outlet>
+    </div>
+</main>
