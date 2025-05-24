@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-inputs',
@@ -9,7 +9,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 })
 export class InputsComponent {
   @Input() label: string  = '';
-  @Input() control: FormControl = new FormControl('');
+  @Input() set control(value: AbstractControl | null) {
+    this._control = value as FormControl;
+  }
+  get control(): FormControl {
+    return this._control;
+  }
+  private _control: FormControl = new FormControl('');
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
   @Input() name: string = '';
