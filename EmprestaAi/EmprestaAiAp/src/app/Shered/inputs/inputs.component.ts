@@ -22,4 +22,5 @@ export class InputsComponent {
   @Input() required: boolean = false;
   @Input() error: string = '';
   @Input() src: string = '';
+  @Input() readOnly: boolean = false;
 }

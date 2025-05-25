@@ -11,7 +11,7 @@ import { InputsComponent } from '../../Shered/inputs/inputs.component';
 
 @Component({
   selector: 'app-perfil',
-  imports: [UserInfoComponent, ReactiveFormsModule, CommonModule],
+  imports: [UserInfoComponent, ReactiveFormsModule, CommonModule, InputsComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
