@@ -30,7 +30,6 @@ export class LivrosComponent implements OnInit {
     try {
       const data: LivroDTO[] = await this.livroService.getLivros();
       this.livros = data;
-      console.log('Livros encontrados:', this.livros);
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     }
