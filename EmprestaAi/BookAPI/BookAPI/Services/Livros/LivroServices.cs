@@ -1,4 +1,5 @@
-﻿using BookAPI.Entities.Livros;
+﻿using BookAPI.Entities.ClientesLivros;
+using BookAPI.Entities.Livros;
 using BookAPI.mappings;
 using BookAPI.Repositories.Livros;
 using BookModels.DTOs.Livros;
@@ -9,22 +10,35 @@ namespace BookAPI.Services.Livros
 {
     public class LivroServices : ILivroServices
     {
-        private readonly ILivroRepository? _repository;
+        private readonly ILivroRepository? _livroRepository;
+        private readonly ILivroImagemRepository _livroImagemRepository;
 
-        public LivroServices(ILivroRepository livroRepository)
+        public LivroServices(ILivroRepository livroRepository, ILivroImagemRepository livroImagemRepository)
         {
-            this._repository = livroRepository;
+            this._livroRepository = livroRepository;
+            _livroImagemRepository = livroImagemRepository;
         }
 
-        public async Task CadastrarLivroCliente(LivroDTO livroDTO)
+        public async Task CadastrarLivroCliente(LivroDTO livroDTO, int clienteId)
         {
             //Cadastrar livro do cliente
 
             var livro = livroDTO.ConverteLivroDTOParaLivro();
-            await Create(livro);
+            var clienteLivro = new ClienteLivro
+            {
+                ClienteId = clienteId,
+                LivroId = livro.Id
+            };
 
-            var fotoLivro = await GetImgBook(livro.Titulo);
-            fotoLivro.LivroId = livro.Id;
+            await Create(livro, clienteLivro);
+
+            var fotoLivro = new FotoLivro
+            {
+                LivroId = livro.Id,
+                UrlImagem = livroDTO.UriImagemLivro
+            };
+
+            await this._livroImagemRepository.SaveImage(fotoLivro);
         }
 
         public async Task<FotoLivro> GetImgBook(string titulo)
@@ -66,23 +80,23 @@ namespace BookAPI.Services.Livros
         }
 
 
-        private async Task Create(Livro livro)
+        private async Task Create(Livro livro, ClienteLivro clienteLivro)
         {
-            await _repository.CreateAsync(livro);
+            await _livroRepository.CreateAsync(livro, clienteLivro);
         }
 
         public async Task Delete(LivroDTO livroDTO)
         {
             var livro = livroDTO.ConverteLivroDTOParaLivro();
 
-            if (livro == null) _repository.DeleteAsync(livro);
+            if (livro == null) _livroRepository.DeleteAsync(livro);
         }
 
         public async Task Update(LivroDTO livroDTO)
         {
             var livro = livroDTO.ConverteLivroDTOParaLivro();
 
-            if (livro == null) _repository.UpdateAsync(livro);
+            if (livro == null) _livroRepository.UpdateAsync(livro);
         }
 
         public Task<IEnumerable<Livro>> GetAll()
@@ -90,9 +104,14 @@ namespace BookAPI.Services.Livros
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Livro>> GetAll(int clienteId)
+        public async Task<IEnumerable<LivroDTO>> GetAll(int clienteId)
         {
-            throw new NotImplementedException();
+            return await _livroRepository.GetAllAsync(clienteId);
+        }
+
+        public async Task<IEnumerable<Categoria>> GetCategorias()
+        {
+            return await _livroRepository.GetCategorias();
         }
     }
 }

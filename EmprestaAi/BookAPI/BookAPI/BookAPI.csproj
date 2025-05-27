@@ -32,4 +32,8 @@
     <ProjectReference Include="..\BookModels\BookModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\ImagensLivro\Imagens\" />
+  </ItemGroup>
+
 </Project>

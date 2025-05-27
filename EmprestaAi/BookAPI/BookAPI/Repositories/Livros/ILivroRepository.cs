@@ -1,12 +1,15 @@
-﻿using BookAPI.Entities.Livros;
+﻿using BookAPI.Entities.ClientesLivros;
+using BookAPI.Entities.Livros;
+using BookModels.DTOs.Livros;
 
 namespace BookAPI.Repositories.Livros
 {
 	public interface ILivroRepository
 	{
-		Task<IEnumerable<Livro>> GetAllAsync();
-		Task CreateAsync(Livro livro);
+		Task<IEnumerable<LivroDTO>> GetAllAsync(int clientId);
+		Task CreateAsync(Livro livro, ClienteLivro clienteLivro);
 		Task UpdateAsync(Livro livro);
 		Task DeleteAsync(Livro livro);
+		Task<IEnumerable<Categoria>> GetCategorias();
 	}
 }

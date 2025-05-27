@@ -4,6 +4,7 @@ using BookAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookAPI.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    partial class BookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250525135216_removingAuthors")]
+    partial class removingAuthors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,208 +285,6 @@ namespace BookAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categorias");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            NomeCategoria = "Ficção"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            NomeCategoria = "Fantasia"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            NomeCategoria = "Romance"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            NomeCategoria = "Terror"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            NomeCategoria = "Suspense"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            NomeCategoria = "Mistério"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            NomeCategoria = "Drama"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            NomeCategoria = "Aventura"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            NomeCategoria = "Ficção Científica"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            NomeCategoria = "Biografia"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            NomeCategoria = "Autobiografia"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            NomeCategoria = "História"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            NomeCategoria = "Religião"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            NomeCategoria = "Espiritualidade"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            NomeCategoria = "Autoajuda"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            NomeCategoria = "Negócios"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            NomeCategoria = "Finanças"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            NomeCategoria = "Tecnologia"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            NomeCategoria = "Programação"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            NomeCategoria = "Ciência"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            NomeCategoria = "Filosofia"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            NomeCategoria = "Psicologia"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            NomeCategoria = "Educação"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            NomeCategoria = "Direito"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            NomeCategoria = "Política"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            NomeCategoria = "Saúde"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            NomeCategoria = "Medicina"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            NomeCategoria = "Esportes"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            NomeCategoria = "Culinária"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            NomeCategoria = "Arte"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            NomeCategoria = "Música"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            NomeCategoria = "Quadrinhos"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            NomeCategoria = "Mangá"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            NomeCategoria = "Infantil"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            NomeCategoria = "Juvenil"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            NomeCategoria = "Poesia"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            NomeCategoria = "Humor"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            NomeCategoria = "Clássicos"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            NomeCategoria = "Erótico"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            NomeCategoria = "Viagem"
-                        });
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Livros.FotoLivro", b =>

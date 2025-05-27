@@ -10,8 +10,8 @@ namespace BookModels.DTOs.Livros
 	{
 		public int? Id { get; set; }
 		public int? ClienteId { get; set; }
-		public int? AutorId { get; set; }
-		public string? Titulo { get; set; }
+        public int? CategoriaId { get; set; }
+        public string? Titulo { get; set; }
 		public decimal? Valor { get; set; }
 		public decimal? Custo { get; set; }
 		public int? QtdPaginas { get; set; }

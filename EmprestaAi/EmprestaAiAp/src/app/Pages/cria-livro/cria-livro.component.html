@@ -71,6 +71,22 @@
                 [required]="true"
               ></app-inputs>
             </div>
+            <div class="space-y-4">
+              <label for="categoria" class="block text-base font-semibold text-[#3596D2]">Categoria</label>
+              <select
+                id="categoria"
+                formControlName="categoriaId"
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3596D2]"
+                required
+              >
+                <option value="" disabled selected hidden>Selecione uma categoria</option>
+                @for (categoria of categorias; track categoria.id) {
+                  <option [value]="categoria.id">{{ categoria.nomeCategoria }}</option>
+                }
+              </select>
+            </div>
+
+
           </div>
         </div>
         <div class="w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64">
@@ -94,6 +110,7 @@
                     type="button"
                     class="p-1 bg-white rounded-full shadow hover:bg-blue-100"
                     title="Adicionar/trocar capa"
+                    (click)="GetCategoriasLivro()"
                 >✏️</button>
                 </div>
 
@@ -118,10 +135,12 @@
       <div class="flex justify-end space-x-4 mt-4">
         <button
           type="button"
+          (click)="GoToLivros()"
           class="bg-red-500 text-white rounded-lg px-5 py-2 hover:bg-red-600 transition"
         >Cancelar</button>
         <button
-          type="submit"
+          type="button"
+          (click)="CriarLivro()"
           [disabled]="formularioLivro.invalid"
           class="bg-indigo-600 text-white rounded-lg px-5 py-2 hover:bg-indigo-700 transition disabled:opacity-50"
         >Salvar</button>

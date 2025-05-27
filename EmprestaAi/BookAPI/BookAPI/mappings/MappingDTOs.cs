@@ -46,7 +46,6 @@ namespace BookAPI.mappings
 			return new LivroDTO
 			{
 				Id = livro.Id,
-				AutorId = livro.AutorId,
 				Titulo = livro.Titulo,
 				Valor = livro.Valor,
 				Custo = livro.Custo,
@@ -129,11 +128,12 @@ namespace BookAPI.mappings
 			return new Livro
 			{
 				Id = LivroDTO.Id ?? 0,
-				AutorId = LivroDTO.AutorId ?? 0,
 				Titulo = LivroDTO.Titulo ?? "",
+				Valor = LivroDTO.Valor ?? 0,
 				Custo = LivroDTO.Custo ?? 0,
 				QtdPaginas = LivroDTO.QtdPaginas ?? 0,
 				Quantidade = LivroDTO.Quantidade ?? 0,
+				CategoriaId = LivroDTO.CategoriaId ?? 0
 			};
 		}
 	}

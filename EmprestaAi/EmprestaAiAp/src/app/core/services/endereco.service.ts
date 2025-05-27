@@ -57,9 +57,6 @@ export class EnderecoService {
     const apiUrl = `${this.url}/create`;
     const httpOptions = this.getHttpOptions();
 
-    console.log("Enviando para API:", JSON.stringify(endereco));
-
-
     return this.httpCliente.post<void>(apiUrl, endereco, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error.status === 400){
