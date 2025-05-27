@@ -9,7 +9,8 @@
            [type]="type"
            class="input-field w-full pl-2 rounded-lg border-0 focus:ring-0 focus:outline-none"
            [placeholder]="placeholder"
-           [name]="name">
+           [name]="name"
+           [readonly]="readOnly">
 </div>
 @if(error){
     <p class="text-red-500 text-sm mt-1">{{error}}</p>
