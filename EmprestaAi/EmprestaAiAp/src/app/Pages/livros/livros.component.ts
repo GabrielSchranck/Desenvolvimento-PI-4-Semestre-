@@ -15,6 +15,8 @@ export class LivrosComponent implements OnInit {
   livros: LivroDTO[] = [];
   livrosEmprestados: LivroDTO[] = [];
   abrirModal: boolean = false;
+  modalAnuciar: boolean = false;
+  formLivro: FormGroup;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private livroService: LivroService){}
   

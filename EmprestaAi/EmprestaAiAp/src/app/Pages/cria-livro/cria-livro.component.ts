@@ -20,6 +20,7 @@ export class CriaLivroComponent implements OnInit {
   livro: LivroDTO = new LivroDTO();
   categorias: CategoriasDTO[] = [];
   formularioLivro!: FormGroup;
+  selectedFile: File | null = null;
 
   constructor(private formBuilder: FormBuilder, private livroService: LivroService, private router: Router) { }
 
@@ -28,21 +29,33 @@ export class CriaLivroComponent implements OnInit {
     this.GetCategoriasLivro();
   }
 
-public CreateFormularioLivro(): void {
-  this.formularioLivro = this.formBuilder.group({
-    id: [null],                    
-    clienteId: [null],
-    titulo: [''],
-    valor: [null],
-    custo: [null],
-    qtdPaginas: [null],
-    quantidade: [null],
-    uriImagemLivro: [''],
-    categoriaId: [null] 
-  });
-}
+  public CreateFormularioLivro(): void {
+    this.formularioLivro = this.formBuilder.group({
+      id: [null],                    
+      clienteId: [null],
+      titulo: [''],
+      valor: [null],
+      custo: [null],
+      qtdPaginas: [null],
+      quantidade: [null],
+      uriImagemLivro: [''],
+      categoriaId: [null] 
+    });
+  }
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
+    const file = input.files[0];
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.formularioLivro.get('uriImagemLivro')?.setValue(e.target.result); 
+    };
+    reader.readAsDataURL(file);
+  }
 
   public async BuscaLivrosInfo(): Promise<void> {
     const nomeLivro: string = this.formularioLivro?.get("titulo")?.value;
@@ -67,20 +80,23 @@ public CreateFormularioLivro(): void {
     if (!this.formularioLivro) return;
 
     const livroCriadoForm = this.formularioLivro.value;
+    const formData = new FormData();
 
-    const livroCriado: LivroDTO = {
-      id: livroCriadoForm.id ? Number(livroCriadoForm.id) : undefined,
-      clienteId: livroCriadoForm.clienteId ? Number(livroCriadoForm.clienteId) : undefined,
-      categoriaId: livroCriadoForm.categoriaId ? Number(livroCriadoForm.categoriaId) : undefined,
-      titulo: livroCriadoForm.titulo,
-      valor: livroCriadoForm.valor ? Number(livroCriadoForm.valor) : undefined,
-      custo: livroCriadoForm.custo ? Number(livroCriadoForm.custo) : undefined,
-      qtdPaginas: livroCriadoForm.qtdPaginas ? Number(livroCriadoForm.qtdPaginas) : undefined,
-      quantidade: livroCriadoForm.quantidade ? Number(livroCriadoForm.quantidade) : undefined,
-      uriImagemLivro: livroCriadoForm.uriImagemLivro
-    };
+    formData.append('Id', livroCriadoForm.id?.toString() ?? '');
+    formData.append('ClienteId', livroCriadoForm.clienteId?.toString() ?? '');
+    formData.append('CategoriaId', livroCriadoForm.categoriaId?.toString() ?? '');
+    formData.append('Titulo', livroCriadoForm.titulo ?? '');
+    formData.append('Valor', livroCriadoForm.valor?.toString() ?? '');
+    formData.append('Custo', livroCriadoForm.custo?.toString() ?? '');
+    formData.append('QtdPaginas', livroCriadoForm.qtdPaginas?.toString() ?? '');
+    formData.append('Quantidade', livroCriadoForm.quantidade?.toString() ?? '');
+    formData.append('UriImagemLivro', livroCriadoForm.uriImagemLivro ?? '');
 
-    (await this.livroService.CreateLivro(livroCriado)).subscribe(
+    if (this.selectedFile) {
+      formData.append('Imagem', this.selectedFile);
+    }
+
+    (await this.livroService.CreateLivro(formData)).subscribe(
       (response) => {
         Swal.fire({
           title: 'Erro',
@@ -99,8 +115,7 @@ public CreateFormularioLivro(): void {
           this.router.navigate(['/livros']);
         });
       }
-    );;
-    // this.router.navigate(["/livros"]);
+    );
   }
 
 
