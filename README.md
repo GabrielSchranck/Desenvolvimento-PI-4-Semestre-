@@ -33,7 +33,7 @@ O Empresta Aí é uma plataforma inovadora que conecta leitores para facilitar o
 
 Além dessas funcionalidades, o Empresta Aí conta com um sistema de avaliações e reputação, garantindo que as transações sejam seguras e transparentes. Com notificações inteligentes, a plataforma também lembra os usuários sobre prazos de devolução e confirmações de trocas.<br>
 
-O projeto nasceu com a missão de democratizar o acesso à leitura, incentivando a economia colaborativa e reduzindo o desperdício de livros que ficam parados nas estantes. Mais do que um simples marketplace, o Empresta Aí busca criar uma comunidade de leitores engajados, valorizando a troca de conhecimento e fortalecendo o hábito da leitura.a.
+O projeto nasceu com a missão de democratizar o acesso à leitura, incentivando a economia colaborativa e reduzindo o desperdício de livros que ficam parados nas estantes. Mais do que um simples marketplace, o Empresta Aí busca criar uma comunidade de leitores engajados, valorizando a troca de conhecimento e fortalecendo o hábito da leitura.
 
 <h2 align="center"> ⌛ Status do Projeto <h2>
   
