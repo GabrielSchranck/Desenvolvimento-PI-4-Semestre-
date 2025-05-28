@@ -44,6 +44,32 @@ namespace BookAPI.Controllers
             }
         }
 
+        [HttpDelete("delete/{livroId}")]
+        public async Task<ActionResult> Delete([FromRoute] int livroId)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                var clienteLivro = new ClienteLivro
+                {
+                    ClienteId = clienteId,
+                    LivroId = livroId
+                };
+
+                await _livroServices.Delete(clienteLivro);
+
+                return Ok("Livro removido com sucesso");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
         [HttpGet("getLivros")]
         public async Task<ActionResult> GetLivros()
         {
@@ -120,7 +146,7 @@ namespace BookAPI.Controllers
         //        if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
         //        int clienteId = (int)await TokenService.GetClientIdFromToken(token);
 
-                
+
         //    }
         //    catch (Exception)
         //    {

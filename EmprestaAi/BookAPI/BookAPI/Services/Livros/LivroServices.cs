@@ -95,11 +95,11 @@ namespace BookAPI.Services.Livros
             await _livroRepository.CreateAsync(livro, clienteLivro);
         }
 
-        public async Task Delete(LivroDTO livroDTO)
-        {
-            var livro = livroDTO.ConverteLivroDTOParaLivro();
 
-            if (livro == null) _livroRepository.DeleteAsync(livro);
+
+        public async Task Delete(ClienteLivro clienteLivro)
+        {
+            await _livroRepository.DeleteAsync(clienteLivro);
         }
 
         public async Task Update(LivroDTO livroDTO)

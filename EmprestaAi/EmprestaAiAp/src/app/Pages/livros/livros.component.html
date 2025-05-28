@@ -71,6 +71,7 @@
             <button
               class="flex items-center bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-200 px-3 py-1.5 rounded-lg transition duration-150"
               title="Excluir livro"
+              (click)="deleteLivro(item.id!)"
             >
               <span class="text-sm mr-1 text-red-600">🗑️</span>
               <span class="text-sm font-medium text-red-600">Excluir</span>

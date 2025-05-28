@@ -9,7 +9,6 @@ import { CategoriasDTO } from '../models/Categorias';
   providedIn: 'root'
 })
 export class LivroService {
-
   private readonly url = `${environment['apiUrl']}/Livro`;
 
   constructor(private httpCliente: HttpClient) { }
@@ -88,6 +87,21 @@ export class LivroService {
       }
       throw new Error('Erro ao conectar com a API. ' + error.message);
     }
-
   }
+
+  public delete(livroId: number): Observable<string> {
+    const apiUrl = `${this.url}/delete/${livroId}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.delete<string>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        console.log("Erro ao excluir livro: ", error.error);
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
 }

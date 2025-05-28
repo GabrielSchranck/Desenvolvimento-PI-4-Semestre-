@@ -9,7 +9,7 @@ namespace BookAPI.Repositories.Livros
 		Task<IEnumerable<LivroDTO>> GetAllAsync(int clientId);
 		Task CreateAsync(Livro livro, ClienteLivro clienteLivro);
 		Task UpdateAsync(Livro livro);
-		Task DeleteAsync(Livro livro);
+		Task DeleteAsync(ClienteLivro clienteLivro);
 		Task<IEnumerable<Categoria>> GetCategorias();
 	}
 }
