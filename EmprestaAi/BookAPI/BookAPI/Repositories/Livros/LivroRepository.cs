@@ -46,14 +46,18 @@ namespace BookAPI.Repositories.Livros
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Livro livro)
+        public async Task DeleteAsync(ClienteLivro clienteLivro)
 		{
-			if(livro != null)
-			{
-				_dbContext.Livros.Remove(livro);
-				await _dbContext.SaveChangesAsync();
-			}
-		}
+            var livroParaRemover = await _dbContext.Livros.Where(l => l.Id == clienteLivro.LivroId).FirstAsync();
+            var itensParaRemover = await _dbContext.ClientesLivros.Where(cl => cl.ClienteId == clienteLivro.ClienteId && cl.LivroId == clienteLivro.LivroId).FirstAsync();
+            var imagemLivroParaRemover = await _dbContext.FotosLivros.Where(fl => fl.LivroId == clienteLivro.LivroId).FirstAsync();
+
+            _dbContext.ClientesLivros.RemoveRange(itensParaRemover);
+            _dbContext.Livros.Remove(livroParaRemover);
+            _dbContext.FotosLivros.Remove(imagemLivroParaRemover);
+
+            await _dbContext.SaveChangesAsync();
+        }
 
         public async Task<IEnumerable<LivroDTO>> GetAllAsync(int clientId)
         {

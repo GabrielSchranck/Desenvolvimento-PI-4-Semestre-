@@ -73,8 +73,20 @@ namespace BookAPI.Repositories.Clientes
 
         public async Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId)
         {
-            return await _context.Enderecos.Where(c => c.EnderecosCliente.Any(e => e.ClienteId == clienteId)).Include(c => c.EnderecosCliente).ToListAsync();
+            var enderecoIds = await _context.EnderecosClientes
+                .Where(ec => ec.ClienteId == clienteId)
+                .Select(ec => ec.EnderecoId)
+                .ToListAsync();
+
+            var enderecosClientes = await _context.EnderecosClientes.Where(ec => ec.ClienteId == clienteId).ToListAsync();
+
+            var enderecos = await _context.Enderecos
+                .Where(e => enderecoIds.Contains(e.Id))
+                .ToListAsync();
+
+            return enderecos;
         }
+
         public async Task<Cliente> Login(string email, string senha)
         {
             return await _context.Clientes.FirstOrDefaultAsync(c => c.Email == email && c.Senha == senha);

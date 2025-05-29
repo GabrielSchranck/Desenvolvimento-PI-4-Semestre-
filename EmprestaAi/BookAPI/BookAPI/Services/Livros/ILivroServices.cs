@@ -1,4 +1,5 @@
-﻿using BookAPI.Entities.Livros;
+﻿using BookAPI.Entities.ClientesLivros;
+using BookAPI.Entities.Livros;
 using BookModels.DTOs.Livros;
 using Microsoft.Win32.SafeHandles;
 
@@ -10,8 +11,9 @@ namespace BookAPI.Services.Livros
 		Task<IEnumerable<Livro>> GetAll();
 		Task<IEnumerable<LivroDTO>> GetAll(int clienteId);
 		Task Update(LivroDTO livroDTO);
-		Task Delete(LivroDTO livroDTO);
+		Task Delete(ClienteLivro clienteLivro);
 		Task<FotoLivro> GetImgBook(string titulo);
 		Task<IEnumerable<Categoria>> GetCategorias();
+		Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO);
     }
 }

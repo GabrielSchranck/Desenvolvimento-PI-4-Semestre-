@@ -1,58 +1,104 @@
 <app-user-info>
-    <div class="w-full max-w-4xl mx-auto px-4 mt-6">
-      <div class="flex justify-between items-center border-b border-gray-300 pb-4 w-full">
-        <h1 class="text-xl font-semibold text-blue-600">Meus livros</h1>
-        <div>
-          <button
-            type="button"
-            (click)="GoToAddLivro()"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow-md hover:shadow-lg transition duration-200"
-          >
-            📖 Adicionar Livro
-          </button>
-        </div>
-      </div>
-      <hr>
+  <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center border-b border-gray-300 pb-4 flex-wrap gap-2">
+      <h1 class="text-2xl font-bold text-[#3596D2]">📚 Meus Livros</h1>
+      <button
+        type="button"
+        (click)="GoToAddLivro()"
+        class="bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium py-2 px-5 rounded-lg shadow hover:shadow-lg transition-all duration-200"
+      >
+        ➕ Adicionar Livro
+      </button>
+    </div>
 
-      <!-- Livros -->
-      <div class="flex flex-rows flex-wrap gap-4 mt-4">
-        @for (item of livros; track $index) {
-          <div class="bg-white rounded-xl shadow-md overflow-hidden p-4 w-full sm:w-[48%] md:w-[31%] lg:w-[23%] min-w-[200px] flex flex-col">
-            <img class="w-full h-48 object-cover rounded-md" src="{{ item.uriImagemLivro }}" alt="Capa do Livro">
+    <!-- Lista de livros -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+      @for (item of livros; track $index) {
+        <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col transition-transform hover:-translate-y-1 hover:shadow-xl duration-200">
+          
+          <!-- Imagem responsiva -->
+          <img
+            class="w-full h-64 sm:h-48 md:h-56 object-contain sm:object-cover rounded-lg mb-3 bg-gray-50"
+            src="{{ item.uriImagemLivro }}"
+            alt="Capa do Livro"
+          />
 
-            <h2 class="text-lg font-semibold mt-3 text-center">{{ item.titulo }}</h2>
+          <!-- Título -->
+          <h2 class="text-center text-lg sm:text-xl font-semibold text-[#287bb3] leading-tight line-clamp-2 font-sans">
+            {{ item.titulo }}
+          </h2>
 
-            <div class="mt-3">
-              <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
-                <option value="emprestar">Emprestar</option>
-                <option value="vender">Vender</option>
-                <option value="doar">Doar</option>
-              </select>
+          <!-- Select -->
+          <div class="relative mt-4">
+            <select
+              class="appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3596D2] focus:border-[#3596D2] text-sm"
+            >
+              <option value="emprestar">Emprestar</option>
+              <option value="vender">Vender</option>
+              <option value="doar">Doar</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+              <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.354a.75.75 0 011.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </div>
+          </div>
 
-            <button class="mt-4 w-full bg-blue-600 text-white text-sm py-2 rounded-md hover:bg-blue-700 transition">
-              Anunciar
+          <!-- Botão Anunciar -->
+          <button
+            class="mt-4 w-full bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium py-2 rounded-md transition-colors duration-200"
+          >
+            📢 Anunciar
+          </button>
+
+          <!-- Botões Editar e Excluir com visual mais suave -->
+          <div class="flex justify-end gap-2 mt-4">
+            <!-- Botão Editar -->
+            <button
+              class="flex items-center bg-white border border-gray-200 text-gray-700 hover:shadow hover:border-gray-300 px-3 py-1.5 rounded-lg transition duration-150"
+              title="Editar livro"
+            >
+              <span class="text-sm mr-1">✏️</span>
+              <span class="text-sm font-medium">Editar</span>
+            </button>
+
+            <!-- Botão Excluir -->
+            <button
+              class="flex items-center bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-200 px-3 py-1.5 rounded-lg transition duration-150"
+              title="Excluir livro"
+              (click)="deleteLivro(item.id!)"
+            >
+              <span class="text-sm mr-1 text-red-600">🗑️</span>
+              <span class="text-sm font-medium text-red-600">Excluir</span>
             </button>
           </div>
-        }
-        @empty {
-          <div class="flex flex-col mt-4 h-64">
-            <p class="text-gray-500">Nenhum livro encontrado.</p>
-          </div>
-        }
-      </div>
-
-
-      <!-- Livros emprestados -->
-      <div>
-        @for (item of livrosEmprestados; track $index) {
-          
-        }
-        @empty {
-          <div class="flex flex-col mt-4 h-64">
-            <p class="text-gray-500">Nenhum livro emprestado.</p>
-          </div>
-        }
-      </div>
+        </div>
+      }
+      @empty {
+        <div class="col-span-full text-center text-gray-500 mt-10">
+          <p class="text-lg">Nenhum livro encontrado.</p>
+        </div>
+      }
     </div>
+
+
+
+    <!-- Livros emprestados -->
+    <div class="mt-12">
+      <h2 class="text-xl font-bold text-[#3596D2] mb-4">📦 Livros Emprestados</h2>
+      @for (item of livrosEmprestados; track $index) {
+        <!-- Adicione conteúdo futuramente -->
+      }
+      @empty {
+        <div class="text-center text-gray-500 mt-6">
+          <p class="text-lg">Nenhum livro emprestado.</p>
+        </div>
+      }
+    </div>
+  </div>
 </app-user-info>

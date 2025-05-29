@@ -21,8 +21,6 @@ namespace BookAPI.Services.Livros
 
         public async Task CadastrarLivroCliente(LivroDTO livroDTO, int clienteId)
         {
-            //Cadastrar livro do cliente
-
             var livro = livroDTO.ConverteLivroDTOParaLivro();
             var clienteLivro = new ClienteLivro
             {
@@ -32,13 +30,25 @@ namespace BookAPI.Services.Livros
 
             await Create(livro, clienteLivro);
 
-            var fotoLivro = new FotoLivro
+            if (livroDTO.Imagem == null || livroDTO.Imagem.Length == 0)
             {
-                LivroId = livro.Id,
-                UrlImagem = livroDTO.UriImagemLivro
-            };
+                var fotoLivro = new FotoLivro
+                {
+                    LivroId = livro.Id,
+                    UrlImagem = livroDTO.UriImagemLivro
+                };
 
-            await this._livroImagemRepository.SaveImage(fotoLivro);
+                await this._livroImagemRepository.SaveImage(fotoLivro);
+            }
+            else
+            {
+                var imagemLivro = new ImagemLivroDTO
+                {
+                    Imagem = livroDTO.Imagem,
+                    LivroId = livro.Id
+                };
+                await this.SaveImagemLivro(imagemLivro);
+            }
         }
 
         public async Task<FotoLivro> GetImgBook(string titulo)
@@ -85,11 +95,11 @@ namespace BookAPI.Services.Livros
             await _livroRepository.CreateAsync(livro, clienteLivro);
         }
 
-        public async Task Delete(LivroDTO livroDTO)
-        {
-            var livro = livroDTO.ConverteLivroDTOParaLivro();
 
-            if (livro == null) _livroRepository.DeleteAsync(livro);
+
+        public async Task Delete(ClienteLivro clienteLivro)
+        {
+            await _livroRepository.DeleteAsync(clienteLivro);
         }
 
         public async Task Update(LivroDTO livroDTO)
@@ -112,6 +122,35 @@ namespace BookAPI.Services.Livros
         public async Task<IEnumerable<Categoria>> GetCategorias()
         {
             return await _livroRepository.GetCategorias();
+        }
+
+        public async Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO)
+        {
+            if (imagemLivroDTO.Imagem == null || imagemLivroDTO.Imagem.Length == 0)
+                throw new ArgumentException("Imagem inválida");
+
+            var nomeArquivo = $"{Guid.NewGuid()}_{imagemLivroDTO.Imagem.FileName}";
+            var caminhoPasta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagens");
+
+            if (!Directory.Exists(caminhoPasta))
+                Directory.CreateDirectory(caminhoPasta);
+
+            var caminhoCompleto = Path.Combine(caminhoPasta, nomeArquivo);
+
+            using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+            {
+                await imagemLivroDTO.Imagem.CopyToAsync(stream);
+            }
+
+            var urlImagem = Path.Combine("imagens", nomeArquivo).Replace("\\", "/");
+
+            var livroFoto = new FotoLivro
+            {
+                LivroId = (int)imagemLivroDTO.LivroId,
+                UrlImagem = urlImagem
+            };
+
+            await _livroImagemRepository.SaveImage(livroFoto);
         }
     }
 }

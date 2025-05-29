@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,6 @@ namespace BookModels.DTOs.Livros
 		public int? QtdPaginas { get; set; }
 		public int? Quantidade { get; set; }
         public string? UriImagemLivro { get; set; }
+        public IFormFile? Imagem { get; set; }
     }
 }
