@@ -205,7 +205,7 @@
                 </h2>
 
                 <!-- Formulário -->
-                <form [formGroup]="formularioEndereco" (ngSubmit)="OperacoesEndereco()" class="space-y-6">
+                <form [formGroup]="formularioEndereco" class="space-y-6">
                   <!-- Cep e número -->
                   <div class="flex flex-col sm:flex-row gap-6">
                     <div class="flex-1 space-y-4">
@@ -290,7 +290,7 @@
                       class="bg-red-500 text-white rounded-lg px-5 py-2 hover:bg-red-600 transition">
                       Cancelar
                     </button>
-                    <button type="submit"
+                    <button type="button" (click)="OperacoesEndereco()"
                       class="bg-indigo-600 text-white rounded-lg px-5 py-2 hover:bg-indigo-700 transition">
                       Salvar
                     </button>
