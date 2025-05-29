@@ -4,10 +4,11 @@ import { AuthService } from '../../core/services/auth-service.service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Cliente } from '../../core/models/Cliente';
 import { ClienteService } from '../../core/services/cliente-service.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -26,6 +27,11 @@ export class NavbarComponent implements OnInit {
     }
   }
   
+  public isPerfilRota(): boolean {
+    const rotasPerfil = ['/perfil', '/carrinho', '/favoritos', '/financeiro', '/livros'];
+    return rotasPerfil.includes(this.router.url);
+  }
+
   private async isLoggedIn(): Promise<boolean> {
     try {
       const logado = await firstValueFrom(this.auth.isLoggedIn());

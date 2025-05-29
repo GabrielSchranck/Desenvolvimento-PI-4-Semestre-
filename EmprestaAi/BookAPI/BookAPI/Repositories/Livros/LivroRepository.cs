@@ -106,9 +106,11 @@ namespace BookAPI.Repositories.Livros
 
 				if(newBook != null)
 				{
+                    newBook.Titulo = livro.Titulo;
 					newBook.Valor = livro.Valor;
 					newBook.Quantidade = livro.Quantidade;
 					newBook.Custo = livro.Custo;
+                    newBook.Categoria = livro.Categoria;
 
 					_dbContext.Livros.Update(newBook);
 

@@ -43,7 +43,7 @@ export class CriaLivroComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event): void {
+  public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 

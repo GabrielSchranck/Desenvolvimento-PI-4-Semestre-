@@ -100,6 +100,28 @@ namespace BookAPI.Controllers
             }
         }
 
+        [HttpPut("update")]
+        public async Task<ActionResult> AlterLivro([FromForm] LivroDTO livroDTO)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                livroDTO.ClienteId = clienteId;
+
+                await _livroServices.Update(livroDTO);
+
+                return Ok(new { retorno = "Livro alterado com sucesso!" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
 
         //Procura imagem na API
         [HttpGet("getIinfoApi")]

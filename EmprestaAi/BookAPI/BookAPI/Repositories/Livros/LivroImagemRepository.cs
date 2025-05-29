@@ -18,7 +18,7 @@ namespace BookAPI.Repositories.Livros
         public async Task SaveImage(FotoLivro fotoLivro)
         {
             var livroExistente = await _dbContext.Livros
-                .FirstOrDefaultAsync(l => l.Id == fotoLivro.Id);
+                .FirstOrDefaultAsync(l => l.Id == fotoLivro.LivroId);
 
             if (livroExistente != null)
             {
@@ -36,6 +36,19 @@ namespace BookAPI.Repositories.Livros
 
             await _dbContext.FotosLivros.AddAsync(fotoLivro);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Update(FotoLivro livroFoto)
+        {
+            var newFotoLivro = await _dbContext.FotosLivros.Where(fl => fl.LivroId == livroFoto.LivroId).FirstOrDefaultAsync();
+
+            if(newFotoLivro != null)
+            {
+                newFotoLivro.UrlImagem = livroFoto.UrlImagem;
+
+                _dbContext.FotosLivros.Update(newFotoLivro);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

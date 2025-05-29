@@ -9,6 +9,7 @@ import { CategoriasDTO } from '../models/Categorias';
   providedIn: 'root'
 })
 export class LivroService {
+  
   private readonly url = `${environment['apiUrl']}/Livro`;
 
   constructor(private httpCliente: HttpClient) { }
@@ -63,6 +64,29 @@ export class LivroService {
     const httpOptions = this.getHttpOptions();
 
     return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public async update(formData: FormData): Promise<Observable<string>> {
+    const apiUrl = `${this.url}/update`;
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpCliente.put<{ retorno: string }>(apiUrl, formData, { headers }).pipe(
+      map(response => response.retorno),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
           return throwError(() => error.error);

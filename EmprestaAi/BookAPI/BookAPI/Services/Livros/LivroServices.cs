@@ -47,7 +47,7 @@ namespace BookAPI.Services.Livros
                     Imagem = livroDTO.Imagem,
                     LivroId = livro.Id
                 };
-                await this.SaveImagemLivro(imagemLivro);
+                await this.SaveImagemLivro(imagemLivro, false);
             }
         }
 
@@ -104,9 +104,21 @@ namespace BookAPI.Services.Livros
 
         public async Task Update(LivroDTO livroDTO)
         {
-            var livro = livroDTO.ConverteLivroDTOParaLivro();
+            if (livroDTO.Imagem != null || livroDTO.Imagem.Length != 0)
+            {
+                var imagemLivro = new ImagemLivroDTO
+                {
+                    ClienteId = livroDTO.ClienteId,
+                    Imagem = livroDTO.Imagem,
+                    LivroId = (int)livroDTO.Id,
+                    ImagemUrl = livroDTO.UriImagemLivro ?? ""
+                };
 
-            if (livro == null) _livroRepository.UpdateAsync(livro);
+                await SaveImagemLivro(imagemLivro, true);
+            }
+
+            var livro = livroDTO.ConverteLivroDTOParaLivro();
+            await _livroRepository.UpdateAsync(livro);
         }
 
         public Task<IEnumerable<Livro>> GetAll()
@@ -124,7 +136,7 @@ namespace BookAPI.Services.Livros
             return await _livroRepository.GetCategorias();
         }
 
-        public async Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO)
+        public async Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO, bool ehEdicao)
         {
             if (imagemLivroDTO.Imagem == null || imagemLivroDTO.Imagem.Length == 0)
                 throw new ArgumentException("Imagem inválida");
@@ -150,7 +162,8 @@ namespace BookAPI.Services.Livros
                 UrlImagem = urlImagem
             };
 
-            await _livroImagemRepository.SaveImage(livroFoto);
+            if (!ehEdicao) await _livroImagemRepository.SaveImage(livroFoto);
+            else await _livroImagemRepository.Update(livroFoto);
         }
     }
 }

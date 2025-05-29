@@ -15,8 +15,8 @@
     <!-- Lista de livros -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
       @for (item of livros; track $index) {
-        <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col transition-transform hover:-translate-y-1 hover:shadow-xl duration-200">
-          
+        <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col justify-between transition-transform hover:-translate-y-1 hover:shadow-xl duration-200 min-h-[420px]">
+
           <!-- Imagem responsiva -->
           <img
             class="w-full h-64 sm:h-48 md:h-56 object-contain sm:object-cover rounded-lg mb-3 bg-gray-50"
@@ -25,43 +25,24 @@
           />
 
           <!-- Título -->
-          <h2 class="text-center text-lg sm:text-xl font-semibold text-[#287bb3] leading-tight line-clamp-2 font-sans">
+          <h2 class="text-center text-lg sm:text-xl font-semibold text-[#287bb3] leading-tight line-clamp-2 font-sans min-h-[3.5rem]">
             {{ item.titulo }}
           </h2>
 
-          <!-- Select -->
-          <div class="relative mt-4">
-            <select
-              class="appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3596D2] focus:border-[#3596D2] text-sm"
-            >
-              <option value="emprestar">Emprestar</option>
-              <option value="vender">Vender</option>
-              <option value="doar">Doar</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-              <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.354a.75.75 0 011.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
           <!-- Botão Anunciar -->
           <button
-            class="mt-4 w-full bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium py-2 rounded-md transition-colors duration-200"
+            class="mt-3 w-full bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium py-2 rounded-md transition-colors duration-200"
           >
             📢 Anunciar
           </button>
 
-          <!-- Botões Editar e Excluir com visual mais suave -->
-          <div class="flex justify-end gap-2 mt-4">
+          <!-- Botões Editar e Excluir em extremidades -->
+          <div class="flex justify-between items-center mt-4">
             <!-- Botão Editar -->
             <button
               class="flex items-center bg-white border border-gray-200 text-gray-700 hover:shadow hover:border-gray-300 px-3 py-1.5 rounded-lg transition duration-150"
               title="Editar livro"
+              (click)="abrirModalAnunciarLivro(item.id!)"
             >
               <span class="text-sm mr-1">✏️</span>
               <span class="text-sm font-medium">Editar</span>
@@ -69,16 +50,17 @@
 
             <!-- Botão Excluir -->
             <button
-              class="flex items-center bg-white border border-gray-200 text-gray-700 hover:bg-red-50 hover:border-red-200 px-3 py-1.5 rounded-lg transition duration-150"
+              class="flex items-center bg-white border border-gray-200 text-red-600 hover:bg-red-50 hover:border-red-200 px-3 py-1.5 rounded-lg transition duration-150"
               title="Excluir livro"
               (click)="deleteLivro(item.id!)"
             >
-              <span class="text-sm mr-1 text-red-600">🗑️</span>
-              <span class="text-sm font-medium text-red-600">Excluir</span>
+              <span class="text-sm mr-1">🗑️</span>
+              <span class="text-sm font-medium">Excluir</span>
             </button>
           </div>
         </div>
       }
+
       @empty {
         <div class="col-span-full text-center text-gray-500 mt-10">
           <p class="text-lg">Nenhum livro encontrado.</p>
@@ -87,6 +69,108 @@
     </div>
 
 
+    @if (abrirModal) {
+    <div
+      class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm flex items-center justify-center"
+    >
+      <div
+        class="z-50 bg-white/90 rounded-3xl shadow-xl w-full max-w-lg p-6 backdrop-blur-md"
+      >
+        <div class="flex flex-col items-center relative">
+          <div class="relative w-40 h-60 mb-6">
+
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
+
+            <img
+              [src]="formLivro.get('imagemUrl')?.value || 'https://via.placeholder.com/150x220?text=Livro'"
+              alt="Imagem do livro"
+              class="w-full h-full object-cover rounded-lg border shadow"
+            />
+            <button
+              (click)="alterarImagem()"
+              class="absolute top-1 right-1 bg-white text-gray-600 hover:bg-blue-600 hover:text-white p-1 rounded-full shadow transition"
+              title="Alterar imagem"
+              (click)="fileInput.click()"
+            >
+              ✏️
+            </button>
+          </div>
+
+          <form [formGroup]="formLivro" (ngSubmit)="salvarEdicaoLivro()" class="w-full space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Título</label>
+              <input
+                type="text"
+                formControlName="titulo"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Quantidade</label>
+              <input
+                type="number"
+                formControlName="quantidade"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Páginas</label>
+              <input
+                type="number"
+                formControlName="qtdPaginas"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Valor (R$)</label>
+              <input
+                type="number"
+                formControlName="valor"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Custo (R$)</label>
+              <input
+                type="number"
+                formControlName="custo"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+              <button
+                type="button"
+                (click)="fecharModal()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    }
 
     <!-- Livros emprestados -->
     <div class="mt-12">
