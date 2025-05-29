@@ -71,20 +71,24 @@
                 [required]="true"
               ></app-inputs>
             </div>
-            <div class="space-y-4">
-              <label for="categoria" class="block text-base font-semibold text-[#3596D2]">Categoria</label>
+            <div class="space-y-2">
+              <label for="categoria" class="block text-base sm:text-lg font-bold text-[#3596D2] font-sans">
+                Selecione a categoria
+              </label>
               <select
                 id="categoria"
                 formControlName="categoriaId"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3596D2]"
+                class="w-full border border-gray-300 rounded-xl px-4 py-3 text-[#3596D2] bg-white shadow-sm font-sans text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#3596D2] focus:border-[#3596D2] transition duration-200"
                 required
               >
                 <option value="" disabled selected hidden>Selecione uma categoria</option>
                 @for (categoria of categorias; track categoria.id) {
-                  <option [value]="categoria.id">{{ categoria.nomeCategoria }}</option>
+                  <option [value]="categoria.id" class="text-base font-semibold">{{ categoria.nomeCategoria }}</option>
                 }
               </select>
             </div>
+
+
 
 
           </div>

@@ -118,8 +118,6 @@ export class CriaLivroComponent implements OnInit {
     );
   }
 
-
-
   public DeletaImagem(): void {
     this.formularioLivro.patchValue({
       uriImagemLivro: ""

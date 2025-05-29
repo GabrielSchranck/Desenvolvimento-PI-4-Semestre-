@@ -104,7 +104,7 @@ namespace BookAPI.Services.Livros
 
         public async Task Update(LivroDTO livroDTO)
         {
-            if (livroDTO.Imagem != null || livroDTO.Imagem.Length != 0)
+            if (livroDTO.Imagem != null)
             {
                 var imagemLivro = new ImagemLivroDTO
                 {

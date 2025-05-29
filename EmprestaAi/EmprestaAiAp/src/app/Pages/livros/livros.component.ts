@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
 import { LivroDTO } from '../../core/models/Livros';
+import { CategoriasDTO } from '../../core/models/Categorias';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LivroService } from '../../core/services/livro.service';
@@ -21,12 +22,14 @@ export class LivrosComponent implements OnInit {
   modalAnuciar: boolean = false;
   formLivro!: FormGroup;
   selectedFile: File | null = null;
+  Categorias: CategoriasDTO[] = [];
 
   constructor(private router: Router, private formBuilder: FormBuilder, private livroService: LivroService){}
   
   async ngOnInit(): Promise<void> {
     this.buscarLivros();
     this.createFormLivro();
+    this.buscarCategorias();
   }
 
   public GoToAddLivro(){
@@ -141,16 +144,12 @@ export class LivrosComponent implements OnInit {
     });
   }
 
-  public alterarImagem() {
-    throw new Error('Method not implemented.');
-  }
-
   public fecharModal() {
     this.abrirModal = false;
     this.livro = new LivroDTO();
     this.formLivro.reset();
+    this.selectedFile = null;
   }
-
 
   public async salvarEdicaoLivro() {
     if(!this.formLivro) return;
@@ -212,5 +211,18 @@ export class LivrosComponent implements OnInit {
       this.formLivro.get('imagemUrl')?.setValue(e.target.result); 
     };
     reader.readAsDataURL(file);
+  }
+
+  public buscarCategorias(): void {
+    this.livroService.GetCategoriasLivro().subscribe(
+      (response) => {
+        this.Categorias = response.result;
+      },
+      (error) => {
+        console.error("Erro ao buscar categorias:", error);
+      }
+    );
+
+    console.log(this.Categorias);
   }
 }
