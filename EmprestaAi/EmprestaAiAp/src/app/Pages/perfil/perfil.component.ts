@@ -32,7 +32,6 @@ export class PerfilComponent implements OnInit{
   constructor(private formBuilder: FormBuilder, private clienteService: ClienteService, private enderecoService: EnderecoService){}
 
   ngOnInit(): void {
-
     this.CreateFormPerfil();
     this.CreateFormEndereco();
 
