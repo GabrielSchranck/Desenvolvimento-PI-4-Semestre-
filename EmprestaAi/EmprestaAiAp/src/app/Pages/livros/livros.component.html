@@ -32,6 +32,7 @@
           <!-- Botão Anunciar -->
           <button
             class="mt-3 w-full bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium py-2 rounded-md transition-colors duration-200"
+            (click)="abrirModalAnunciar(item.id!)"
           >
             📢 Anunciar
           </button>
@@ -42,7 +43,7 @@
             <button
               class="flex items-center bg-white border border-gray-200 text-gray-700 hover:shadow hover:border-gray-300 px-3 py-1.5 rounded-lg transition duration-150"
               title="Editar livro"
-              (click)="abrirModalAnunciarLivro(item.id!)"
+              (click)="abrirModalEditarLivro(item.id!)"
             >
               <span class="text-sm mr-1">✏️</span>
               <span class="text-sm font-medium">Editar</span>
@@ -68,6 +69,32 @@
       }
     </div>
 
+    <!-- Livros anunciados -->
+    <div class="mt-12">
+      <h2 class="text-xl font-bold text-[#3596D2] mb-4">📢 Livros Anunciados</h2>
+      @for (item of livrosAnunciados; track $index) {
+        <!-- Adicione conteúdo futuramente -->
+      }
+      @empty {
+        <div class="text-center text-gray-500 mt-6">
+          <p class="text-lg">Nenhum livro anunciado.</p>
+        </div>
+      }
+    </div>
+
+
+    <!-- Livros emprestados -->
+    <div class="mt-12">
+      <h2 class="text-xl font-bold text-[#3596D2] mb-4">📦 Livros Emprestados</h2>
+      @for (item of livrosEmprestados; track $index) {
+        <!-- Adicione conteúdo futuramente -->
+      }
+      @empty {
+        <div class="text-center text-gray-500 mt-6">
+          <p class="text-lg">Nenhum livro emprestado.</p>
+        </div>
+      }
+    </div>
 
     @if (abrirModal) {
       <div class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm flex items-center justify-center px-4">
@@ -187,18 +214,95 @@
       </div>
     }
 
+    @if (modalAnuciar) {
+    <div class="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm flex items-center justify-center px-4">
+      <div
+        class="z-50 bg-white/95 rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8 backdrop-blur-md border border-gray-200"
+      >
+        <div class="flex flex-col items-center relative space-y-6">
+          <!-- Imagem do Livro -->
+          <div class="relative w-32 h-48 sm:w-36 sm:h-52 md:w-40 md:h-60">
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              class="hidden"
+            />
+            <img
+              [src]="formLivro.get('imagemUrl')?.value || 'https://via.placeholder.com/150x220?text=Livro'"
+              alt="Imagem do livro"
+              class="w-full h-full object-cover rounded-xl border border-gray-300 shadow-md"
+            />
+          </div>
 
-    <!-- Livros emprestados -->
-    <div class="mt-12">
-      <h2 class="text-xl font-bold text-[#3596D2] mb-4">📦 Livros Emprestados</h2>
-      @for (item of livrosEmprestados; track $index) {
-        <!-- Adicione conteúdo futuramente -->
-      }
-      @empty {
-        <div class="text-center text-gray-500 mt-6">
-          <p class="text-lg">Nenhum livro emprestado.</p>
+          <!-- Formulário -->
+          <form [formGroup]="formLivro" class="w-full space-y-5">
+            <div class="grid gap-4 md:grid-cols-2">
+              <!-- Título -->
+              <div class="col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Título</label>
+                <input
+                  type="text"
+                  formControlName="titulo"
+                  readonly
+                  placeholder="Digite o título do livro"
+                  class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none text-sm bg-gray-100 text-gray-600 cursor-not-allowed shadow-sm"
+                />
+              </div>
+
+              <!-- Quantidade -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Quantidade</label>
+                <input
+                  type="number"
+                  formControlName="quantidade"
+                  min="1"
+                  max="{{ formLivro.get('quantidade')?.value }}"
+                  placeholder="1"
+                  (blur)="verificarQuantidade()"
+                  class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-base font-medium shadow-sm"
+                />
+              </div>
+
+              <!-- Tipo de anúncio -->
+              <div>
+                <label for="categoria" class="block text-sm font-semibold text-gray-700 mb-1">
+                  Tipo de Anúncio
+                </label>
+                <select
+                  [value]="formLivro.get('tipo')?.value"
+                  formControlName="tipo"
+                  class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-gray-800 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                  required
+                >
+                  <option [value]="0">Venda</option>
+                  <option [value]="1">Empréstimo</option>
+                  <option [value]="2">Doação</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex justify-end gap-3 pt-4 flex-wrap">
+              <button
+                type="button"
+                (click)="fecharModal()"
+                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition shadow-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md"
+                (click)="anunciarLivro()"
+              >
+                Anunciar
+              </button>
+            </div>
+          </form>
         </div>
-      }
+      </div>
     </div>
+    }
   </div>
 </app-user-info>

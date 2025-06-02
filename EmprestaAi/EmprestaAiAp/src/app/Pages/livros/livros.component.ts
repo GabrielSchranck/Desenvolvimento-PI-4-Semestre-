@@ -17,12 +17,14 @@ export class LivrosComponent implements OnInit {
 
   livro!: LivroDTO | undefined;
   livros: LivroDTO[] = [];
+  Categorias: CategoriasDTO[] = [];
   livrosEmprestados: LivroDTO[] = [];
+  livrosAnunciados: LivroDTO[] = [];
   abrirModal: boolean = false;
   modalAnuciar: boolean = false;
   formLivro!: FormGroup;
   selectedFile: File | null = null;
-  Categorias: CategoriasDTO[] = [];
+  quantidadeDisponivel: number = 0;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private livroService: LivroService){}
   
@@ -39,11 +41,22 @@ export class LivrosComponent implements OnInit {
   public async buscarLivros() {
     try {
       const data: LivroDTO[] = await this.livroService.getLivros();
-      this.livros = data;
+
+      this.livros = data.filter(livro => livro.quantidade !== 0);
+
+      console.log(data.filter(livro => livro.LivrosAnunciados));
+
+      this.livrosAnunciados = data.filter(livro => livro.LivrosAnunciados);
+
+
+      console.log("Livros:", this.livros);
+      console.log("Livros anunciados:", this.livrosAnunciados);
+
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     }
   }
+
 
   public async deleteLivro(livroId: number): Promise<void> {
     const result = await Swal.fire({
@@ -99,7 +112,7 @@ export class LivrosComponent implements OnInit {
     this.buscarLivros();
   }
   
-  public abrirModalAnunciarLivro(livroId: number): void {
+  public abrirModalEditarLivro(livroId: number): void {
     
     this.livro = this.livros.find(l => l.id === livroId);
 
@@ -140,7 +153,8 @@ export class LivrosComponent implements OnInit {
       valor: [0.00],
       custo: [0.00],
       titulo: [''],
-      imagemUrl: ['']
+      imagemUrl: [''],
+      tipo: [0]
     });
   }
 
@@ -149,6 +163,20 @@ export class LivrosComponent implements OnInit {
     this.livro = new LivroDTO();
     this.formLivro.reset();
     this.selectedFile = null;
+    this.modalAnuciar = false;
+  }
+
+  public verificarQuantidade(): void {
+    const controle = this.formLivro.get('quantidade');
+    const valor = controle?.value;
+
+    if (valor > this.quantidadeDisponivel) {
+      controle?.setValue(this.quantidadeDisponivel);
+    }
+
+    if (valor < 1) {
+      controle?.setValue(1);
+  }
   }
 
   public async salvarEdicaoLivro() {
@@ -224,5 +252,93 @@ export class LivrosComponent implements OnInit {
     );
 
     console.log(this.Categorias);
+  }
+
+  public abrirModalAnunciar(livroId: number): void {
+    this.livro = this.livros.find(l => l.id === livroId);
+
+    if (!this.livro) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Livro não encontrado.',
+        icon: 'error',
+        confirmButtonText: 'Fechar',
+        customClass: {
+          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+        },
+        buttonsStyling: false
+      });
+      return;
+    }
+
+    this.formLivro.patchValue({
+      id: this.livro.id,
+      categoriaId: this.livro.categoriaId,
+      quantidade: this.livro.quantidade,
+      qtdPaginas: this.livro.qtdPaginas,
+      valor: this.livro.valor,
+      custo: this.livro.custo,
+      titulo: this.livro.titulo,
+      imagemUrl: this.livro.uriImagemLivro
+    });
+
+    this.quantidadeDisponivel = this.livro.quantidade || 0;
+
+    this.modalAnuciar = true;
+  }
+
+  public anunciarLivro(): void {
+    if (this.formLivro.invalid) {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Por favor, preencha todos os campos obrigatórios.',
+        icon: 'error',
+        confirmButtonText: 'Fechar',
+        customClass: {
+          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+        },
+        buttonsStyling: false
+      });
+      return;
+    }
+
+    const livroAnunciado = {
+      clienteId: this.livro?.clienteId,
+      LivroId: this.livro?.id,
+      Tipo: this.formLivro.get('tipo')?.value || 0,
+      quantidadeAnunciado: this.formLivro.get('quantidade')?.value || 0
+    };
+    
+    this.livroService.anunciaLivro(livroAnunciado).subscribe({
+      next: (response) => {
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Livro anunciado com sucesso.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        }).then(() => {
+          this.fecharModal();
+          this.atualizarListaDeLivros();
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Erro',
+          text: error.error || 'Erro ao anunciar o livro.',
+          icon: 'error',
+          confirmButtonText: 'Fechar',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        });
+      }
+    });
+
+    this.modalAnuciar = false;
   }
 }

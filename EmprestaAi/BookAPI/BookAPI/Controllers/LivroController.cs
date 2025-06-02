@@ -175,5 +175,27 @@ namespace BookAPI.Controllers
         //        return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
         //    }
         //}
+
+        [HttpPost("anunciar")]
+        public async Task<ActionResult> Anunciar([FromBody] LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                livroAnunciadoDTO.ClienteId = clienteId;
+
+                await _livroServices.AnunciarLivroAsync(livroAnunciadoDTO);
+
+                return Ok(new { result = "Livro anunciado com sucesso!"});
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }

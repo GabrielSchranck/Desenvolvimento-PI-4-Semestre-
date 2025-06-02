@@ -6,13 +6,58 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Repositories.Livros
 {
-	public class LivroRepository : ILivroRepository
-	{
-		private readonly BookDbContext _dbContext;
+    public class LivroRepository : ILivroRepository
+    {
+        private readonly BookDbContext _dbContext;
 
         public LivroRepository(BookDbContext dbContext)
         {
-			this._dbContext = dbContext;
+            this._dbContext = dbContext;
+        }
+
+        public async Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            var anuncioExistente = await _dbContext.LivrosAnunciados
+                .FirstOrDefaultAsync(la => la.LivroId == livroAnunciadoDTO.LivroId && la.ClienteId == livroAnunciadoDTO.ClienteId);
+
+            bool ehTipoDiferente = false;
+
+            var livroAnunciado = new LivroAnunciado();
+
+            if (anuncioExistente == null)
+            {
+                livroAnunciado = new LivroAnunciado
+                {
+                    ClienteId = (int)livroAnunciadoDTO.ClienteId,
+                    LivroId = (int)livroAnunciadoDTO.LivroId,
+                    Tipo = (int)livroAnunciadoDTO.Tipo,
+                    QuantidadeAnunciado = (int)livroAnunciadoDTO.QuantidadeAnunciado
+                };
+            }
+            else
+            {
+                livroAnunciado = anuncioExistente;
+                livroAnunciado.QuantidadeAnunciado += (int)livroAnunciadoDTO.QuantidadeAnunciado;
+
+                if(livroAnunciado.Tipo != livroAnunciadoDTO.Tipo)
+                {
+                    ehTipoDiferente = true;
+                    livroAnunciado.Id = 0;
+                }
+            }
+
+            var livro = await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == livroAnunciado.LivroId);
+
+            if (livro.Quantidade == 0) return;
+
+            livro.Anunciado = true;
+            livro.Quantidade = livro.Quantidade - (int)livroAnunciadoDTO.QuantidadeAnunciado;
+
+            if (anuncioExistente == null || ehTipoDiferente) await _dbContext.LivrosAnunciados.AddAsync(livroAnunciado);
+            else _dbContext.LivrosAnunciados.Update(livroAnunciado);
+
+            _dbContext.UpdateRange(livro);
+            _dbContext.SaveChanges();
         }
 
         public async Task CreateAsync(Livro livro, ClienteLivro clienteLivro)
@@ -47,7 +92,7 @@ namespace BookAPI.Repositories.Livros
         }
 
         public async Task DeleteAsync(ClienteLivro clienteLivro)
-		{
+        {
             var livroParaRemover = await _dbContext.Livros.Where(l => l.Id == clienteLivro.LivroId).FirstAsync();
             var itensParaRemover = await _dbContext.ClientesLivros.Where(cl => cl.ClienteId == clienteLivro.ClienteId && cl.LivroId == clienteLivro.LivroId).FirstAsync();
             var imagemLivroParaRemover = await _dbContext.FotosLivros.Where(fl => fl.LivroId == clienteLivro.LivroId).FirstAsync();
@@ -67,6 +112,9 @@ namespace BookAPI.Repositories.Livros
 
             var livrosIds = clientesLivro.Select(cl => cl.LivroId).ToList();
 
+            if (!livrosIds.Any())
+                return Enumerable.Empty<LivroDTO>();
+
             var livrosCliente = await _dbContext.Livros
                 .Where(l => livrosIds.Contains(l.Id))
                 .ToListAsync();
@@ -74,24 +122,49 @@ namespace BookAPI.Repositories.Livros
             var imagensLivro = await _dbContext.FotosLivros
                 .Where(img => livrosIds.Contains(img.LivroId))
                 .GroupBy(img => img.LivroId)
-                .Select(g => g.FirstOrDefault()) 
+                .Select(g => g.FirstOrDefault())
                 .ToListAsync();
 
-            var livrosDto = livrosCliente.Select(l => new LivroDTO
-            {
-                Id = l.Id,
-                CategoriaId = l.CategoriaId,
-                Titulo = l.Titulo,
-                Valor = l.Valor,
-                Custo = l.Custo,
-                QtdPaginas = l.QtdPaginas,
-                Quantidade = l.Quantidade,
-                ClienteId = clientId,
-                UriImagemLivro = imagensLivro.FirstOrDefault(img => img.LivroId == l.Id)?.UrlImagem
-            }).ToList();
+            var livrosAnunciados = await _dbContext.LivrosAnunciados
+                .Where(la => la.ClienteId == clientId && la.QuantidadeAnunciado > 0)
+                .ToListAsync();
+
+            var anunciosAgrupados = livrosAnunciados
+                .GroupBy(la => la.LivroId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(la => new LivroAnunciadoDTO
+                    {
+                        ClienteId = clientId,
+                        LivroId = la.LivroId,
+                        Tipo = la.Tipo,
+                        QuantidadeAnunciado = la.QuantidadeAnunciado
+                    }).ToList()
+                );
+
+            var livrosDto = livrosCliente
+                .Select(l => new LivroDTO
+                {
+                    Id = l.Id,
+                    CategoriaId = l.CategoriaId,
+                    Titulo = l.Titulo,
+                    Valor = l.Valor,
+                    Custo = l.Custo,
+                    QtdPaginas = l.QtdPaginas,
+                    Quantidade = l.Quantidade,
+                    ClienteId = clientId,
+                    UriImagemLivro = imagensLivro.FirstOrDefault(img => img.LivroId == l.Id)?.UrlImagem,
+                    Anunciado = livrosAnunciados.Any(la => la.LivroId == l.Id),
+                    LivrosAnunciados = anunciosAgrupados.ContainsKey(l.Id)
+                        ? anunciosAgrupados[l.Id]
+                        : new List<LivroAnunciadoDTO>()
+                })
+                .ToList();
 
             return livrosDto;
         }
+
+
 
         public async Task<IEnumerable<Categoria>> GetCategorias()
         {
@@ -99,24 +172,24 @@ namespace BookAPI.Repositories.Livros
         }
 
         public async Task UpdateAsync(Livro livro)
-		{
-			if(livro != null)
-			{
-				var newBook = await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == livro.Id);
+        {
+            if (livro != null)
+            {
+                var newBook = await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == livro.Id);
 
-				if(newBook != null)
-				{
+                if (newBook != null)
+                {
                     newBook.Titulo = livro.Titulo;
-					newBook.Valor = livro.Valor;
-					newBook.Quantidade = livro.Quantidade;
-					newBook.Custo = livro.Custo;
+                    newBook.Valor = livro.Valor;
+                    newBook.Quantidade = livro.Quantidade;
+                    newBook.Custo = livro.Custo;
                     newBook.Categoria = livro.Categoria;
 
-					_dbContext.Livros.Update(newBook);
+                    _dbContext.Livros.Update(newBook);
 
-					await _dbContext.SaveChangesAsync();
-				}
-			}
-		}
-	}
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+        }
+    }
 }

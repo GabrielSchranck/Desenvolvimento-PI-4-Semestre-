@@ -15,5 +15,6 @@ namespace BookAPI.Services.Livros
 		Task<FotoLivro> GetImgBook(string titulo);
 		Task<IEnumerable<Categoria>> GetCategorias();
 		Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO, bool ehEdicao);
+		Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO);
     }
 }

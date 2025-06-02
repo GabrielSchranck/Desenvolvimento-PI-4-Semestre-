@@ -25,6 +25,7 @@ namespace BookAPI.Data
         public DbSet<ClienteLivro> ClientesLivros { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
 		public DbSet<CartaoCliente> CartoesClientes { get; set; }
+        public DbSet<LivroAnunciado> LivrosAnunciados { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

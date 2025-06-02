@@ -128,4 +128,18 @@ export class LivroService {
     );
   }
 
+  public anunciaLivro(LivroAnunciadoDTO: any): Observable<any> {
+    const apiUrl = `${this.url}/anunciar`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, LivroAnunciadoDTO, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
 }

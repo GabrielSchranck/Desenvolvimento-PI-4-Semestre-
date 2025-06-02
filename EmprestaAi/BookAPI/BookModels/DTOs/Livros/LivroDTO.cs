@@ -19,5 +19,8 @@ namespace BookModels.DTOs.Livros
 		public int? Quantidade { get; set; }
         public string? UriImagemLivro { get; set; }
         public IFormFile? Imagem { get; set; }
+		public bool? Anunciado { get; set; }
+        public LivroAnunciadoDTO? LivroAnunciadoDTO { get; set; }
+        public List<LivroAnunciadoDTO>? LivrosAnunciados { get; set; }
     }
 }

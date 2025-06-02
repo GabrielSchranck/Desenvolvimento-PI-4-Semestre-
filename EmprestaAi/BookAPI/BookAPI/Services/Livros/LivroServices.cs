@@ -95,8 +95,6 @@ namespace BookAPI.Services.Livros
             await _livroRepository.CreateAsync(livro, clienteLivro);
         }
 
-
-
         public async Task Delete(ClienteLivro clienteLivro)
         {
             await _livroRepository.DeleteAsync(clienteLivro);
@@ -164,6 +162,10 @@ namespace BookAPI.Services.Livros
 
             if (!ehEdicao) await _livroImagemRepository.SaveImage(livroFoto);
             else await _livroImagemRepository.Update(livroFoto);
+        }
+        public async Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            if(livroAnunciadoDTO != null) await _livroRepository.AnunciarLivroAsync(livroAnunciadoDTO);
         }
     }
 }

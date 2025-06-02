@@ -24,7 +24,7 @@ namespace BookAPI.Entities.Livros
 
 		public int QtdPaginas { get; set; }
 		public int Quantidade { get; set; }
-
+		public bool Anunciado { get; set; } = false;
         public Cliente? Cliente { get; set; }
         //public Autor? Autor { get; set; }
         public Categoria? Categoria { get; set; }
