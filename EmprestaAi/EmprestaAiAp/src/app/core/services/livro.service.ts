@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environments';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
-import { LivroDTO } from '../models/Livros';
+import { LivroAnunciadoDTO, LivroDTO } from '../models/Livros';
 import { CategoriasDTO } from '../models/Categorias';
 
 @Injectable({
@@ -133,6 +133,20 @@ export class LivroService {
     const httpOptions = this.getHttpOptions();
 
     return this.httpCliente.post(apiUrl, LivroAnunciadoDTO, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public cancelarAnincio(anuncio: LivroAnunciadoDTO): Observable<any> {
+    const apiUrl = `${this.url}/cancelarAnuncio`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, anuncio, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
           return throwError(() => error.error);

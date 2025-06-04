@@ -167,5 +167,10 @@ namespace BookAPI.Services.Livros
         {
             if(livroAnunciadoDTO != null) await _livroRepository.AnunciarLivroAsync(livroAnunciadoDTO);
         }
+
+        public async Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            if(livroAnunciadoDTO != null) await _livroRepository.CancelarAnuncioAsync(livroAnunciadoDTO);
+        }
     }
 }

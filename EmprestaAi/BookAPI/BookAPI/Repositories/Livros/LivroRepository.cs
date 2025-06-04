@@ -18,7 +18,7 @@ namespace BookAPI.Repositories.Livros
         public async Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO)
         {
             var anuncioExistente = await _dbContext.LivrosAnunciados
-                .FirstOrDefaultAsync(la => la.LivroId == livroAnunciadoDTO.LivroId && la.ClienteId == livroAnunciadoDTO.ClienteId);
+                .FirstOrDefaultAsync(la => la.LivroId == livroAnunciadoDTO.LivroId && la.ClienteId == livroAnunciadoDTO.ClienteId && la.Tipo == livroAnunciadoDTO.Tipo);
 
             bool ehTipoDiferente = false;
 
@@ -60,6 +60,20 @@ namespace BookAPI.Repositories.Livros
             _dbContext.SaveChanges();
         }
 
+        public async Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            var anunciado = await _dbContext.LivrosAnunciados.Where(la => la.Id == livroAnunciadoDTO.Id).FirstOrDefaultAsync();
+            var livro = await _dbContext.Livros.Where(l => l.Id == anunciado.LivroId).FirstOrDefaultAsync();
+
+            anunciado.QuantidadeAnunciado -= (int)livroAnunciadoDTO.QuantidadeAnunciado;
+            livro.Quantidade += (int)livroAnunciadoDTO.QuantidadeAnunciado;
+
+            _dbContext.LivrosAnunciados.Update(anunciado);
+            _dbContext.Livros.Update(livro);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task CreateAsync(Livro livro, ClienteLivro clienteLivro)
         {
             if (livro == null || clienteLivro == null)
@@ -67,6 +81,8 @@ namespace BookAPI.Repositories.Livros
 
             var livroExistente = await _dbContext.Livros
                 .FirstOrDefaultAsync(l => l.Titulo == livro.Titulo);
+
+            livroExistente = null;
 
             if (livroExistente != null)
             {
@@ -135,6 +151,7 @@ namespace BookAPI.Repositories.Livros
                     g => g.Key,
                     g => g.Select(la => new LivroAnunciadoDTO
                     {
+                        Id = la.Id,
                         ClienteId = clientId,
                         LivroId = la.LivroId,
                         Tipo = la.Tipo,

@@ -9,6 +9,7 @@ namespace BookModels.DTOs.Livros
 {
     public class LivroAnunciadoDTO
     {
+        public int? Id { get; set; }
         public int? ClienteId { get; set; }
         public int? LivroId { get; set; }
         public int? QuantidadeAnunciado { get; set; }

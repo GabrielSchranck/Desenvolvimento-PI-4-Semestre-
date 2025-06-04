@@ -43,7 +43,11 @@
               {{ card.description }}
             </p>
 
-            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md py-2 px-3 sm:py-2.5 sm:px-4 transition-colors duration-200 text-sm sm:text-base">
+            <button 
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md py-2 px-3 sm:py-2.5 sm:px-4 transition-colors duration-200 text-sm sm:text-base"
+              tipe="button"
+              (click)="goToLivro()"
+              >
               Quero esse
             </button>
           </div>

@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Card } from '../../core/models/Card';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cards',
@@ -28,6 +29,8 @@ export class CardsComponent implements OnInit {
   isMobile = false;
   cardWidth = 320;
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     this.checkIfMobile();
     this.startAutoScroll();
@@ -40,6 +43,10 @@ export class CardsComponent implements OnInit {
 
   calculateCardWidth() {
     this.cardWidth = this.isMobile ? 280 : 320;
+  }
+
+  public goToLivro(){
+    this.router.navigate(['/exibelivro']);
   }
 
   startAutoScroll() {

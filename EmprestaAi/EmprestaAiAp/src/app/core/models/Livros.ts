@@ -9,14 +9,14 @@ export class LivroDTO {
   quantidade?: number;
   uriImagemLivro?: string;
   anunciado?: boolean;
-  LivroAnunciadoDTO?: LivroAnunciadoDTO;
-  LivrosAnunciados?: LivroAnunciadoDTO[];
+  livroAnunciadoDTO?: LivroAnunciadoDTO;
+  livrosAnunciados?: LivroAnunciadoDTO[];
 }
 
 export class LivroAnunciadoDTO {
   id?: number;
   clienteId?: number;
   LivroId? : number;
-  Tipo?: number;
+  tipo?: number;
   quantidadeAnunciado?: number;
 }

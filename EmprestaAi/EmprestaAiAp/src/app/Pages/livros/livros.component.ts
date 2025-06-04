@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
-import { LivroDTO } from '../../core/models/Livros';
+import { LivroAnunciadoDTO, LivroDTO } from '../../core/models/Livros';
 import { CategoriasDTO } from '../../core/models/Categorias';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -17,14 +17,18 @@ export class LivrosComponent implements OnInit {
 
   livro!: LivroDTO | undefined;
   livros: LivroDTO[] = [];
+  livrosEncontrados: LivroDTO[] = [];
   Categorias: CategoriasDTO[] = [];
   livrosEmprestados: LivroDTO[] = [];
   livrosAnunciados: LivroDTO[] = [];
   abrirModal: boolean = false;
   modalAnuciar: boolean = false;
+  modalCancelarAnuncio: boolean = false;
   formLivro!: FormGroup;
+  formLivroAnunciar!: FormGroup;
   selectedFile: File | null = null;
   quantidadeDisponivel: number = 0;
+
 
   constructor(private router: Router, private formBuilder: FormBuilder, private livroService: LivroService){}
   
@@ -32,6 +36,7 @@ export class LivrosComponent implements OnInit {
     this.buscarLivros();
     this.createFormLivro();
     this.buscarCategorias();
+    this.createFormLivroAnunciar();
   }
 
   public GoToAddLivro(){
@@ -42,21 +47,31 @@ export class LivrosComponent implements OnInit {
     try {
       const data: LivroDTO[] = await this.livroService.getLivros();
 
-      this.livros = data.filter(livro => livro.quantidade !== 0);
+      this.livrosEncontrados = data ?? [];
 
-      console.log(data.filter(livro => livro.LivrosAnunciados));
+      this.livros = this.livrosEncontrados.filter(livro => (livro.quantidade ?? 0) > 0);
 
-      this.livrosAnunciados = data.filter(livro => livro.LivrosAnunciados);
+      this.livrosAnunciados = [];
 
-
-      console.log("Livros:", this.livros);
-      console.log("Livros anunciados:", this.livrosAnunciados);
+      this.livrosEncontrados.forEach(livro => {
+        if (Array.isArray(livro.livrosAnunciados) && livro.livrosAnunciados.length > 0) {
+          this.livrosAnunciados.push(livro);
+        }
+      });
 
     } catch (error) {
-      console.error('Erro ao buscar livros:', error);
+      console.error("❌ Erro ao buscar livros:", error);
     }
   }
 
+  public getTipoAnuncio(tipo: number | undefined): string {
+    switch (tipo) {
+      case 0: return 'Venda';
+      case 1: return 'Empréstimo';
+      case 2: return 'Doação';
+      default: return 'Tipo desconhecido';
+    }
+  }
 
   public async deleteLivro(livroId: number): Promise<void> {
     const result = await Swal.fire({
@@ -158,16 +173,30 @@ export class LivrosComponent implements OnInit {
     });
   }
 
+  public createFormLivroAnunciar(): void {
+    this.formLivroAnunciar = this.formBuilder.group({
+      id: [0],
+      clienteId: [0],
+      LivroId: [0],
+      tipo: ['Tipo desconhecido'],
+      quantidadeAnunciado: [0]
+    });
+  }
+
   public fecharModal() {
     this.abrirModal = false;
     this.livro = new LivroDTO();
     this.formLivro.reset();
     this.selectedFile = null;
     this.modalAnuciar = false;
+    this.modalCancelarAnuncio = false;
   }
 
   public verificarQuantidade(): void {
-    const controle = this.formLivro.get('quantidade');
+    let controle = this.formLivro.get('quantidade');
+    
+    if (!controle) controle = this.formLivroAnunciar.get('quantidadeAnunciado');
+
     const valor = controle?.value;
 
     if (valor > this.quantidadeDisponivel) {
@@ -176,7 +205,7 @@ export class LivrosComponent implements OnInit {
 
     if (valor < 1) {
       controle?.setValue(1);
-  }
+    }
   }
 
   public async salvarEdicaoLivro() {
@@ -250,8 +279,6 @@ export class LivrosComponent implements OnInit {
         console.error("Erro ao buscar categorias:", error);
       }
     );
-
-    console.log(this.Categorias);
   }
 
   public abrirModalAnunciar(livroId: number): void {
@@ -341,4 +368,82 @@ export class LivrosComponent implements OnInit {
 
     this.modalAnuciar = false;
   }
+
+  public cancelarAnuncio(anuncioId: number|undefined) {
+
+    let anuncioEncontrado: LivroAnunciadoDTO | undefined;
+
+    for (const livro of this.livrosAnunciados) {
+      for (const anuncio of livro.livrosAnunciados || []) {
+        if (anuncio.id === anuncioId) {
+          anuncioEncontrado = anuncio;
+          break;
+        }
+      }
+      if (anuncioEncontrado) break;
+    }
+
+    this.formLivroAnunciar.patchValue({
+      id: anuncioEncontrado?.id,
+      clienteId: anuncioEncontrado?.clienteId,
+      LivroId: anuncioEncontrado?.LivroId,
+      tipo: this.getTipoAnuncio(anuncioEncontrado?.tipo),
+      quantidadeAnunciado: anuncioEncontrado?.quantidadeAnunciado
+    });
+
+    this.quantidadeDisponivel = anuncioEncontrado?.quantidadeAnunciado || 0;
+
+    this.modalCancelarAnuncio = true;
+  }
+
+  public cancelarAnuncioLivro(): void {
+
+    var anuncioEncontrado: LivroAnunciadoDTO | undefined;
+    anuncioEncontrado = this.formLivroAnunciar.value;
+
+    if (anuncioEncontrado) {
+      anuncioEncontrado.tipo = this.getTipoAnuncioNumero(String(anuncioEncontrado.tipo ?? ''));
+    }
+
+    if (anuncioEncontrado) {
+      this.livroService.cancelarAnincio(anuncioEncontrado).subscribe({
+        next: (response) => {
+          Swal.fire({
+            title: 'Sucesso',
+            text: 'Anúncio cancelado com sucesso.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+            },
+            buttonsStyling: false
+          }).then(() => {
+            this.fecharModal();
+            this.atualizarListaDeLivros();
+          });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Anúncio não encontrado.',
+        icon: 'error',
+        confirmButtonText: 'Fechar',
+        customClass: {
+          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+        },
+        buttonsStyling: false
+      });
+    }
+  }
+
+  public getTipoAnuncioNumero(tipo: string): number {
+    switch (tipo.toLowerCase()) {
+      case 'venda': return 0;
+      case 'empréstimo': return 1;
+      case 'doação': return 2;
+      default: return -1; 
+    }
+}
+
 }
