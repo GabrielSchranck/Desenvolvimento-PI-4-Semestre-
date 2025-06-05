@@ -34,18 +34,15 @@
 
   <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
 
-  <div class="flex items-center justify-center py-2 md:py-8 flex-wrap gap-4">
+ <div class="flex flex-wrap items-center justify-center gap-4 p-8">
 
-    <button type="button"
-      class="text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center">
-      Série
-    </button>
+    <!-- Barra de pesquisa aprimorada -->
+   <input type="text" placeholder="Pesquisar..."
+       [(ngModel)]="searchTerm"
+       (input)="filterLivros()"
+       class="flex-1 min-w-[200px] max-w-md md:w-96 px-4 py-3 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none" />
 
-    <button type="button"
-      class="text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center">
-      Solo
-    </button>
-
+    <!-- Dropdown de categoria -->
     <div class="relative">
       <button type="button"
         class="flex items-center justify-between w-full md:w-auto text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center"
@@ -58,28 +55,124 @@
       </button>
 
       @if (dropdownOpen) {
-        <div class="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg">
+        <div class="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto">
           <ul class="py-2 text-sm text-gray-700">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Fantasia</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Romance</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Terror</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Ficção científica</a></li>
+            @for (categoria of categorias; track categoria.id) {
+              <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100"
+                  (click)="selectCategory(categoria.id)">
+                  {{ categoria.nomeCategoria }}
+                </a>  
+              </li>
+            }
           </ul>
         </div>
       }
-
     </div>
+    <!-- Botão de filtro -->
+     <button
+      class="flex items-center justify-between w-full md:w-auto text-blue-600 bg-white hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-3 text-center"
+      (click)="toggleFiltro()">
+     >
+      Limpar filtros
+     </button>
+
   </div>
 
-  <div class="bg-gray-100 p-8">
-    <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros mais vendidos</h2>
 
-    <app-cards></app-cards>
+  @if (!possuiFiltroAtivo) {
+    <div class="bg-gray-100 p-8">
 
-    <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros de romance</h2>
+      @if (isTyping) {
+        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
+      
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="0"
+        />
 
-    <app-cards></app-cards>
-  </div>
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="1"
+        />
+
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="2"
+        />
+      }
+      @else{
+        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
+      
+        <app-cards
+          [livrosAnunciados]="livrosVenda"
+          [tipo]="0"
+        />
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosEmprestimo"
+          [tipo]="1"
+        />
+
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosDoacao"
+          [tipo]="2"
+        />
+      }
+    </div>
+  }
+  @else {
+    <div class="bg-gray-100 p-8">
+      @if (isTyping) {
+        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
+      
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="0"
+        />
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="1"
+        />
+
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosAnunciadosFiltrado"
+          [tipo]="2"
+        />
+      }
+      @else{
+        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
+        <app-cards
+          [livrosAnunciados]="livrosVendaFiltrado"
+          [tipo]="0"
+        />
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosEmprestimoFiltrado"
+          [tipo]="1"
+        />
+
+
+        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
+        <app-cards
+          [livrosAnunciados]="livrosDoacaoFiltrado"
+          [tipo]="2"
+        />
+      }
+    </div>
+  }
+  
 
 
 </main>

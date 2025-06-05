@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environments';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, tap, throwError } from 'rxjs';
 import { LivroAnunciadoDTO, LivroDTO } from '../models/Livros';
 import { CategoriasDTO } from '../models/Categorias';
 
@@ -147,6 +147,19 @@ export class LivroService {
     const httpOptions = this.getHttpOptions();
 
     return this.httpCliente.post(apiUrl, anuncio, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public GetAllLivrosAnunciados(): Observable<any> { 
+    const apiUrl = `${this.url}/selecionarAnuncios`;
+    const httpOptions = this.getHttpOptions();
+    return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
           return throwError(() => error.error);

@@ -17,5 +17,6 @@ namespace BookAPI.Services.Livros
 		Task SaveImagemLivro(ImagemLivroDTO imagemLivroDTO, bool ehEdicao);
 		Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO);
 		Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO);
+		Task<IEnumerable<LivroDTO>> SelecionarAnuncios();
     }
 }

@@ -32,5 +32,6 @@ namespace BookAPI.Entities.Livros
         public ICollection<FotoLivro> FotosLivros { get; set; } = new List<FotoLivro>();
         public ICollection<ClienteLivro> CLientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<ItemHistorico> ItensHistorico { get; set; } = new List<ItemHistorico>();
+		public ICollection<LivroAnunciado> livrosAnunciados { get; set; } = new List<LivroAnunciado>();
 	}
 }

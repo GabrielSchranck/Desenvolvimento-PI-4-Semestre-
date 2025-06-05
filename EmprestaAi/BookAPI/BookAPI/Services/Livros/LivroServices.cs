@@ -163,6 +163,7 @@ namespace BookAPI.Services.Livros
             if (!ehEdicao) await _livroImagemRepository.SaveImage(livroFoto);
             else await _livroImagemRepository.Update(livroFoto);
         }
+
         public async Task AnunciarLivroAsync(LivroAnunciadoDTO livroAnunciadoDTO)
         {
             if(livroAnunciadoDTO != null) await _livroRepository.AnunciarLivroAsync(livroAnunciadoDTO);
@@ -171,6 +172,11 @@ namespace BookAPI.Services.Livros
         public async Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO)
         {
             if(livroAnunciadoDTO != null) await _livroRepository.CancelarAnuncioAsync(livroAnunciadoDTO);
+        }
+
+        public async Task<IEnumerable<LivroDTO>> SelecionarAnuncios()
+        {
+            return await _livroRepository.SelecionarAnuncios();
         }
     }
 }

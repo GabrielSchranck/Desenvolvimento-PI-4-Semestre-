@@ -1,6 +1,7 @@
 ﻿using BookAPI.Data;
 using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Livros;
+using BookModels.DTOs.Clientes;
 using BookModels.DTOs.Livros;
 using Microsoft.EntityFrameworkCore;
 
@@ -112,10 +113,16 @@ namespace BookAPI.Repositories.Livros
             var livroParaRemover = await _dbContext.Livros.Where(l => l.Id == clienteLivro.LivroId).FirstAsync();
             var itensParaRemover = await _dbContext.ClientesLivros.Where(cl => cl.ClienteId == clienteLivro.ClienteId && cl.LivroId == clienteLivro.LivroId).FirstAsync();
             var imagemLivroParaRemover = await _dbContext.FotosLivros.Where(fl => fl.LivroId == clienteLivro.LivroId).FirstAsync();
+            var livrosAnunciados = await _dbContext.LivrosAnunciados.Where(la => la.LivroId == clienteLivro.LivroId).ToListAsync();
 
             _dbContext.ClientesLivros.RemoveRange(itensParaRemover);
             _dbContext.Livros.Remove(livroParaRemover);
             _dbContext.FotosLivros.Remove(imagemLivroParaRemover);
+
+            foreach(var anuncio in livrosAnunciados)
+            {
+                _dbContext.LivrosAnunciados.Remove(anuncio);
+            }
 
             await _dbContext.SaveChangesAsync();
         }
@@ -181,6 +188,47 @@ namespace BookAPI.Repositories.Livros
             return livrosDto;
         }
 
+        public async Task<IEnumerable<LivroDTO>> SelecionarAnuncios()
+        {
+            var livros = await _dbContext.Livros
+                .Include(l => l.livrosAnunciados)
+                    .ThenInclude(la => la.Cliente)
+                .Include(l => l.Categoria)
+                .Include(l => l.FotosLivros)
+                .Where(l => l.livrosAnunciados.Any(la => la.QuantidadeAnunciado > 0))
+                .ToListAsync();
+
+            var livroDTOs = livros.Select(l => new LivroDTO
+            {
+                Id = l.Id,
+                ClienteId = l.Cliente?.Id,
+                CategoriaId = l.CategoriaId,
+                Titulo = l.Titulo,
+                Valor = l.Valor,
+                Custo = l.Custo,
+                QtdPaginas = l.QtdPaginas,
+                Quantidade = l.Quantidade,
+                Anunciado = l.Anunciado,
+                UriImagemLivro = l.FotosLivros.FirstOrDefault()?.UrlImagem,
+                LivrosAnunciados = l.livrosAnunciados
+                    .Where(la => la.QuantidadeAnunciado > 0) 
+                    .Select(la => new LivroAnunciadoDTO
+                    {
+                        Id = la.Id,
+                        ClienteId = la.ClienteId,
+                        LivroId = la.LivroId,
+                        QuantidadeAnunciado = la.QuantidadeAnunciado,
+                        Tipo = la.Tipo,
+                        ClienteDTO = la.Cliente != null ? new ClienteDTO
+                        {
+                            Id = la.Cliente.Id,
+                        } : null
+                    }).ToList()
+            }).ToList();
+
+            return livroDTOs;
+        }
+
 
 
         public async Task<IEnumerable<Categoria>> GetCategorias()
@@ -200,7 +248,7 @@ namespace BookAPI.Repositories.Livros
                     newBook.Valor = livro.Valor;
                     newBook.Quantidade = livro.Quantidade;
                     newBook.Custo = livro.Custo;
-                    newBook.Categoria = livro.Categoria;
+                    newBook.CategoriaId = livro.CategoriaId;
 
                     _dbContext.Livros.Update(newBook);
 

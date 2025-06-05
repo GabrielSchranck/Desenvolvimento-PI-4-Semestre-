@@ -144,6 +144,7 @@ namespace BookAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("getCategorias")]
         public async Task<ActionResult> GetCategorias()
         {
@@ -190,7 +191,7 @@ namespace BookAPI.Controllers
 
                 await _livroServices.AnunciarLivroAsync(livroAnunciadoDTO);
 
-                return Ok(new { result = "Livro anunciado com sucesso!"});
+                return Ok(new { result = "Livro anunciado com sucesso!" });
             }
             catch (Exception)
             {
@@ -213,6 +214,42 @@ namespace BookAPI.Controllers
                 await _livroServices.CancelarAnuncioAsync(livroAnunciadoDTO);
 
                 return Ok(new { result = "Anuncio cancelado com sucesso!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("selecionarAnuncios")]
+        public async Task<ActionResult> SelecionarAnuncios()
+        {
+            try
+            {
+                var livros = await _livroServices.SelecionarAnuncios();
+
+                if (livros == null) return Ok(new { result = "Nenhum livro encontrado" });
+
+                foreach (var livro in livros)
+                {
+                    if (!string.IsNullOrEmpty(livro.UriImagemLivro) && livro.UriImagemLivro.StartsWith("imagens/"))
+                    {
+                        livro.UriImagemLivro = $"{Request.Scheme}://{Request.Host}/{livro.UriImagemLivro}";
+                    }
+                }
+
+                var vendas = livros.Where(l => l.LivrosAnunciados.Any(la => la.Tipo == 0)).ToList();
+                var emprestimos = livros.Where(l => l.LivrosAnunciados.Any(la => la.Tipo == 1)).ToList();
+                var doacoes = livros.Where(l => l.LivrosAnunciados.Any(la => la.Tipo == 2)).ToList();
+
+                return Ok(new
+                {
+                    livrosAnunciados = livros,
+                    livrosVendidos = vendas,
+                    livrosEmprestimos = emprestimos,
+                    livrosDoacoes = doacoes
+                });
             }
             catch (Exception)
             {
