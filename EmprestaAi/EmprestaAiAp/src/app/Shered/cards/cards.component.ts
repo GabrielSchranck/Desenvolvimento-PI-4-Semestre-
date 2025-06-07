@@ -20,6 +20,7 @@ export class CardsComponent implements OnInit {
 
   @Input() livrosAnunciados: LivroDTO[] = [];
   @Input() tipo: number = 0;
+  @Input() titulo: string = '';
 
   isDragging = false;
   startX = 0;
