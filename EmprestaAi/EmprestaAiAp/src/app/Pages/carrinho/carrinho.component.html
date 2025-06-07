@@ -1,3 +1,115 @@
 <app-user-info>
-    
+  <main class="p-4 sm:p-6 space-y-10 sm:space-y-12">
+    @if (possuiItens) {
+        <!-- VENDA -->
+        @if(possuiItensVenda) {
+            <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-blue-600">Livros para Venda</h2>
+            <div>
+                <div class="space-y-4" id="venda-lista">
+                @for (item of itensVenda; track item.id) {
+                    <div class="flex items-center bg-blue-50/70 rounded-xl shadow p-3 sm:p-4 space-x-3 sm:space-x-4">
+                    <img src="{{ item.livroAnunciadoDTO?.livroDTO?.uriImagemLivro }}"
+                        alt="Capa do livro"
+                        class="w-12 h-20 sm:w-16 sm:h-24 object-cover rounded-md">
+                    <div class="flex-1">
+                        <h3 class="text-sm sm:text-base font-semibold">{{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
+                    </div>
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
+                        Qtd:
+                        <input type="number"
+                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                min="1"
+                                class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
+                        </span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                    </div>
+                    </div>
+                }
+                </div>
+            </div>
+            </section>
+        }
+
+        <!-- EMPRÉSTIMO -->
+        @if(possuiItensEmprestimo) {
+            <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-600">Livros para Empréstimo</h2>
+            <div>
+                <div class="space-y-4" id="emprestimo-lista">
+                @for (item of itensEmprestimo; track item.id) {
+                    <div class="flex items-center bg-green-50/70 rounded-xl shadow p-3 sm:p-4 space-x-3 sm:space-x-4">
+                    <img src="{{ item.livroAnunciadoDTO?.livroDTO?.uriImagemLivro }}"
+                        alt="Capa do livro"
+                        class="w-12 h-20 sm:w-16 sm:h-24 object-cover rounded-md">
+                    <div class="flex-1">
+                        <h3 class="text-sm sm:text-base font-semibold">{{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
+                    </div>
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
+                        Qtd:
+                        <input type="number"
+                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                min="1"
+                                class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
+                        </span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                    </div>
+                    </div>
+                }
+                </div>
+            </div>
+            </section>
+        }
+
+        <!-- DOAÇÃO -->
+        @if(possuiItensDoacao) {
+            <section>
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-purple-600">Livros para Doação</h2>
+            <div>
+                <div class="space-y-4" id="doacao-lista">
+                @for (item of itensDoacao; track item.id) {
+                    <div class="flex items-center bg-purple-50/70 rounded-xl shadow p-3 sm:p-4 space-x-3 sm:space-x-4">
+                    <img src="{{ item.livroAnunciadoDTO?.livroDTO?.uriImagemLivro }}"
+                        alt="Capa do livro"
+                        class="w-12 h-20 sm:w-16 sm:h-24 object-cover rounded-md">
+                    <div class="flex-1">
+                        <h3 class="text-sm sm:text-base font-semibold">{{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
+                    </div>
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
+                        Qtd:
+                        <input type="number"
+                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                                min="1"
+                                class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
+                        </span>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                    </div>
+                    </div>
+                }
+                </div>
+            </div>
+        </section>
+        }
+    }
+    @else {
+        <div class="flex justify-center items-center h-screen bg-white">
+            <div class="flex justify-center items-center text-center text-gray-500 max-w-96 max-h-96 w-full mb-20" style="height: 300px;">
+                <img src="userInfo/CarrinhoVazio.png" alt="carrinho vazio">
+            </div>
+        </div>
+
+    }
+  </main>
 </app-user-info>

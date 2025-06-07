@@ -1,3 +1,5 @@
+import { Cliente } from "./Cliente";
+
 export class LivroDTO {
   id?: number;
   clienteId?: number;
@@ -19,4 +21,6 @@ export class LivroAnunciadoDTO {
   LivroId? : number;
   tipo?: number;
   quantidadeAnunciado?: number;
+  livroDTO?: LivroDTO;
+  clienteDTO?: Cliente;
 }
