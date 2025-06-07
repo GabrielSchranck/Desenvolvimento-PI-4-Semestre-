@@ -82,93 +82,93 @@
 
   @if (!possuiFiltroAtivo) {
     <div class="bg-gray-100 p-8">
-
       @if (isTyping) {
-        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
-      
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="0"
-        />
+        <div class="max-w-7xl mx-auto space-y-8">
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="0"
+            [titulo]="'Livros à venda'"
+          />
 
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="1"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="1"
+            [titulo]="'Livros para empréstimo'"
+          />
 
-
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="2"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="2"
+            [titulo]="'Livros para doação'"
+          />
+        </div>
       }
       @else{
-        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
-      
-        <app-cards
-          [livrosAnunciados]="livrosVenda"
-          [tipo]="0"
-        />
+        <div class="max-w-7xl mx-auto space-y-8">
+          <app-cards
+            [livrosAnunciados]="livrosVenda"
+            [tipo]="0"
+            [titulo]="'Livros à venda'"
+          />
 
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosEmprestimo"
-          [tipo]="1"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosEmprestimo"
+            [tipo]="1"
+            [titulo]="'Livros para empréstimo'"
+          />
 
-
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosDoacao"
-          [tipo]="2"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosDoacao"
+            [tipo]="2"
+            [titulo]="'Livros para doação'"
+          />
+        </div>
       }
     </div>
   }
   @else {
     <div class="bg-gray-100 p-8">
       @if (isTyping) {
-        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
-      
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="0"
-        />
+        <div class="max-w-7xl mx-auto space-y-8">
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="0"
+            [titulo]="'Livros à venda'"
+          />
 
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="1"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="1"
+            [titulo]="'Livros para empréstimo'"
+          />
 
-
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosAnunciadosFiltrado"
-          [tipo]="2"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosAnunciadosFiltrado"
+            [tipo]="2"
+            [titulo]="'Livros para doação'"
+          />
+        </div>
       }
       @else{
-        <h2 class="text-3xl font-extrabold text-blue-900 mb-6 px-4">Livros a venda</h2>
-        <app-cards
-          [livrosAnunciados]="livrosVendaFiltrado"
-          [tipo]="0"
-        />
+        <div class="max-w-7xl mx-auto space-y-8">
+          <app-cards
+            [livrosAnunciados]="livrosVendaFiltrado"
+            [tipo]="0"
+            [titulo]="'Livros à venda'"
+          />
 
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para empréstimo</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosEmprestimoFiltrado"
-          [tipo]="1"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosEmprestimoFiltrado"
+            [tipo]="1"
+            [titulo]="'Livros para empréstimo'"
+          />
 
-
-        <h2 class="text-3xl font-extrabold text-blue-900 mt-12 mb-6 px-4">Livros para doação</h2>  
-        <app-cards
-          [livrosAnunciados]="livrosDoacaoFiltrado"
-          [tipo]="2"
-        />
+          <app-cards
+            [livrosAnunciados]="livrosDoacaoFiltrado"
+            [tipo]="2"
+            [titulo]="'Livros para doação'"
+          />
+        </div>
       }
     </div>
   }

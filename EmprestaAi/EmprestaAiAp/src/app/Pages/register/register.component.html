@@ -1,13 +1,13 @@
 <app-user-acess class="min-h-screen w-full overflow-y-auto">
     <div class="container mx-auto py-6">
-        <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form p-6 bg-white rounded-lg max-w-2xl mx-auto">
-          <h2 class="text-center text-2xl mb-2 font-bold text-[#3596D2] lg:mb-8 md:text-[1.5rem] lg:text-3xl">CADASTRO</h2>
+        <form [formGroup]="formularioRegistro" (ngSubmit)="CadastrarCliente()" class="registro-form p-8 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h2 class="text-center text-2xl mb-6 font-bold text-[#3596D2] lg:mb-8 md:text-[1.5rem] lg:text-3xl">CADASTRO</h2>
           
-          <img src="useracess/logo.png" alt="logo" class="w-52 h-52 p-5 ml-8 lg:hidden">
+          <img src="useracess/logo.png" alt="logo" class="w-52 h-52 p-5 mx-auto lg:hidden">
             <!-- Nome e Email -->
-            <div class="space-y-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <!-- Nome -->
-              <div>
+              <div class="form-group">
                 <app-inputs
                     [label]="'Nome'"
                     [control]="formularioRegistro.get('nome')"
@@ -16,12 +16,12 @@
                     [name]="'nome'"
                     [src]="'useracess/user.png'"></app-inputs>
                 @if (formularioRegistro.get('nome')?.invalid && formularioRegistro.get('nome')?.touched) {
-                  <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('O nome') }}</small>
+                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O nome') }}</small>
                 }
               </div>
           
               <!-- Email -->
-              <div>
+              <div class="form-group">
                 <app-inputs
                     [label]="'Email'"
                     [control]="formularioRegistro.get('email')"
@@ -31,19 +31,19 @@
                     [src]="'useracess/email.png'"></app-inputs>
                 @if (formularioRegistro.get('email')?.touched) {
                   @if (formularioRegistro.get('email')?.hasError('required')) {
-                    <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('O email') }}</small>
+                    <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O email') }}</small>
                   }
                   @if (formularioRegistro.get('email')?.hasError('email')) {
-                    <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['invalid']('Email') }}</small>
+                    <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['invalid']('Email') }}</small>
                   }
                 }
               </div>
             </div>
           
             <!-- Senha e CPF -->
-            <div class="space-y-1 mt-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <!-- Senha -->
-              <div>
+              <div class="form-group">
                 <app-inputs
                     [label]="'Senha'"
                     [control]="formularioRegistro.get('senha')"
@@ -52,12 +52,12 @@
                     [name]="'senha'"
                     [src]="'useracess/chave.png'"></app-inputs>
                 @if (formularioRegistro.get('senha')?.invalid && formularioRegistro.get('senha')?.touched) {
-                  <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('A senha') }}</small>
+                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A senha') }}</small>
                 }
               </div>
           
               <!-- CPF -->
-              <div>
+              <div class="form-group">
                 <app-inputs
                     [label]="'CPF'"
                     [control]="formularioRegistro.get('cpf')"
@@ -67,54 +67,73 @@
                     [src]="'useracess/cpf.png'"></app-inputs>
                 @if (formularioRegistro.get('cpf')?.touched) {
                   @if (formularioRegistro.get('cpf')?.hasError('required')) {
-                    <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('O CPF') }}</small>
+                    <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O CPF') }}</small>
                   }
                   @if (formularioRegistro.get('cpf')?.hasError('cpfInvalid')) {
-                    <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['invalid']('CPF') }}</small>
+                    <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['invalid']('CPF') }}</small>
                   }
                 }
               </div>
             </div>
           
-            <!-- Contato -->
-            <div class="mt-1">
-              <app-inputs
-                  [label]="'Contato'"
-                  [control]="formularioRegistro.get('contato')"
-                  [type]="'text'"
-                  [placeholder]="'Número'"
-                  [name]="'contato'"
-                  [src]="'useracess/phone.png'"></app-inputs>
-              @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
-                <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('O número') }}</small>
-              }
+            <!-- Contato e Data de Nascimento -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <!-- Contato -->
+              <div class="form-group">
+                <app-inputs
+                    [label]="'Contato'"
+                    [control]="formularioRegistro.get('contato')"
+                    [type]="'text'"
+                    [placeholder]="'Número'"
+                    [name]="'contato'"
+                    [src]="'useracess/phone.png'"></app-inputs>
+                @if (formularioRegistro.get('contato')?.invalid && formularioRegistro.get('contato')?.touched) {
+                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('O número') }}</small>
+                }
+              </div>
+          
+              <!-- Data de Nascimento -->
+              <div class="form-group">
+                <app-inputs
+                    [label]="'Data de Nascimento'"
+                    [control]="formularioRegistro.get('dataNascimento')"
+                    [type]="'date'"
+                    [name]="'dataNascimento'"
+                    [src]="'useracess/calendar.png'"></app-inputs>
+                @if (formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched) {
+                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A data de nascimento') }}</small>
+                }
+              </div>
             </div>
           
-            <!-- Data de Nascimento -->
-            <div class="mt-1">
-              <app-inputs
-                  [label]="'Data de Nascimento'"
-                  [control]="formularioRegistro.get('dataNascimento')"
-                  [type]="'date'"
-                  [name]="'dataNascimento'"
-                  [src]="'useracess/calendar.png'"></app-inputs>
-              @if (formularioRegistro.get('dataNascimento')?.invalid && formularioRegistro.get('dataNascimento')?.touched) {
-                <small class="text-red-500 font-semibold mt-0.5 block">{{ validacoes['required']('A data de nascimento') }}</small>
-              }
+            <!-- Categoria -->
+            <div class="mb-6">
+              <div class="form-group">
+                <app-inputs
+                    [label]="'Categoria'"
+                    [control]="formularioRegistro.get('categoria')"
+                    [type]="'text'"
+                    [placeholder]="'Selecione sua categoria'"
+                    [name]="'categoria'"
+                    [src]="'useracess/category.png'"></app-inputs>
+                @if (formularioRegistro.get('categoria')?.invalid && formularioRegistro.get('categoria')?.touched) {
+                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A categoria') }}</small>
+                }
+              </div>
             </div>
           
             <!-- Botão Cadastrar -->
              @if(!isClicked){
                 <div class="mt-6">
                     <button type="submit"
-                      class="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out">
+                      class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">
                       Cadastrar
                     </button>
                   </div>
              }
              @else {
                 <div class="mt-6">
-                  <button type="button" class="py-2 px-4 flex justify-center items-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg max-w-md">
+                  <button type="button" class="py-3 px-4 flex justify-center items-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                     <svg width="20" height="20" fill="currentColor" class="animate-spin mx-auto" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
                         <path d="M526 1394q0 53-37.5 90.5t-90.5 37.5q-52 0-90-38t-38-90q0-53 37.5-90.5t90.5-37.5 90.5 37.5 37.5 90.5zm498 206q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-704-704q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm1202 498q0 52-38 90t-90 38q-53 0-90.5-37.5t-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-964-996q0 66-47 113t-113 47-113-47-47-113 47-113 113-47 113 47 47 113zm1170 498q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-640-704q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm530 206q0 93-66 158.5t-158 65.5q-93 0-158.5-65.5t-65.5-158.5q0-92 65.5-158t158.5-66q92 0 158 66t66 158z">
                         </path>
@@ -123,17 +142,13 @@
                 </div>
               }
           
-            <!-- Link para Login -->
-            <div class="mt-4 text-center">
+            <!-- Links -->
+            <div class="mt-6 space-y-2 text-center">
               <p class="text-sm text-gray-700">Já tem uma conta?
-                <a routerLink="/login" class="text-blue-600 hover:underline">Faça login</a>
+                <a routerLink="/login" class="text-blue-600 hover:underline font-medium">Faça login</a>
               </p>
-            </div>
-          
-            <!-- Link para Página Inicial -->
-            <div class="mt-2 text-center">
               <p class="text-sm text-gray-700">Voltar à
-                <a routerLink="/" class="text-blue-600 hover:underline">Página Inicial</a>
+                <a routerLink="/" class="text-blue-600 hover:underline font-medium">Página Inicial</a>
               </p>
             </div>
           </form>
