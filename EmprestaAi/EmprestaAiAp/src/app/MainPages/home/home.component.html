@@ -80,10 +80,10 @@
   </div>
 
 
-  @if (!possuiFiltroAtivo) {
-    <div class="bg-gray-100 p-8">
-      @if (isTyping) {
-        <div class="max-w-7xl mx-auto space-y-8">
+  <div class="bg-white min-h-screen py-12 px-6 md:px-12">
+    <div class="mx-auto space-y-12">
+      @if (!possuiFiltroAtivo) {
+        @if (isTyping) {
           <app-cards
             [livrosAnunciados]="livrosAnunciadosFiltrado"
             [tipo]="0"
@@ -101,10 +101,8 @@
             [tipo]="2"
             [titulo]="'Livros para doação'"
           />
-        </div>
-      }
-      @else{
-        <div class="max-w-7xl mx-auto space-y-8">
+        }
+        @else {
           <app-cards
             [livrosAnunciados]="livrosVenda"
             [tipo]="0"
@@ -122,14 +120,10 @@
             [tipo]="2"
             [titulo]="'Livros para doação'"
           />
-        </div>
+        }
       }
-    </div>
-  }
-  @else {
-    <div class="bg-gray-100 p-8">
-      @if (isTyping) {
-        <div class="max-w-7xl mx-auto space-y-8">
+      @else {
+        @if (isTyping) {
           <app-cards
             [livrosAnunciados]="livrosAnunciadosFiltrado"
             [tipo]="0"
@@ -147,10 +141,8 @@
             [tipo]="2"
             [titulo]="'Livros para doação'"
           />
-        </div>
-      }
-      @else{
-        <div class="max-w-7xl mx-auto space-y-8">
+        }
+        @else {
           <app-cards
             [livrosAnunciados]="livrosVendaFiltrado"
             [tipo]="0"
@@ -168,10 +160,12 @@
             [tipo]="2"
             [titulo]="'Livros para doação'"
           />
-        </div>
+        }
       }
     </div>
-  }
+</div>
+
+
   
 
 
