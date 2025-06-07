@@ -22,6 +22,7 @@
     "@tailwindcss/postcss": "^4.0.16",
     "cpf-cnpj-validator": "^1.0.3",
     "flowbite": "^3.1.2",
+    "ngx-toastr": "^19.0.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.17.2",

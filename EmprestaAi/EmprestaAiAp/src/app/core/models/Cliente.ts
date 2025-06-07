@@ -9,6 +9,7 @@ export class Cliente {
     DataNascimento?: string;
     Senha?: string;
     Enderecos?: EnderecoCliente[];
+    nome?: string;
 }
 
 export class EnderecoCliente{

@@ -1,16 +1,21 @@
 using BookAPI.Data;
+using BookAPI.Repositories.Carrinhos;
 using BookAPI.Repositories.Clientes;
 using BookAPI.Repositories.Enderecos;
 using BookAPI.Repositories.Livros;
+using BookAPI.Services.Carrinhos;
 using BookAPI.Services.Clientes;
 using BookAPI.Services.Enderecos;
 using BookAPI.Services.Livros;
 using BookAPI.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Optivem.Framework.Core.Domain;
+using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,8 +57,15 @@ builder.Services.AddSwaggerGen( c =>
 
 builder.Services.AddDbContext<BookDbContext>(options =>
 {
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//builder.Services.AddDbContextFactory<BookDbContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//});
+
+
 
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -66,12 +78,14 @@ builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICartaoClienteRepository, CartaoClienteRepository>();
 builder.Services.AddScoped<ILivroImagemRepository, LivroImagemRepository>();
+builder.Services.AddScoped<ICarrinhoRepository, CarrinhoRepository>();
 
 //Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<ICartaoClienteService, CartaoClienteService>();
 builder.Services.AddScoped<ILivroServices, LivroServices>();
+builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 
 var key = Encoding.ASCII.GetBytes(Key.Secret);
 

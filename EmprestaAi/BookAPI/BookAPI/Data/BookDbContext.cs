@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities;
+using BookAPI.Entities.Carrinhos;
 using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
 using BookAPI.Entities.ClientesLivros;
@@ -26,6 +27,8 @@ namespace BookAPI.Data
         public DbSet<Endereco> Enderecos { get; set; }
 		public DbSet<CartaoCliente> CartoesClientes { get; set; }
         public DbSet<LivroAnunciado> LivrosAnunciados { get; set; }
+        public DbSet<Carrinho> Carrinho { get; set; }
+        public DbSet<ItemCarrinho> ItemCarrinho { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -100,6 +103,12 @@ namespace BookAPI.Data
                 new Categoria { Id = 39, NomeCategoria = "Erótico" },
                 new Categoria { Id = 40, NomeCategoria = "Viagem" }
             );
+
+            modelBuilder.Entity<ItemCarrinho>()
+            .HasOne(ic => ic.LivroAnunciado)
+            .WithMany()
+            .HasForeignKey(ic => ic.LivroAnunciadoId)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

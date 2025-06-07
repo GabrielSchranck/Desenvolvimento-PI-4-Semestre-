@@ -2,9 +2,11 @@ import { Component, ViewChild, ElementRef, HostListener, OnInit, OnDestroy, Inpu
 import { Card } from '../../core/models/Card';
 import { Router } from '@angular/router';
 import { LivroService } from '../../core/services/livro.service';
-import { LivroDTO } from '../../core/models/Livros';
+import { LivroAnunciadoDTO, LivroDTO } from '../../core/models/Livros';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth-service.service';
+import { CarrinhoService } from '../../core/services/carrinho.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cards',
@@ -27,8 +29,9 @@ export class CardsComponent implements OnInit {
   autoScrollInterval: any;
   isMobile = false;
   cardWidth = 320;
+  showSuccess = false;
 
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(private router: Router, private auth: AuthService, private carrinhoService: CarrinhoService) {}
 
   public async ngOnInit() {
     this.checkIfMobile();
@@ -61,8 +64,52 @@ export class CardsComponent implements OnInit {
     });
   }
 
-  public adicionarAoCarrinho(anuncioId: number|undefined) {
-    throw new Error('Method not implemented.');
+  public adicionarAoCarrinho(livro: LivroDTO) {
+    this.auth.isLoggedIn().subscribe({
+      next: (isLoggedIn) => {
+        if (isLoggedIn) {
+          const livroAnunciadoResult = livro.livrosAnunciados?.find(la => la.tipo === this.tipo);
+
+          const livroAnunciado: LivroAnunciadoDTO = {
+            id: livroAnunciadoResult?.id,
+            clienteId: livroAnunciadoResult?.clienteId,
+            tipo: livroAnunciadoResult?.tipo,
+            quantidadeAnunciado: livroAnunciadoResult?.quantidadeAnunciado,
+          };
+
+          if (livroAnunciado) {
+            this.carrinhoService.AddLivroToCarrinho(livroAnunciado).subscribe({
+              next: (response) => {
+                      Swal.fire({
+                        title: 'Sucesso',
+                        text: 'Livro adicionado ao carrinho.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+                        },
+                        buttonsStyling: false
+                      });
+                    },
+                    error: (error) => {
+                      Swal.fire({
+                        title: 'Erro',
+                        text: error.error || 'Livro já existe no carrinho.',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+                        },
+                        buttonsStyling: false
+                      });
+                    }
+            });
+          }
+        } else {
+          this.router.navigate(['login']);
+        }
+      }
+    });
   }
 
   public startAutoScroll() {

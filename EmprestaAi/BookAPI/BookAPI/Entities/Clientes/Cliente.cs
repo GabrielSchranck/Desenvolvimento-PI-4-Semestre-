@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using BookAPI.Entities.Livros;
 using System.ComponentModel;
 using BookAPI.Entities.ClientesLivros;
+using BookAPI.Entities.Carrinhos;
 
 
 namespace BookAPI.Entities.Clientes
@@ -11,7 +12,7 @@ namespace BookAPI.Entities.Clientes
 	{
 		public int Id { get; set; }
 
-		[MaxLength(100)]
+        [MaxLength(100)]
         public string Nome { get; set; } = string.Empty;
 
         [MaxLength(11)]
@@ -39,6 +40,7 @@ namespace BookAPI.Entities.Clientes
         public bool EmailConfirmado { get; set; } = false;
         public string? TokenConfirmacao { get; set; }
 
+        public Carrinho? Carrinho { get; set; }
         public ICollection<EnderecoCliente> Enderecos { get; set; } = new List<EnderecoCliente>();
         public ICollection<ClienteLivro> ClientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<Historico> Historicos { get; set; } = new List<Historico>();
