@@ -1,4 +1,5 @@
-﻿using BookAPI.Entities.ClientesLivros;
+﻿using Azure.Core;
+using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Livros;
 using BookAPI.mappings;
 using BookAPI.Repositories.Livros;
@@ -177,6 +178,11 @@ namespace BookAPI.Services.Livros
         public async Task<IEnumerable<LivroDTO>> SelecionarAnuncios()
         {
             return await _livroRepository.SelecionarAnuncios();
+        }
+
+        public async Task<LivroAnunciadoDTO> GetLivroAnunciadoDTO(int livroId, int tipo)
+        {
+            return await _livroRepository.GetAnuncioDTO(livroId, tipo);
         }
     }
 }

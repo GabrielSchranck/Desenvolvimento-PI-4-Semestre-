@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Repositories.Clientes
 {
-	public class CartaoClienteRepository : ICartaoClienteRepository
+    public class CartaoClienteRepository : ICartaoClienteRepository
 	{
 		private readonly BookDbContext _dbContext;
 
@@ -20,7 +20,21 @@ namespace BookAPI.Repositories.Clientes
 			await this._dbContext.SaveChangesAsync();
 		}
 
-		public async Task DeleteAsync(CartaoCliente cartaoCliente)
+        public async Task<bool> CreateUUid(string uuid, int clienteId)
+        {
+			var cliente = await _dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();
+
+			if (cliente == null) return false;
+
+            cliente.uuidMercadoPago = uuid;
+            _dbContext.Clientes.Update(cliente);
+
+            await _dbContext.SaveChangesAsync();
+
+			return true;
+        }
+
+        public async Task DeleteAsync(CartaoCliente cartaoCliente)
 		{
 			this._dbContext.CartoesClientes.Remove(cartaoCliente);
 			await this._dbContext.SaveChangesAsync();
@@ -49,7 +63,30 @@ namespace BookAPI.Repositories.Clientes
 			return null;
 		}
 
-		public async Task UpdateAsync(CartaoCliente cartaoCliente)
+        public async Task<double> GetSaldo(int clienteId)
+        {
+			var cliente = await _dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();
+
+			if (cliente is null) return 0;
+
+			if (cliente.Saldo is null)
+			{
+				cliente.Saldo = 0;
+				_dbContext.Clientes.Update(cliente);
+				await _dbContext.SaveChangesAsync();
+			}
+
+			return (double)cliente.Saldo;
+        }
+
+        public async Task<string> GetUUIDMercadoPago(int clienteId)
+        {
+			var cliente = await this._dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();
+
+			return cliente.uuidMercadoPago;
+        }
+
+        public async Task UpdateAsync(CartaoCliente cartaoCliente)
 		{
 			var existente = await _dbContext.CartoesClientes.FindAsync(cartaoCliente.Id);
 			if (existente != null)

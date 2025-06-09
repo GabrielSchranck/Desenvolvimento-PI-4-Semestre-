@@ -1,4 +1,5 @@
 ﻿using BookAPI.Data;
+using BookAPI.Entities.Carrinhos;
 using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Livros;
 using BookModels.DTOs.Clientes;
@@ -40,7 +41,7 @@ namespace BookAPI.Repositories.Livros
                 livroAnunciado = anuncioExistente;
                 livroAnunciado.QuantidadeAnunciado += (int)livroAnunciadoDTO.QuantidadeAnunciado;
 
-                if(livroAnunciado.Tipo != livroAnunciadoDTO.Tipo)
+                if (livroAnunciado.Tipo != livroAnunciadoDTO.Tipo)
                 {
                     ehTipoDiferente = true;
                     livroAnunciado.Id = 0;
@@ -115,11 +116,28 @@ namespace BookAPI.Repositories.Livros
             var imagemLivroParaRemover = await _dbContext.FotosLivros.Where(fl => fl.LivroId == clienteLivro.LivroId).FirstAsync();
             var livrosAnunciados = await _dbContext.LivrosAnunciados.Where(la => la.LivroId == clienteLivro.LivroId).ToListAsync();
 
+            var itensCarrinho = new List<ItemCarrinho>();
+
+            foreach (var anuncio in livrosAnunciados)
+            {
+                var itemCarrinho = await _dbContext.ItemCarrinho.Where(i => i.LivroAnunciadoId == anuncio.Id).FirstOrDefaultAsync();
+
+                if (itemCarrinho is null) continue;
+
+                itensCarrinho.Add(itemCarrinho);
+            }
+
             _dbContext.ClientesLivros.RemoveRange(itensParaRemover);
-            _dbContext.Livros.Remove(livroParaRemover);
             _dbContext.FotosLivros.Remove(imagemLivroParaRemover);
 
-            foreach(var anuncio in livrosAnunciados)
+            foreach (var item in itensCarrinho)
+            {
+                _dbContext.ItemCarrinho.Remove(item);
+            }
+
+            _dbContext.Livros.Remove(livroParaRemover);
+
+            foreach (var anuncio in livrosAnunciados)
             {
                 _dbContext.LivrosAnunciados.Remove(anuncio);
             }
@@ -211,7 +229,7 @@ namespace BookAPI.Repositories.Livros
                 Anunciado = l.Anunciado,
                 UriImagemLivro = l.FotosLivros.FirstOrDefault()?.UrlImagem,
                 LivrosAnunciados = l.livrosAnunciados
-                    .Where(la => la.QuantidadeAnunciado > 0) 
+                    .Where(la => la.QuantidadeAnunciado > 0)
                     .Select(la => new LivroAnunciadoDTO
                     {
                         Id = la.Id,
@@ -229,7 +247,37 @@ namespace BookAPI.Repositories.Livros
             return livroDTOs;
         }
 
+        public async Task<LivroAnunciadoDTO> GetAnuncioDTO(int livroId, int tipo)
+        {
+            var anuncio = await _dbContext.LivrosAnunciados.Where(l => l.LivroId == livroId && l.Tipo == tipo).FirstOrDefaultAsync();
+            var livro = await _dbContext.Livros.Where(l => l.Id == anuncio.LivroId).FirstOrDefaultAsync();
+            var cliente = await _dbContext.Clientes.Where(c => c.Id == anuncio.ClienteId).FirstOrDefaultAsync();
+            var fotoLivro = await _dbContext.FotosLivros.Where(fl => fl.LivroId == livro.Id).FirstOrDefaultAsync();
+            var categoria = await _dbContext.Categorias.Where(ct => ct.Id == livro.CategoriaId).FirstOrDefaultAsync();
 
+            return new LivroAnunciadoDTO
+            {
+                Id = anuncio.Id,
+                ClienteDTO = new ClienteDTO
+                {
+                    Id = cliente.Id,
+                    Nome = cliente.Nome
+                },
+                ClienteId = cliente.Id,
+                LivroDTO = new LivroDTO
+                {
+                    Id = livro.Id,
+                    Titulo = livro.Titulo,
+                    UriImagemLivro = fotoLivro.UrlImagem,
+                    categoria = categoria.NomeCategoria,
+                    Valor = livro.Valor,
+                    QtdPaginas = livro.QtdPaginas
+                },
+                LivroId = cliente.Id,
+                QuantidadeAnunciado = anuncio.QuantidadeAnunciado,
+                Tipo = anuncio.Tipo
+            };
+        }
 
         public async Task<IEnumerable<Categoria>> GetCategorias()
         {
@@ -256,5 +304,7 @@ namespace BookAPI.Repositories.Livros
                 }
             }
         }
+
+
     }
 }

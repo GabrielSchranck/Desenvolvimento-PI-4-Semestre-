@@ -13,6 +13,7 @@ export class LivroDTO {
   anunciado?: boolean;
   livroAnunciadoDTO?: LivroAnunciadoDTO;
   livrosAnunciados?: LivroAnunciadoDTO[];
+  categoria?: string;
 }
 
 export class LivroAnunciadoDTO {
@@ -23,4 +24,5 @@ export class LivroAnunciadoDTO {
   quantidadeAnunciado?: number;
   livroDTO?: LivroDTO;
   clienteDTO?: Cliente;
+  valorTaxa?: number;
 }

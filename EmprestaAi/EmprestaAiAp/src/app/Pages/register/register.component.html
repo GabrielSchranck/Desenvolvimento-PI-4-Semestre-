@@ -106,22 +106,6 @@
               </div>
             </div>
           
-            <!-- Categoria -->
-            <div class="mb-6">
-              <div class="form-group">
-                <app-inputs
-                    [label]="'Categoria'"
-                    [control]="formularioRegistro.get('categoria')"
-                    [type]="'text'"
-                    [placeholder]="'Selecione sua categoria'"
-                    [name]="'categoria'"
-                    [src]="'useracess/category.png'"></app-inputs>
-                @if (formularioRegistro.get('categoria')?.invalid && formularioRegistro.get('categoria')?.touched) {
-                  <small class="text-red-500 font-semibold mt-1 block">{{ validacoes['required']('A categoria') }}</small>
-                }
-              </div>
-            </div>
-          
             <!-- Botão Cadastrar -->
              @if(!isClicked){
                 <div class="mt-6">

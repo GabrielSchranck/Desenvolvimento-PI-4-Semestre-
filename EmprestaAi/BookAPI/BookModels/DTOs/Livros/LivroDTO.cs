@@ -22,6 +22,7 @@ namespace BookModels.DTOs.Livros
         public IFormFile? Imagem { get; set; }
 		public bool? Anunciado { get; set; }
         public ClienteDTO? ClienteDTO { get; set; }
+        public string? categoria { get; set; }
         //public string? Descricao { get; set; }
         public LivroAnunciadoDTO? LivroAnunciadoDTO { get; set; }
         public List<LivroAnunciadoDTO>? LivrosAnunciados { get; set; }

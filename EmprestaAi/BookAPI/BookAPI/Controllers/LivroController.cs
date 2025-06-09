@@ -256,5 +256,30 @@ namespace BookAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+        [HttpGet("getLivroInfo/{livroId}/{tipo}")]
+        public async Task<ActionResult> SelecionarLivroAnunciado([FromRoute] int livroId, int tipo)
+        {
+            try
+            {
+                var livroAnunciadoDTO = await _livroServices.GetLivroAnunciadoDTO(livroId, tipo);
+
+                if (livroAnunciadoDTO is null) return BadRequest("Erro ao encontrar livro");
+
+                if (!string.IsNullOrEmpty(livroAnunciadoDTO.LivroDTO.UriImagemLivro) && livroAnunciadoDTO.LivroDTO.UriImagemLivro.StartsWith("imagens/"))
+                {
+                    livroAnunciadoDTO.LivroDTO.UriImagemLivro = $"{Request.Scheme}://{Request.Host}/{livroAnunciadoDTO.LivroDTO.UriImagemLivro}";
+                }
+
+                return Ok(new
+                {
+                    livroAnunciado = livroAnunciadoDTO
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }

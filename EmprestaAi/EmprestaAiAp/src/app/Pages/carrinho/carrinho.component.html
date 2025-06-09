@@ -4,7 +4,10 @@
         <!-- VENDA -->
         @if(possuiItensVenda) {
             <section>
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-blue-600">Livros para Venda</h2>
+                <div class="flex justify-between items-center m-4">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-blue-600">Livros para Venda</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Comprar</button>
+                </div>
             <div>
                 <div class="space-y-4" id="venda-lista">
                 @for (item of itensVenda; track item.id) {
@@ -25,8 +28,11 @@
                                 min="1"
                                 class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
                         </span>
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                        <button 
+                            class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
+                            (click)="RemoverItemCarrinho(item?.id!)"
+                            >Remover
+                        </button>
                     </div>
                     </div>
                 }
@@ -38,7 +44,10 @@
         <!-- EMPRÉSTIMO -->
         @if(possuiItensEmprestimo) {
             <section>
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-600">Livros para Empréstimo</h2>
+                <div class="flex justify-between items-center m-4">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-600">Livros para Empréstimo</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Pegar emprestado</button>
+                </div>
             <div>
                 <div class="space-y-4" id="emprestimo-lista">
                 @for (item of itensEmprestimo; track item.id) {
@@ -59,8 +68,11 @@
                                 min="1"
                                 class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
                         </span>
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                        <button 
+                            class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
+                            (click)="RemoverItemCarrinho(item?.id!)"
+                            >Remover
+                        </button>
                     </div>
                     </div>
                 }
@@ -72,7 +84,10 @@
         <!-- DOAÇÃO -->
         @if(possuiItensDoacao) {
             <section>
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-purple-600">Livros para Doação</h2>
+                <div class="flex justify-between items-center m-4">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-4 text-purple-600">Livros para Doação</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Receber doação</button>
+                </div>
             <div>
                 <div class="space-y-4" id="doacao-lista">
                 @for (item of itensDoacao; track item.id) {
@@ -93,8 +108,11 @@
                                 min="1"
                                 class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
                         </span>
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Finalizar</button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded">Remover</button>
+                        <button 
+                            class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
+                            (click)="RemoverItemCarrinho(item?.id!)">
+                            Remover
+                        </button>
                     </div>
                     </div>
                 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
 import { CarrinhoService } from '../../core/services/carrinho.service';
 import { CarrinhoDTO, ItemCarrinhoDTO } from '../../core/models/Carrinho';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carrinho',
@@ -99,4 +100,35 @@ export class CarrinhoComponent implements OnInit {
     );
   }
 
+  public RemoverItemCarrinho(itemId: number): void {
+    this.carrinhoService.RemoveItemCarrinho(itemId)
+      .subscribe(
+        (result) => {
+          Swal.fire({
+            title: 'Sucesso',
+            text: result.result,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+            },
+            buttonsStyling: false
+          }).then(() => {
+            this.GetCarrinho();
+          });
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'Erro',
+            text: error.error || 'Erro ao remover item do carrinho.',
+            icon: 'error',
+            confirmButtonText: 'Fechar',
+            customClass: {
+              confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+            },
+            buttonsStyling: false
+          });
+        }
+      );
+  }
 }

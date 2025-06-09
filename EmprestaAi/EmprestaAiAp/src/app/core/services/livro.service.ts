@@ -169,4 +169,17 @@ export class LivroService {
     );
   }
 
+  public GetLivrosAnunciados(anuncioId: number, tipo: number): Observable<any> {
+    const apiUrl = `${this.url}/getLivroInfo/${anuncioId}/${tipo}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
 }

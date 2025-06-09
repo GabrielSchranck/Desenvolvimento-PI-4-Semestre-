@@ -207,10 +207,10 @@ namespace BookAPI.Controllers
 
                 await _repository.Create(cliente);
 
-                var verifyToken = Guid.NewGuid().ToString();
-                cliente.EmailConfirmado = false;
+                //var verifyToken = Guid.NewGuid().ToString();
+                //cliente.EmailConfirmado = false;
 
-                await _clienteService.SendEmail(verifyToken, _configuration, cliente);
+                //await _clienteService.SendEmail(verifyToken, _configuration, cliente);
 
                 var token = TokenService.GenerateToken(cliente);
 

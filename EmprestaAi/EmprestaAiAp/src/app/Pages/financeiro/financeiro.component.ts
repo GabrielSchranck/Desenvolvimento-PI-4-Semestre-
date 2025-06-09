@@ -2,12 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
 import { CommonModule } from '@angular/common';
 import { CarteiraService } from '../../core/services/carteira.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Cartao } from '../../core/models/Cliente';
 
 @Component({
   selector: 'app-financeiro',
-  imports: [UserInfoComponent, CommonModule, ReactiveFormsModule],
+  imports: [UserInfoComponent, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './financeiro.component.html',
   styleUrl: './financeiro.component.css'
 })
@@ -16,8 +16,10 @@ export class FinanceiroComponent implements OnInit {
 
   saldoDisponivel: number = 0;
   cartoes: any[] = [];
+  modalAdicionarAberto: boolean = false;
   modalAberto: boolean = false;
   formularioCartao!:FormGroup;
+  valorAdicionar:number = 0;
 
   constructor(
     private carteiraService: CarteiraService,
@@ -26,6 +28,7 @@ export class FinanceiroComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     await this.getCartoesCliente();
+    this.getSaldoDisponivel();
   }
 
   public async buildFormulario(): Promise<void>{
@@ -58,8 +61,20 @@ export class FinanceiroComponent implements OnInit {
     this.modalAberto = !this.modalAberto;
   }
 
+  public AdicionarFundos(valor: number): void {
+    this.carteiraService.addSaldo(valor); 
+  }
 
-
+  public getSaldoDisponivel(): void {
+    this.carteiraService.getSaldo().subscribe({
+      next: (saldo) => {
+        this.saldoDisponivel = saldo.result;
+      },
+      error: (error) => {
+        console.error('Erro ao obter o saldo disponível:', error);
+      }
+    });
+  }
 
   scrollLeft() {
     this.carousel.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });

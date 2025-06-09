@@ -29,6 +29,7 @@ namespace BookAPI.Data
         public DbSet<LivroAnunciado> LivrosAnunciados { get; set; }
         public DbSet<Carrinho> Carrinho { get; set; }
         public DbSet<ItemCarrinho> ItemCarrinho { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

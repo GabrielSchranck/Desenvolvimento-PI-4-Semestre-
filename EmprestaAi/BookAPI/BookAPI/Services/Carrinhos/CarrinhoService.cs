@@ -34,6 +34,16 @@ namespace BookAPI.Services.Carrinhos
             return await _carrinhoRepository.GetCarrinhoAsync(clienteId);
         }
 
+        public async Task<bool> RemoveFromCarrinhoAsync(int carrinhoItemId)
+        {
+            var item = new ItensCarrinhoDTO
+            {
+                Id = carrinhoItemId
+            };
+
+            return await _carrinhoRepository.RemoveFromCarrinhoAsync(item);
+        }
+
         public async Task<bool> VerificarExistenciaAsync(int clienteId)
         {
             return await _carrinhoRepository.Verificar(clienteId);

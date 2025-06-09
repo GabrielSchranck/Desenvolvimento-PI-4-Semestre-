@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     await this.loadLivrosAnunciados();
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     if (this.slideInterval) {
       clearInterval(this.slideInterval);
     }

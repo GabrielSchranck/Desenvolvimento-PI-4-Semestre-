@@ -3,10 +3,12 @@ using BookAPI.Repositories.Carrinhos;
 using BookAPI.Repositories.Clientes;
 using BookAPI.Repositories.Enderecos;
 using BookAPI.Repositories.Livros;
+using BookAPI.Repositories.Vendas;
 using BookAPI.Services.Carrinhos;
 using BookAPI.Services.Clientes;
 using BookAPI.Services.Enderecos;
 using BookAPI.Services.Livros;
+using BookAPI.Services.Vendas;
 using BookAPI.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Optivem.Framework.Core.Domain;
+using Stripe;
 using System;
 using System.Text;
 
@@ -64,8 +67,7 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 //{
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 //});
-
-
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -79,6 +81,7 @@ builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICartaoClienteRepository, CartaoClienteRepository>();
 builder.Services.AddScoped<ILivroImagemRepository, LivroImagemRepository>();
 builder.Services.AddScoped<ICarrinhoRepository, CarrinhoRepository>();
+builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 
 //Services
 builder.Services.AddScoped<IClienteService, ClienteService>();
@@ -86,6 +89,8 @@ builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<ICartaoClienteService, CartaoClienteService>();
 builder.Services.AddScoped<ILivroServices, LivroServices>();
 builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
+builder.Services.AddScoped<IVendaService, VendaService>();
+
 
 var key = Encoding.ASCII.GetBytes(Key.Secret);
 

@@ -9,5 +9,8 @@ namespace BookAPI.Repositories.Clientes
 		Task CreateAsync(CartaoCliente cartaoCliente);
 		Task UpdateAsync(CartaoCliente cartaoCliente);
 		Task DeleteAsync(CartaoCliente cartaoCliente);
+		Task<string> GetUUIDMercadoPago(int clienteId);
+		Task<bool> CreateUUid(string uuid, int clienteId);
+		Task<double> GetSaldo(int clienteId);
 	}
 }

@@ -9,5 +9,6 @@ namespace BookAPI.Repositories.Carrinhos
         Task<bool> Verificar(int clienteId);
         Task<CarrinhoDTO> GetCarrinhoAsync(int clienteId);
         Task<bool> AddItemCarrinho(ItensCarrinhoDTO itensCarrinhoDTO, int clienteId, int tipo);
+        Task<bool> RemoveFromCarrinhoAsync(ItensCarrinhoDTO item);
     }
 }

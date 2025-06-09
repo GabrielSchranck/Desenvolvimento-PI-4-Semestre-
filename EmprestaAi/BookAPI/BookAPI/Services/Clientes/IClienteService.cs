@@ -11,5 +11,6 @@ namespace BookAPI.Services.Clientes
         Task CreateEnderecoClienteAsync(Endereco endereco, int clienteId);
         Task SendEmail(string token, IConfiguration configuration, Cliente cliente);
         Task<Cliente> FindByToken(string token);
+        
     }
 }

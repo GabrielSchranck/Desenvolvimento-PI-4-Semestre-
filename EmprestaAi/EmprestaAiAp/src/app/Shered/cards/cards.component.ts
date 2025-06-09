@@ -49,11 +49,17 @@ export class CardsComponent implements OnInit {
     this.cardWidth = this.isMobile ? 280 : 320;
   }
 
-  public goToLivro(anuncioId: number|undefined){
+  public goToLivro(anuncioId: number | undefined) {
     this.auth.isLoggedIn().subscribe({
       next: (isLoggedIn) => {
         if (isLoggedIn) {
-          this.router.navigate(['exibelivro']);
+          if (anuncioId !== undefined) {
+            console.log('anuncioId:', anuncioId);
+            console.log('tipo:', this.tipo);
+            this.router.navigate(['exibelivro', anuncioId, this.tipo]);
+          } else {
+            console.error('anuncioId está indefinido');
+          }
         } else {
           this.router.navigate(['login']);
         }
@@ -64,6 +70,7 @@ export class CardsComponent implements OnInit {
       }
     });
   }
+
 
   public adicionarAoCarrinho(livro: LivroDTO) {
     this.auth.isLoggedIn().subscribe({

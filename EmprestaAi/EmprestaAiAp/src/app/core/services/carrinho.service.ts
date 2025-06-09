@@ -64,4 +64,11 @@ export class CarrinhoService {
 
     return this.httpCliente.post<{ retorno:string }>(apiUrl, livroAnunciado, httpOptions);
   }
+
+  public RemoveItemCarrinho(id: number): Observable<any> {
+    const apiUrl = `${this.url}/removeCarrinho/${id}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.delete(apiUrl, httpOptions);
+  }
 }

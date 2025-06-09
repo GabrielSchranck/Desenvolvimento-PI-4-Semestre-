@@ -37,6 +37,10 @@ namespace BookAPI.Entities.Clientes
         [PasswordPropertyText]
         public string? Senha { get; set; }
 
+        public double? Saldo { get; set; } = 0;
+
+        public string? uuidMercadoPago { get; set; }
+
         public bool EmailConfirmado { get; set; } = false;
         public string? TokenConfirmacao { get; set; }
 

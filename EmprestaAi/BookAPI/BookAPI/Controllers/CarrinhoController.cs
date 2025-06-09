@@ -108,5 +108,22 @@ namespace BookAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+        [HttpDelete("removeCarrinho/{carrinhoItemId}")]
+        public async Task<ActionResult> RemoveFromCarrinho([FromRoute] int carrinhoItemId)
+        {
+            try
+            {
+                var result = await _carrinhoService.RemoveFromCarrinhoAsync(carrinhoItemId);
+
+                if (!result) return BadRequest("Item não removido do carrinho");
+
+                return Ok(new { result = "Item removido do carrinho com sucesso!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }

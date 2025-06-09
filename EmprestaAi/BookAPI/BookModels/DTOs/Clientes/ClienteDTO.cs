@@ -19,6 +19,8 @@ namespace BookModels.DTOs.Clientes
 		public DateTime DataNascimento { get; set; }
 		public string? Genero { get; set; }
         public string? Senha { get; set; }
+        public string? uuidMercadoPago { get; set; }
+        public double? Saldo { get; set; }
         //public IEnumerable<EnderecoDTO> EnderecoDTOs { get; set; }
     }
 }

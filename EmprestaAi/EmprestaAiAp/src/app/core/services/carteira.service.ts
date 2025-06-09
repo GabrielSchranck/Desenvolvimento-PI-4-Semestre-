@@ -68,4 +68,46 @@ export class CarteiraService {
       map(() => void 0)
     );
   }
+
+public async getUUID(): Promise<{ uuid: string }> {
+  const apiUrl = `${this.url}/getUuidMP`;
+  const httpOptions = this.getHttpOptions();
+
+  const result = await this.httpCliente.get<{ uuid: string }>(apiUrl, httpOptions).toPromise();
+  if (!result) {
+    throw new Error('UUID não encontrado.');
+  }
+  return result;
+}
+
+
+  public createUUID(uuid: string): Promise<void> {
+    const apiUrl = `${this.url}/creteUuid`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post<void>(apiUrl, JSON.stringify(uuid), httpOptions).toPromise().catch(
+      (error: any) => {
+        console.error('Erro ao criar UUID:', error);
+        throw error;
+      }
+    );
+  }
+
+  public addSaldo(valor: number): void {
+    const apiUrl = `${environment['apiUrl']}/Pagamento/criar-pagamento/${valor}`;
+    const httpOptions = this.getHttpOptions();
+
+    this.httpCliente.post<any>(apiUrl, {
+      valor: valor
+    }, httpOptions).subscribe(res => {
+      window.location.href = res.result;
+    });
+  }
+
+  public getSaldo(): Observable<any> {
+    const apiUrl = `${this.url}/getSaldo`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.get<any>(apiUrl, httpOptions);
+  }
 }

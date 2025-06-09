@@ -5,6 +5,8 @@ using BookModels.DTOs.Clientes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using System;
 
 namespace BookAPI.Controllers
 {
@@ -48,24 +50,24 @@ namespace BookAPI.Controllers
         {
             try
             {
-				var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-				if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
 
-				int clienteId = (int)await TokenService.GetClientIdFromToken(token);
-				var cartoes = await _cartaoClienteService.GetCartoesClienteAsync(clienteId);
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+                var cartoes = await _cartaoClienteService.GetCartoesClienteAsync(clienteId);
 
-				if (cartoes == null) return Ok("Nenhum cartão encontrado");
+                if (cartoes == null) return Ok("Nenhum cartão encontrado");
 
-				return Ok(new
-				{
-					cartoes = cartoes
-				});
-			}
-			catch (Exception)
-			{
-				return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
-			}
-		}
+                return Ok(new
+                {
+                    cartoes = cartoes
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
 
 		[HttpPut("update")]
 		public async Task<ActionResult> UpdateCartao(CartaoClienteDTO cartaoClienteDTO)
@@ -110,5 +112,71 @@ namespace BookAPI.Controllers
 				return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
 			}
 		}
+
+		[HttpGet("getUuidMP")]
+		public async Task<ActionResult> GetUuidMercadoPago()
+		{
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+				var uuid = await _cartaoClienteService.GetUUID(clienteId);
+
+                return Ok(new
+                {
+                    uuid = uuid
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+		[HttpPost("creteUuid")]
+		public async Task<ActionResult> CreateUUID([FromBody] string uuid)
+		{
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+				if (!(await _cartaoClienteService.CreateUUId(uuid, clienteId))) return BadRequest("Não foi possível cadastrar o uuid");
+
+                return Ok(new
+                {
+                    result = "UUID cadastrado com sucesso"
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+		[HttpGet("getSaldo")]
+		public async Task<ActionResult> GetSaldoCliente()
+		{
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                var result = await _cartaoClienteService.GetSaldo(clienteId);
+
+                return Ok(new{ result = result });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }

@@ -15,6 +15,19 @@ namespace BookModels.DTOs.Livros
         public int? QuantidadeAnunciado { get; set; }
         public LivroDTO? LivroDTO { get; set; }
         public ClienteDTO? ClienteDTO { get; set; }
+        public decimal? valorTaxa
+        {
+            get
+            {
+                if (Tipo == 0 && LivroDTO?.Valor != null)
+                {
+                    return LivroDTO.Valor * 15 / 100;
+                }
+
+                return 0;
+            }
+        }
+
         public int Tipo { get; set; }
     }
 }

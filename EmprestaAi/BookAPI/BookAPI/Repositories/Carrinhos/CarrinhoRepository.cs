@@ -117,7 +117,7 @@ namespace BookAPI.Repositories.Carrinhos
                         }
                     }
                 };
-            }).ToList();
+            }).Where(i => i.LivroAnunciadoDTO.QuantidadeAnunciado > 0).ToList();
 
             return new CarrinhoDTO
             {
@@ -127,7 +127,17 @@ namespace BookAPI.Repositories.Carrinhos
             };
         }
 
+        public async Task<bool> RemoveFromCarrinhoAsync(ItensCarrinhoDTO item)
+        {
+            var itemExistente = await _dbContext.ItemCarrinho.FindAsync(item.Id);
 
+            if (itemExistente == null) return false;
+
+            _dbContext.ItemCarrinho.Remove(itemExistente);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
 
         public async Task<bool> Verificar(int clienteId)
         {

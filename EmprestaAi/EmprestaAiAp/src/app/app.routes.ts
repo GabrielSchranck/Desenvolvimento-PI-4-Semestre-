@@ -23,7 +23,7 @@ export const routes: Routes = [
     { path: "perfil", component: PerfilComponent },
     { path: "register", component: RegisterComponent },
     { path: "googleSingIn", component: GoogleSingInComponent},
-    { path: "exibelivro", component: ExibeLivroComponent},
+    { path: 'exibelivro/:id/:tipo',component: ExibeLivroComponent},
     { path: "esqueciSenha", component: EsquciSenhaComponent},
     { path: "registraLivro", component: CriaLivroComponent}
 ];

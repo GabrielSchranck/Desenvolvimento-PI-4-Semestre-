@@ -9,5 +9,8 @@ namespace BookAPI.Services.Clientes
 		Task CreateCartaoClienteAsync(CartaoClienteDTO cartaoClienteDTO);
 		Task DeleteCartaoClienteAsync(CartaoClienteDTO cartaoClienteDTO);
 		Task AlterCartaoClienteAsync(CartaoClienteDTO cartaoClienteDTO);
-	}
+		Task<string> GetUUID(int clienteId);
+		Task<bool> CreateUUId(string uuid, int clienteId);
+        Task<double> GetSaldo(int clienteId);
+    }
 }

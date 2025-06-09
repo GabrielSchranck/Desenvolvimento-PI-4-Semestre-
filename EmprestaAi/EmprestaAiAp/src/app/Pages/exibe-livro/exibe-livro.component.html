@@ -1,135 +1,163 @@
 <main class="bg-gray-100 w-full p-0 m-0">
-    <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
-  
-    <!-- Produto -->
-    <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
-      <div class="flex flex-col md:flex-row gap-6">
-        
-        <!-- Imagem -->
-        <div class="w-full md:w-5/12 flex items-center justify-center rounded-lg bg-gray-100 p-4">
-          <div class="w-full aspect-w-1 aspect-h-1 max-w-sm">
-            <img src="https://via.placeholder.com/400x400" alt="Capa do Livro" class="w-full h-auto object-contain rounded-lg">
-          </div>
+  <app-navbar class="sticky top-0 w-full z-50"></app-navbar>
+
+  <!-- Produto -->
+  <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
+    <div class="flex flex-col md:flex-row gap-6">
+
+      <!-- Imagem -->
+    <div class="w-full md:w-3/12 flex items-center justify-center rounded-lg bg-gray-100 p-4">
+      <div class="w-32 sm:w-36 md:w-40 aspect-[9/14] overflow-hidden rounded-md shadow">
+        <img src="{{ livroAnunciado.livroDTO?.uriImagemLivro }}" alt="Capa do Livro" class="w-full h-full object-cover rounded-md">
+      </div>
+    </div>
+
+
+
+      <!-- Informações -->
+      <div class="w-full md:w-7/12 flex flex-col justify-between">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-semibold text-blue-800 mb-2 break-words">{{ livroAnunciado.livroDTO?.titulo }}</h1>
+
+          <ul class="text-sm text-gray-600 space-y-1 mb-6">
+            <li><span class="font-medium text-gray-800">Pertence a:</span> {{ livroAnunciado.clienteDTO?.nome }}</li>
+            <li><span class="font-medium text-gray-800">Páginas:</span> {{ livroAnunciado.livroDTO?.qtdPaginas }}</li>
+            <li><span class="font-medium text-gray-800">Gênero:</span> {{ livroAnunciado.livroDTO?.categoria }}</li>
+          </ul>
         </div>
-        
-        <!-- Informações -->
-        <div class="w-full md:w-7/12 flex flex-col justify-between">
-          <div>
-            <h1 class="text-2xl sm:text-3xl font-semibold text-blue-800 mb-2 break-words">Nome do Livro</h1>
-            <p class="text-gray-700 mb-4 text-sm sm:text-base leading-relaxed">
-              Este livro aborda temas relevantes com uma narrativa envolvente e educativa. Ideal para quem busca conhecimento e entretenimento em uma só leitura.
-            </p>
-  
-            <ul class="text-sm text-gray-600 space-y-1 mb-6">
-              <li><span class="font-medium text-gray-800">Autor:</span> Fulano de Tal</li>
-              <li><span class="font-medium text-gray-800">Páginas:</span> 320</li>
-              <li><span class="font-medium text-gray-800">Editora:</span> Exemplo Editora</li>
-              <li><span class="font-medium text-gray-800">Gênero:</span> Ficção / Aventura</li>
-            </ul>
+
+        @if (livroAnunciado.tipo === 0) {
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
+          
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-700 mb-1">
+              Saldo disponível: <span class="font-medium text-gray-900">R$ 0</span>
+            </span>
+            <span class="font-medium text-gray-900">
+              Valor do livro: R$ {{ formatNumber(livroAnunciado.livroDTO?.valor ?? 0) }}
+            </span>
+              <span class="font-medium text-gray-900">
+              Valor da taxa: R$ {{ formatNumber(livroAnunciado.valorTaxa ?? 0) }} 
+            </span>
+
+            <span class="text-2xl sm:text-3xl font-bold text-green-600">
+              Total: R$ {{ formatNumber((livroAnunciado.livroDTO?.valor ?? 0) + (livroAnunciado.valorTaxa ?? 0)) }}
+            </span>
           </div>
+
+          <button 
+            class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition"
+            onclick="abrirModalCompra()"
+          >
+            Comprar agora
+          </button>
+        </div>
+      }
+
+        @else {
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
-            <span class="text-3xl font-bold text-green-600">R$ 59,90</span>
-            <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
-              Obter agora
-            </button>
+              <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
+                Obter agora
+              </button>
           </div>
-        </div>
-      </div>
-    </section>
-  
-    <!-- Produtos relacionados -->
-    <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Produtos relacionados</h2>
-  
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <!-- Cards relacionados -->
-        <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-          <img src="https://via.placeholder.com/300x300" alt="Produto 1" class="mb-4 rounded-lg object-contain h-48 w-full">
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: A Jornada</h3>
-          <p class="text-green-600 font-bold text-lg mb-4">R$ 39,90</p>
-          <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
-        </div>
-  
-        <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-          <img src="https://via.placeholder.com/300x300" alt="Produto 2" class="mb-4 rounded-lg object-contain h-48 w-full">
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Mistérios do Tempo</h3>
-          <p class="text-green-600 font-bold text-lg mb-4">R$ 42,50</p>
-          <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
-        </div>
-  
-        <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-          <img src="https://via.placeholder.com/300x300" alt="Produto 3" class="mb-4 rounded-lg object-contain h-48 w-full">
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Além da Imaginação</h3>
-          <p class="text-green-600 font-bold text-lg mb-4">R$ 55,00</p>
-          <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
-        </div>
-      </div>
-    </section>
-  
-    <!-- Comentários -->
-    <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Comentários sobre o produto</h2>
-  
-      <div class="space-y-6 mb-8">
-        <div class="border rounded-lg p-4 bg-gray-50">
-          <div class="flex items-center mb-2">
-            <div class="w-10 h-10 bg-blue-700 text-white flex items-center justify-center rounded-full text-sm font-semibold">JD</div>
-            <div class="ml-3">
-              <p class="font-medium text-gray-800">João Dias</p>
-              <p class="text-sm text-gray-500">há 2 dias</p>
-            </div>
-          </div>
-          <p class="text-gray-700">Livro excelente, leitura fluida e conteúdo muito bom para quem está começando!</p>
-        </div>
-  
-        <div class="border rounded-lg p-4 bg-gray-50">
-          <div class="flex items-center mb-2">
-            <div class="w-10 h-10 bg-purple-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">MA</div>
-            <div class="ml-3">
-              <p class="font-medium text-gray-800">Maria Alves</p>
-              <p class="text-sm text-gray-500">há 5 dias</p>
-            </div>
-          </div>
-          <p class="text-gray-700">Gostei bastante da abordagem. Vale o preço.</p>
-        </div>
-      </div>
-  
-      <!-- Formulário de comentário -->
-      <div class="bg-gray-100 p-4 rounded-lg">
-        <h3 class="text-lg font-medium text-gray-800 mb-2">Deixe seu comentário</h3>
-        <form onsubmit="event.preventDefault(); addComment();" class="space-y-4">
-          <textarea id="comentarioInput" rows="3" placeholder="Escreva seu comentário aqui..." class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"></textarea>
-          <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800 transition">Enviar comentário</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- <script>
-        function addComment() {
-        const input = document.getElementById('comentarioInput');
-        const texto = input.value.trim();
-        if (!texto) return;
-    
-        const comentariosContainer = document.querySelector('section > .space-y-6');
-    
-        const novoComentario = document.createElement('div');
-        novoComentario.className = 'border rounded-lg p-4 bg-gray-50';
-    
-        novoComentario.innerHTML = `
-            <div class="flex items-center mb-2">
-            <div class="w-10 h-10 bg-green-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">VO</div>
-            <div class="ml-3">
-                <p class="font-medium text-gray-800">Você</p>
-                <p class="text-sm text-gray-500">agora mesmo</p>
-            </div>
-            </div>
-            <p class="text-gray-700">${texto}</p>
-        `;
-    
-        comentariosContainer.prepend(novoComentario);
-        input.value = '';
         }
-    </script> -->
+        
+      </div>
+    </div>
+  </section>
 
-  </main>
-  
+  <!-- Produtos relacionados -->
+  <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Produtos relacionados</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- Cards relacionados -->
+      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
+        <img src="https://via.placeholder.com/200x300" alt="Produto 1" class="mb-4 rounded-lg object-cover h-72 w-full">
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: A Jornada</h3>
+        <p class="text-green-600 font-bold text-lg mb-4">R$ 39,90</p>
+        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
+      </div>
+
+      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
+        <img src="https://via.placeholder.com/200x300" alt="Produto 2" class="mb-4 rounded-lg object-cover h-72 w-full">
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Mistérios do Tempo</h3>
+        <p class="text-green-600 font-bold text-lg mb-4">R$ 42,50</p>
+        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
+      </div>
+
+      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
+        <img src="https://via.placeholder.com/200x300" alt="Produto 3" class="mb-4 rounded-lg object-cover h-72 w-full">
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Além da Imaginação</h3>
+        <p class="text-green-600 font-bold text-lg mb-4">R$ 55,00</p>
+        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comentários -->
+  <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Comentários sobre o produto</h2>
+
+    <div class="space-y-6 mb-8">
+      <div class="border rounded-lg p-4 bg-gray-50">
+        <div class="flex items-center mb-2">
+          <div class="w-10 h-10 bg-blue-700 text-white flex items-center justify-center rounded-full text-sm font-semibold">JD</div>
+          <div class="ml-3">
+            <p class="font-medium text-gray-800">João Dias</p>
+            <p class="text-sm text-gray-500">há 2 dias</p>
+          </div>
+        </div>
+        <p class="text-gray-700">Livro excelente, leitura fluida e conteúdo muito bom para quem está começando!</p>
+      </div>
+
+      <div class="border rounded-lg p-4 bg-gray-50">
+        <div class="flex items-center mb-2">
+          <div class="w-10 h-10 bg-purple-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">MA</div>
+          <div class="ml-3">
+            <p class="font-medium text-gray-800">Maria Alves</p>
+            <p class="text-sm text-gray-500">há 5 dias</p>
+          </div>
+        </div>
+        <p class="text-gray-700">Gostei bastante da abordagem. Vale o preço.</p>
+      </div>
+    </div>
+
+    <!-- Formulário de comentário -->
+    <div class="bg-gray-100 p-4 rounded-lg">
+      <h3 class="text-lg font-medium text-gray-800 mb-2">Deixe seu comentário</h3>
+      <form onsubmit="event.preventDefault(); addComment();" class="space-y-4">
+        <textarea id="comentarioInput" rows="3" placeholder="Escreva seu comentário aqui..." class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"></textarea>
+        <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800 transition">Enviar comentário</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Script para adicionar comentário dinamicamente -->
+  <script>
+    function addComment() {
+      const input = document.getElementById('comentarioInput');
+      const texto = input.value.trim();
+      if (!texto) return;
+
+      const comentariosContainer = document.querySelector('section > .space-y-6');
+
+      const novoComentario = document.createElement('div');
+      novoComentario.className = 'border rounded-lg p-4 bg-gray-50';
+
+      novoComentario.innerHTML = `
+        <div class="flex items-center mb-2">
+          <div class="w-10 h-10 bg-green-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">VO</div>
+          <div class="ml-3">
+            <p class="font-medium text-gray-800">Você</p>
+            <p class="text-sm text-gray-500">agora mesmo</p>
+          </div>
+        </div>
+        <p class="text-gray-700">${texto}</p>
+      `;
+
+      comentariosContainer.prepend(novoComentario);
+      input.value = '';
+    }
+  </script>
+</main>
