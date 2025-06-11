@@ -1,6 +1,7 @@
 ﻿using BookAPI.Entities.Historicos;
 using System.ComponentModel.DataAnnotations;
 using BookAPI.Entities.Livros;
+using BookAPI.Entities.Notificacoes;
 using System.ComponentModel;
 using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Carrinhos;
@@ -49,5 +50,6 @@ namespace BookAPI.Entities.Clientes
         public ICollection<ClienteLivro> ClientesLivros { get; set; } = new List<ClienteLivro>();
         public ICollection<Historico> Historicos { get; set; } = new List<Historico>();
         public ICollection<CartaoCliente> CartaoClientes { get; set; } = new List<CartaoCliente>();
-	}
+        public ICollection<Notificacao> Notificacoes { get; set; } = new List<Notificacao>();
+    }
 }

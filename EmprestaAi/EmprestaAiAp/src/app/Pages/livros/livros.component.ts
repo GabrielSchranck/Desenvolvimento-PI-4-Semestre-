@@ -157,6 +157,7 @@ export class LivrosComponent implements OnInit {
     });
 
     this.abrirModal = true;
+    console.log(this.livros);
   }
 
   public createFormLivro(): void {

@@ -27,7 +27,7 @@ namespace BookModels.DTOs.Livros
                 return 0;
             }
         }
-
+        public int? qtdOperacao { get; set; }
         public int Tipo { get; set; }
     }
 }

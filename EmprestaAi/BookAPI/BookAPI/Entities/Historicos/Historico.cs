@@ -1,9 +1,22 @@
 ﻿using BookAPI.Entities.Clientes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookAPI.Entities.Historicos
 {
-	public class Historico
+    public enum TipoOperacaoEnum
+    {
+        [Description("VENDA")]
+        Venda,
+
+        [Description("EMPRESTIMO")]
+        Emprestimo,
+
+        [Description("DOACAO")]
+        Doacao
+    }
+
+    public class Historico
 	{
         public int ClienteId { get; set; }
         [Key]

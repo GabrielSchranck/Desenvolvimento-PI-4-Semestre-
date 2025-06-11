@@ -26,6 +26,9 @@ namespace BookAPI.Repositories.Enderecos
         public async Task CreateAsync(Endereco endereco)
         {
             await _context.Enderecos.AddAsync(endereco);
+
+            if (endereco.Bairro == null) return;
+
             await _context.SaveChangesAsync();
         }
 

@@ -184,5 +184,10 @@ namespace BookAPI.Services.Livros
         {
             return await _livroRepository.GetAnuncioDTO(livroId, tipo);
         }
+
+        public Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId)
+        {
+            return _livroRepository.GetAllByCategoria(categoriaId, livroId);
+        }
     }
 }

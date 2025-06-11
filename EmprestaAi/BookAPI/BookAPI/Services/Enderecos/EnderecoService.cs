@@ -65,6 +65,8 @@ namespace BookAPI.Services.Enderecos
 
                         await CreateAsync(endereco);
 
+                        if (endereco.Cidade == null) return null;
+
                         return endereco;
                     }
                     else

@@ -31,7 +31,7 @@
           
           <div class="flex flex-col">
             <span class="text-sm text-gray-700 mb-1">
-              Saldo disponível: <span class="font-medium text-gray-900">R$ 0</span>
+              Saldo disponível: <span class="font-medium text-gray-900">R$ {{ formatNumber(saldo) }}</span>
             </span>
             <span class="font-medium text-gray-900">
               Valor do livro: R$ {{ formatNumber(livroAnunciado.livroDTO?.valor ?? 0) }}
@@ -47,7 +47,7 @@
 
           <button 
             class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition"
-            onclick="abrirModalCompra()"
+            (click)="ComprarLivro()"
           >
             Comprar agora
           </button>
@@ -56,7 +56,9 @@
 
         @else {
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
-              <button class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
+              <button 
+                type="button"
+                class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
                 Obter agora
               </button>
           </div>
@@ -66,33 +68,81 @@
     </div>
   </section>
 
-  <!-- Produtos relacionados -->
-  <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Produtos relacionados</h2>
+  @if(comprarLivro) {
+  <div id="modalCompra" class="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <!-- Cards relacionados -->
-      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-        <img src="https://via.placeholder.com/200x300" alt="Produto 1" class="mb-4 rounded-lg object-cover h-72 w-full">
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: A Jornada</h3>
-        <p class="text-green-600 font-bold text-lg mb-4">R$ 39,90</p>
-        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
-      </div>
+      <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-4xl flex gap-6">
+        
+        <!-- 🛒 Coluna da esquerda: Produtos -->
+        <div class="w-1/2 border-r pr-4">
+          <h2 class="text-2xl font-semibold mb-4">Livros</h2>
+          <!-- Lista de produtos (você pode popular dinamicamente depois) -->
+          <div class="space-y-2">
+            <div class="p-3 border rounded shadow-sm">
+              <p class="font-medium">Livro: {{ livroAnunciado.livroDTO?.titulo }}</p>
+              <p class="text-sm text-gray-600">Preço: R$ {{ formatNumber(livroAnunciado.livroDTO?.valor ?? 0) }}</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-        <img src="https://via.placeholder.com/200x300" alt="Produto 2" class="mb-4 rounded-lg object-cover h-72 w-full">
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Mistérios do Tempo</h3>
-        <p class="text-green-600 font-bold text-lg mb-4">R$ 42,50</p>
-        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
-      </div>
+        <!-- ✅ Coluna da direita: Quantidade, endereço e botão -->
+        <div class="w-1/2 pl-4">
+          <h2 class="text-2xl font-semibold mb-4">Finalizar Compra</h2>
 
-      <div class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-4 flex flex-col">
-        <img src="https://via.placeholder.com/200x300" alt="Produto 3" class="mb-4 rounded-lg object-cover h-72 w-full">
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Livro: Além da Imaginação</h3>
-        <p class="text-green-600 font-bold text-lg mb-4">R$ 55,00</p>
-        <button class="mt-auto bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Ver mais</button>
+          <!-- Quantidade -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Quantidade</label>
+            <input type="number"
+                  min="1"
+                  max="{{ livroAnunciado.quantidadeAnunciado }}"
+                  [(ngModel)]="quantidadeSelecionada"
+                  id="quantidade"
+                  name="quantidade"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+          </div>
+
+
+          <!-- Valor total (pode ser dinâmico depois) -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Valor total</label>
+            <p class="mt-1 font-semibold text-lg">R$ {{ formatNumber((livroAnunciado.livroDTO?.valor ?? 0) + (livroAnunciado.valorTaxa ?? 0)) }}</p>
+          </div>
+
+          <!-- Endereço -->
+         <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Endereço</label>
+          <select id="enderecoSelect"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  [(ngModel)]="enderecoSelecionadoId"
+                  name="enderecoSelect">
+            @for (endereco of enderecos; track $index) {
+              <option [value]="endereco.id">{{ endereco.cep }} - {{ endereco.rua }}, {{ endereco.numero }}</option>
+            }
+          </select>
+        </div>
+
+
+          <!-- Botões -->
+          <div class="flex justify-end space-x-2">
+            <button type="button" (click)="comprarLivro = false;" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancelar</button>
+            <button type="button" (click)="FinalizarCompra(enderecoSelecionadoId)" class="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white">Finalizar</button>
+          </div>
+        </div>
+
       </div>
     </div>
+  }
+@else {
+
+}
+
+
+  <!-- Produtos relacionados -->
+  <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
+    <app-cards
+      [livrosAnunciados]="livrosRelacionados"
+      [tipo]="livroAnunciado.tipo ?? 0"
+      [titulo]="'Produtos relacionados'"/>
   </section>
 
   <!-- Comentários -->

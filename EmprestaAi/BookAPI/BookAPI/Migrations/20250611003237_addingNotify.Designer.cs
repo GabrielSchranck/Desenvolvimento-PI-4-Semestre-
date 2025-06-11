@@ -4,6 +4,7 @@ using BookAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookAPI.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    partial class BookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250611003237_addingNotify")]
+    partial class addingNotify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -673,9 +676,6 @@ namespace BookAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClienteId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CompradorId")
                         .HasColumnType("int");
 
@@ -696,8 +696,6 @@ namespace BookAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
 
                     b.HasIndex("CompradorId");
 
@@ -873,10 +871,6 @@ namespace BookAPI.Migrations
 
             modelBuilder.Entity("BookAPI.Entities.Notificacoes.Notificacao", b =>
                 {
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", null)
-                        .WithMany("Notificacoes")
-                        .HasForeignKey("ClienteId");
-
                     b.HasOne("BookAPI.Entities.Clientes.Cliente", "Comprador")
                         .WithMany()
                         .HasForeignKey("CompradorId")
@@ -915,8 +909,6 @@ namespace BookAPI.Migrations
                     b.Navigation("Enderecos");
 
                     b.Navigation("Historicos");
-
-                    b.Navigation("Notificacoes");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Historicos.Historico", b =>

@@ -271,7 +271,9 @@ namespace BookAPI.Repositories.Livros
                     UriImagemLivro = fotoLivro.UrlImagem,
                     categoria = categoria.NomeCategoria,
                     Valor = livro.Valor,
-                    QtdPaginas = livro.QtdPaginas
+                    QtdPaginas = livro.QtdPaginas,
+                    Quantidade = livro.Quantidade,
+                    CategoriaId = livro.CategoriaId
                 },
                 LivroId = cliente.Id,
                 QuantidadeAnunciado = anuncio.QuantidadeAnunciado,
@@ -303,6 +305,53 @@ namespace BookAPI.Repositories.Livros
                     await _dbContext.SaveChangesAsync();
                 }
             }
+        }
+
+        public async Task<IEnumerable<LivroDTO>> GetAllByCategoria(int categoriaId, int livroId)
+        {
+            var livros = await _dbContext.Livros
+                .Include(l => l.livrosAnunciados)
+                    .ThenInclude(la => la.Cliente)
+                .Include(l => l.Categoria)
+                .Include(l => l.FotosLivros)
+                .Where(l =>
+                    l.CategoriaId == categoriaId &&
+                    l.Id != livroId && // EXCLUI o livro do parâmetro
+                    l.livrosAnunciados.Any(la => la.QuantidadeAnunciado > 0 && la.Tipo == 0)
+                )
+                .OrderBy(r => Guid.NewGuid())
+                .Take(10)
+                .ToListAsync();
+
+            var livroDTOs = livros.Select(l => new LivroDTO
+            {
+                Id = l.Id,
+                ClienteId = l.Cliente?.Id,
+                CategoriaId = l.CategoriaId,
+                Titulo = l.Titulo,
+                Valor = l.Valor,
+                Custo = l.Custo,
+                QtdPaginas = l.QtdPaginas,
+                Quantidade = l.Quantidade,
+                Anunciado = l.Anunciado,
+                UriImagemLivro = l.FotosLivros.FirstOrDefault()?.UrlImagem,
+                LivrosAnunciados = l.livrosAnunciados
+                    .Where(la => la.QuantidadeAnunciado > 0 && la.Tipo == 0)
+                    .Select(la => new LivroAnunciadoDTO
+                    {
+                        Id = la.Id,
+                        ClienteId = la.ClienteId,
+                        LivroId = la.LivroId,
+                        QuantidadeAnunciado = la.QuantidadeAnunciado,
+                        Tipo = la.Tipo,
+                        ClienteDTO = la.Cliente != null ? new ClienteDTO
+                        {
+                            Id = la.Cliente.Id,
+                        } : null
+                    }).ToList()
+            }).ToList();
+
+            return livroDTOs;
         }
 
 

@@ -19,5 +19,6 @@ namespace BookAPI.Services.Livros
 		Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO);
 		Task<IEnumerable<LivroDTO>> SelecionarAnuncios();
 		Task<LivroAnunciadoDTO> GetLivroAnunciadoDTO(int livroId, int tipo);
+		Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId);
     }
 }

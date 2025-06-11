@@ -1,4 +1,5 @@
 ﻿using BookAPI.Entities.ClientesLivros;
+using BookAPI.Entities.Livros;
 using BookAPI.mappings;
 using BookAPI.Repositories.Livros;
 using BookAPI.Services.Livros;
@@ -274,6 +275,33 @@ namespace BookAPI.Controllers
                 return Ok(new
                 {
                     livroAnunciado = livroAnunciadoDTO
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getRelacionados/{categoriaId}/{livroId}")]
+        public async Task<ActionResult> GetAllRelacionados([FromRoute] int categoriaId, [FromRoute] int livroId)
+        {
+            try
+            {
+                var livrosAnunciadosRelacionadosDTO = await _livroServices.GetAllRelacionados(categoriaId, livroId);
+
+                foreach (var livro in livrosAnunciadosRelacionadosDTO)
+                {
+                    if (!string.IsNullOrEmpty(livro.UriImagemLivro) && livro.UriImagemLivro.StartsWith("imagens/"))
+                    {
+                        livro.UriImagemLivro = $"{Request.Scheme}://{Request.Host}/{livro.UriImagemLivro}";
+                    }
+                }
+
+                return Ok(new
+                {
+                    livrosAnunciados = livrosAnunciadosRelacionadosDTO
                 });
             }
             catch (Exception)

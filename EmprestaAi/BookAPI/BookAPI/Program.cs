@@ -73,6 +73,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile("../Environment.json", optional: true, reloadOnChange: true);
 
+builder.Services.AddSignalR();
 
 //Repositories
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
@@ -137,6 +138,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.MapHub<NotificationHub>("/notificacoesHub");
+
 
 app.UseAuthorization();
 

@@ -32,6 +32,17 @@ export class NavbarComponent implements OnInit {
     return rotasPerfil.includes(this.router.url);
   }
 
+ public isVendaRota(): boolean {
+  const rotasVenda = ['', '/'];
+  const urlAtual = this.router.url;
+
+  return (
+    rotasVenda.includes(urlAtual) ||
+    urlAtual.startsWith('/exibelivro/')
+  );
+}
+
+
   private async isLoggedIn(): Promise<boolean> {
     try {
       const logado = await firstValueFrom(this.auth.isLoggedIn());

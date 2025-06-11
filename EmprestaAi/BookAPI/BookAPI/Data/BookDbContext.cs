@@ -5,6 +5,7 @@ using BookAPI.Entities.Clientes;
 using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Historicos;
 using BookAPI.Entities.Livros;
+using BookAPI.Entities.Notificacoes;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Data
@@ -30,6 +31,7 @@ namespace BookAPI.Data
         public DbSet<Carrinho> Carrinho { get; set; }
         public DbSet<ItemCarrinho> ItemCarrinho { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<Notificacao> Notificacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -110,6 +112,19 @@ namespace BookAPI.Data
             .WithMany()
             .HasForeignKey(ic => ic.LivroAnunciadoId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Notificacao>()
+                .HasOne(n => n.Comprador)
+                .WithMany()
+                .HasForeignKey(n => n.CompradorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Notificacao>()
+                .HasOne(n => n.Vendedor)
+                .WithMany()
+                .HasForeignKey(n => n.VendedorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

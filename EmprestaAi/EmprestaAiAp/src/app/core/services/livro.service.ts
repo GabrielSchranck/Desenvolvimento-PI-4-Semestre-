@@ -169,6 +169,22 @@ export class LivroService {
     );
   }
 
+  public GetAllLivrosAnunciadosByCat(categoriaId: number, livroId: number): Observable<any> { 
+    const apiUrl = `${this.url}/getRelacionados/${categoriaId}/${livroId}`;
+    const httpOptions = this.getHttpOptions();
+
+    console.log("URL API: ", apiUrl);
+
+    return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
   public GetLivrosAnunciados(anuncioId: number, tipo: number): Observable<any> {
     const apiUrl = `${this.url}/getLivroInfo/${anuncioId}/${tipo}`;
     const httpOptions = this.getHttpOptions();
