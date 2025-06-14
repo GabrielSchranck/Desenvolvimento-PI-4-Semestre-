@@ -65,7 +65,7 @@ namespace BookAPI.Controllers
         }
 
         [HttpPost("comprarLivro")]
-        public async Task<ActionResult> Vender([FromBody] Operacao operacao)
+        public async Task<ActionResult> Vender([FromBody] List<Operacao> operacoes)
         {
             try
             {
@@ -74,16 +74,20 @@ namespace BookAPI.Controllers
 
                 int clienteId = (int)await TokenService.GetClientIdFromToken(token);
 
-                operacao.LivroAnunciadoDTO.qtdOperacao = operacao.Quantidade;
+                foreach (var operacao in operacoes)
+                {
+                    operacao.LivroAnunciadoDTO.qtdOperacao = operacao.Quantidade;
+                    await _vendaService.ComprarLivro(clienteId, operacao.LivroAnunciadoDTO);
+                }
 
-                await _vendaService.ComprarLivro(clienteId, operacao.LivroAnunciadoDTO);
-
-                return Ok(new { result = "Compra realizada com sucesso!" });
+                return Ok(new { result = "Compras realizadas com sucesso!" });
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }
+
+
     }
 }

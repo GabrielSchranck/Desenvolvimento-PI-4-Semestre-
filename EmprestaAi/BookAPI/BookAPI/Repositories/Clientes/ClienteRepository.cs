@@ -1,6 +1,7 @@
 ﻿using BookAPI.Data;
 using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
+using BookAPI.Entities.Notificacoes;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookAPI.Repositories.Clientes
@@ -22,6 +23,16 @@ namespace BookAPI.Repositories.Clientes
         public async Task CreateEnderecoCliente(EnderecoCliente enderecoCliente)
         {
             await _context.EnderecosClientes.AddAsync(enderecoCliente);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task FecharNotificacao(int notificacaoId)
+        {
+            var notificacao = await _context.Notificacoes.Where(n => n.Id == notificacaoId).FirstOrDefaultAsync();
+
+            notificacao.Visto = 1;
+
+            _context.Notificacoes.Update(notificacao);
             await _context.SaveChangesAsync();
         }
 
@@ -85,6 +96,11 @@ namespace BookAPI.Repositories.Clientes
                 .ToListAsync();
 
             return enderecos;
+        }
+
+        public async Task<IEnumerable<Notificacao>> GetNotificacao(int clienteId)
+        {
+            return await _context.Notificacoes.Where(n => n.VendedorId == clienteId && n.Visto == 0).ToListAsync();
         }
 
         public async Task<Cliente> Login(string email, string senha)

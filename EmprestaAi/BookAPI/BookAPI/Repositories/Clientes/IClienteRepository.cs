@@ -1,5 +1,6 @@
 ﻿using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
+using BookAPI.Entities.Notificacoes;
 
 namespace BookAPI.Repositories.Clientes
 {
@@ -16,5 +17,7 @@ namespace BookAPI.Repositories.Clientes
         Task<IEnumerable<Endereco>> GetClienteEnderecosAsync(int clienteId);
         Task CreateEnderecoCliente(EnderecoCliente enderecoCliente);
         Task<Cliente> FindByTokenAsync(string token);
+        Task<IEnumerable<Notificacao>> GetNotificacao(int clienteId);
+        Task FecharNotificacao(int notificacaoId);
     }
 }

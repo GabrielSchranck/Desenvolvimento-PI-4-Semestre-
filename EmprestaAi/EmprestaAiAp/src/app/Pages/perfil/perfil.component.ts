@@ -8,6 +8,8 @@ import { EnderecoService } from '../../core/services/endereco.service';
 import { Endereco } from '../../core/models/Endereco';
 import { CommonModule } from '@angular/common';
 import { InputsComponent } from '../../Shered/inputs/inputs.component';
+import { Notificacao } from '../../core/models/Notificacao';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-perfil',
@@ -22,6 +24,7 @@ export class PerfilComponent implements OnInit{
   cliente: Cliente = new Cliente();
   enabled: boolean = true;
   enderecos: EnderecoCliente[] = [];
+  notificacoes:Notificacao[] = [];
   cep: string = "";
   editarPerfil: boolean = false;
   deletarEndereco: boolean = false;
@@ -29,7 +32,11 @@ export class PerfilComponent implements OnInit{
   possuiEnderecos: boolean = false;
   adicionaEndereco: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private clienteService: ClienteService, private enderecoService: EnderecoService){}
+  constructor(
+    private formBuilder: FormBuilder, 
+    private clienteService: ClienteService, 
+    private enderecoService: EnderecoService, 
+    private notificacaoService: NotificationService){}
 
   ngOnInit(): void {
     this.CreateFormPerfil();
@@ -41,6 +48,40 @@ export class PerfilComponent implements OnInit{
       this.GetUserData();
     }
   }
+
+  public marcarComoVista(notificacao: Notificacao): void {
+    notificacao.visto = 1;
+    this.notificacaoService.closeNotificacao(notificacao.id!).subscribe({
+      next: () => {
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Notificação marcada como vista.",
+          icon: "success",
+          confirmButtonText: "Ok"
+        }).then(() => {
+          this.GetUserData();
+        });
+      },
+      error: (error: any) => {
+        Swal.fire({
+          title: "Erro!",
+          text: "Erro ao marcar notificação como vista.",
+          icon: "error",
+          confirmButtonText: "Ok"
+        });
+        console.error("Erro ao marcar notificação como vista:", error);
+      }
+    });
+  }
+
+  public confirmarNotificacao(notificacao: Notificacao): void {
+    // Lógica para aceitar a proposta
+  }
+
+  public recusarNotificacao(notificacao: Notificacao): void {
+    // Lógica para recusar a proposta
+  }
+
 
   public editarEndereco(endereco: EnderecoCliente): void {
     this.modalAberto = true;
@@ -92,7 +133,8 @@ export class PerfilComponent implements OnInit{
       next: (dados) => {
         this.cliente = dados.cliente;
         this.enderecos = dados.enderecos;
-
+        this.notificacoes = dados.notificacoes;
+        console.log("Notificações: ", this.notificacoes);
         if (this.cliente.DataNascimento) {
           this.cliente.DataNascimento = this.cliente.DataNascimento.split("T")[0];
         }

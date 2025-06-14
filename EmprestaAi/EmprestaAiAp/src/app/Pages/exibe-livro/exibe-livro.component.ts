@@ -28,6 +28,7 @@ export class ExibeLivroComponent implements OnInit {
   enderecos: EnderecoCliente[] = [];
   livrosRelacionados: LivroDTO[] = [];
   operacao: Operacao = new Operacao();
+  operacoes: Operacao[] = [];
   enderecoSelecionadoId: number = 0;
   quantidadeSelecionada: number = 1;
 
@@ -104,7 +105,9 @@ export class ExibeLivroComponent implements OnInit {
     this.operacao.tipo = this.tipo;
     this.operacao.Quantidade = this.quantidadeSelecionada;
 
-    this.operacoesService.ComprarLivro(this.operacao).subscribe({
+    this.operacoes.push(this.operacao);
+
+    this.operacoesService.ComprarLivro(this.operacoes).subscribe({
       next: (response) => {
               Swal.fire({
                 title: 'Sucesso',

@@ -3,6 +3,8 @@ import { UserInfoComponent } from "../../MainPages/user-info/user-info.component
 import { CarrinhoService } from '../../core/services/carrinho.service';
 import { CarrinhoDTO, ItemCarrinhoDTO } from '../../core/models/Carrinho';
 import Swal from 'sweetalert2';
+import { Operacao } from '../../core/models/Operacao';
+import { OperacoesService } from '../../core/services/operacoes.service';
 
 @Component({
   selector: 'app-carrinho',
@@ -17,6 +19,8 @@ export class CarrinhoComponent implements OnInit {
   itensVenda: ItemCarrinhoDTO[] = [];
   itensEmprestimo: ItemCarrinhoDTO[] = [];
   itensDoacao: ItemCarrinhoDTO[] = [];
+  operacao!: Operacao;
+  operacoes: Operacao[] = [];
 
   mostrarTodosVenda: boolean = false;
   mostrarTodosEmprestimo: boolean = false;
@@ -28,7 +32,7 @@ export class CarrinhoComponent implements OnInit {
   possuiItensDoacao: boolean = false;
 
 
-  constructor(private carrinhoService: CarrinhoService) { }
+  constructor(private carrinhoService: CarrinhoService, private operacoesServices: OperacoesService) { }
 
   public ngOnInit(): void {
     this.VerificarCarrinhoExistente();
@@ -130,5 +134,60 @@ export class CarrinhoComponent implements OnInit {
           });
         }
       );
+  }
+
+  public FinalizarCompra(): void {
+    if (this.carrinho.itens.length === 0) {
+      Swal.fire({
+        title: 'Carrinho vazio',
+        text: 'Adicione itens ao carrinho antes de finalizar a compra.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+        },
+        buttonsStyling: false
+      });
+      return;
+    }
+
+    this.itensVenda.forEach(item => {
+      const operacao = new Operacao();
+      if (item.livroAnunciadoDTO) {
+        operacao.LivroAnunciadoDTO = item.livroAnunciadoDTO;
+        operacao.tipo = item.livroAnunciadoDTO.tipo || 0; 
+        operacao.Quantidade = item.quantidade || 1; 
+        this.operacoes.push(operacao);
+      }
+    });
+
+    this.operacoesServices.ComprarLivro(this.operacoes).subscribe({
+      next: (response) => {
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Compra finalizada com sucesso.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        }).then(() => {
+          this.GetCarrinho();
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Erro',
+          text: error.error || 'Erro ao finalizar a compra.',
+          icon: 'error',
+          confirmButtonText: 'Fechar',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        });
+      }
+    });
   }
 }

@@ -29,11 +29,11 @@ export class OperacoesService {
     return { headers };
   }
 
-  ComprarLivro(operacao: Operacao) {
+  ComprarLivro(operacoes: Operacao[]) {
     const apiUrl = `${this.url}/comprarLivro`;
     const httpOptions = this.getHttpOptions();
 
-    return this.httpCliente.post<any>(apiUrl, operacao, httpOptions).pipe(
+    return this.httpCliente.post<any>(apiUrl, operacoes, httpOptions).pipe(
       catchError((error) => {
         if (error.status === 400) {
           return throwError(() => error.error);
@@ -42,4 +42,5 @@ export class OperacoesService {
       })
     );
   }
+
 }

@@ -6,7 +6,11 @@
             <section>
                 <div class="flex justify-between items-center m-4">
                     <h2 class="text-xl sm:text-2xl font-bold mb-4 text-blue-600">Livros para Venda</h2>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Comprar</button>
+                    <button 
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded"
+                        type="button"
+                        (click)="FinalizarCompra()"
+                    >Comprar</button>
                 </div>
             <div>
                 <div class="space-y-4" id="venda-lista">
@@ -35,6 +39,9 @@
                         </button>
                     </div>
                     </div>
+                }
+                @empty {
+                    <div class="text-gray-500 text-sm">Nenhum livro adicionado para venda.</div>
                 }
                 </div>
             </div>

@@ -1,0 +1,20 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "EmprestaAi@2025"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
+  frontend:
+    build:
+      context: ./EmprestaAiAp
+    ports:
+      - "4200:4200"
+
+
+volumes:
+  sqlvolume:

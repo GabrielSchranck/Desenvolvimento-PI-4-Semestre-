@@ -1,5 +1,6 @@
 ﻿using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
+using BookAPI.Entities.Notificacoes;
 using BookAPI.Repositories.Clientes;
 using BookAPI.Services.Enderecos;
 using BookAPI.Services.Token;
@@ -37,6 +38,11 @@ namespace BookAPI.Services.Clientes
             await _clienteRepository.CreateEnderecoCliente(enderecoCliente);
         }
 
+        public async Task FecharNotificacao(int notificacaoId)
+        {
+            await _clienteRepository.FecharNotificacao(notificacaoId);
+        }
+
         public async Task<Cliente> FindByToken(string token)
         {
             return await _clienteRepository.FindByTokenAsync(token);
@@ -52,6 +58,11 @@ namespace BookAPI.Services.Clientes
         {
             if (string.IsNullOrEmpty(token)) return 0;
             return (int)await TokenService.GetClientIdFromToken(token);
+        }
+
+        public async Task<IEnumerable<Notificacao>> GetNotificacoes(int clienteId)
+        {
+            return await _clienteRepository.GetNotificacao(clienteId);
         }
 
         public async Task SendEmail(string token, IConfiguration configuration, Cliente cliente)

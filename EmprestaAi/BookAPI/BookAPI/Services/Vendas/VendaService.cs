@@ -54,8 +54,8 @@ namespace BookAPI.Services.Vendas
                     }
                 },
                 Mode = "payment",
-                SuccessUrl = "https://1bcc-177-128-8-241.ngrok-free.app/sucesso?session_id={CHECKOUT_SESSION_ID}",
-                CancelUrl = "https://1bcc-177-128-8-241.ngrok-free.app/erro"
+                SuccessUrl = "https://2759-177-128-11-134.ngrok-free.app/sucesso?session_id={CHECKOUT_SESSION_ID}",
+                CancelUrl = "https://2759-177-128-11-134.ngrok-free.app/erro"
             };
 
             var service = new Stripe.Checkout.SessionService();

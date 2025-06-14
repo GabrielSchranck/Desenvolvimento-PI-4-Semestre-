@@ -17,6 +17,7 @@ using BookAPI.Entities.CEPs;
 using Optivem.Framework.Core.Domain;
 using Optivem.Framework.Core.Common.Http;
 using Microsoft.EntityFrameworkCore;
+using BookModels.DTOs.Notificacoes;
 
 namespace BookAPI.Controllers
 {
@@ -96,6 +97,26 @@ namespace BookAPI.Controllers
                 }
             }
 
+            var notificacoes = await _clienteService.GetNotificacoes(clienteId);
+
+            var notificacoesDTO = new List<NotificacaoDTO>();
+
+            foreach(var notificacao in notificacoes)
+            {
+                var notificacaoDTO = new NotificacaoDTO
+                {
+                    CompradorId = notificacao.CompradorId,
+                    VendedorId = notificacao.VendedorId,
+                    Id = notificacao.Id,
+                    Mensagem = notificacao.Mensagem,
+                    Notificado = notificacao.Notificado,
+                    Tipo = (int?)notificacao.Tipo,
+                    Visto = notificacao.Visto
+                };
+
+                notificacoesDTO.Add(notificacaoDTO);
+            }
+
             return Ok(new
             {
                 cliente = new
@@ -109,7 +130,8 @@ namespace BookAPI.Controllers
                     cliente.Contato,
                     dataNascimento
                 },
-                enderecos = enderecosCliente
+                enderecos = enderecosCliente,
+                notificacoes = notificacoesDTO
             });
         }
 
@@ -285,6 +307,19 @@ namespace BookAPI.Controllers
             return Ok("E-mail verificado com sucesso.");
         }
 
+        [HttpPost("fecharNotificacao/{notificacaoId}")]
+        public async Task<ActionResult> FecharNotificacao([FromRoute] int notificacaoId)
+        {
+            try
+            {
+               await _clienteService.FecharNotificacao(notificacaoId);
 
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }
