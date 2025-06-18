@@ -20,6 +20,9 @@ using Optivem.Framework.Core.Domain;
 using Stripe;
 using System;
 using System.Text;
+using DotNetEnv;
+
+Env.Load("../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
