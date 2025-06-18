@@ -1,0 +1,5 @@
+*.ldf
+*.mdf
+*.ndf
+database/*.bin
+.env

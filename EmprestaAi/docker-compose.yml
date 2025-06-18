@@ -1,20 +1,61 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      SA_PASSWORD: "EmprestaAi@2025"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqlvolume:/var/opt/mssql
-
-  frontend:
+  angular:
     build:
       context: ./EmprestaAiAp
+    container_name: angular_app
     ports:
       - "4200:4200"
+    volumes:
+      - ./EmprestaAiAp:/app
+      - /app/node_modules
+    networks:
+      - app_network
+    command: ng serve --host 0.0.0.0 --poll 2000
 
+  bookapi:
+    build:
+      context: ./BookAPI
+    container_name: bookapi
+    ports:
+      - "7010:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - app_network
 
-volumes:
-  sqlvolume:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver2022
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "MinhaSenhaForte123!"
+      TZ: "America/Sao_Paulo"
+    ports:
+      - "1433:1433"
+    networks:
+      - app_network
+    volumes:
+      - ./database:/var/opt/mssql/data
+    shm_size: '1gb'
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    container_name: ngrok
+    command:
+      - "http"
+      - "--url"
+      - "${NGROK_URL}"
+      - "bookapi:7010"
+    environment:
+      NGROK_AUTHTOKEN: "${NGROK_TOKEN}"
+    ports:
+      - "4040:4040"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
