@@ -19,7 +19,6 @@ namespace BookAPI.Services.Livros
             this._livroRepository = livroRepository;
             _livroImagemRepository = livroImagemRepository;
         }
-
         public async Task CadastrarLivroCliente(LivroDTO livroDTO, int clienteId)
         {
             var livro = livroDTO.ConverteLivroDTOParaLivro();
@@ -51,7 +50,6 @@ namespace BookAPI.Services.Livros
                 await this.SaveImagemLivro(imagemLivro, false);
             }
         }
-
         public async Task<FotoLivro> GetImgBook(string titulo)
         {
             string url = $"https://www.googleapis.com/books/v1/volumes?q={Uri.EscapeDataString(titulo)}";
@@ -89,7 +87,6 @@ namespace BookAPI.Services.Livros
                 return null;
             }
         }
-
 
         private async Task Create(Livro livro, ClienteLivro clienteLivro)
         {
@@ -185,9 +182,39 @@ namespace BookAPI.Services.Livros
             return await _livroRepository.GetAnuncioDTO(livroId, tipo);
         }
 
-        public Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId)
+        public Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId, int tipo)
         {
-            return _livroRepository.GetAllByCategoria(categoriaId, livroId);
+            return _livroRepository.GetAllByCategoria(categoriaId, livroId, tipo);
+        }
+
+        public async Task<IEnumerable<LivroEmprestadoDTO>> GetLivrosEmprestados(int clienteId)
+        {
+            return await _livroRepository.GetLivrosEmprestados(clienteId);
+        }
+
+        public async Task DevolverLivro(int livroId)
+        {
+            await _livroRepository.DevolverLivro(livroId);
+        }
+
+        public async Task AdicionarComentario(ComentarioLivroDTO comentarioLivroDTO)
+        {
+            await _livroRepository.AdicionarComentario(comentarioLivroDTO);
+        }
+
+        public async Task<IEnumerable<ComentarioLivroDTO>> GetComentarioLivroDTO(int livroId)
+        {
+            return await _livroRepository.GetComentarios(livroId);
+        }
+
+        public async Task ExcluirComentario(int comentarioId)
+        {
+            await _livroRepository.ExcluirComentario(comentarioId);
+        }
+
+        public async Task EditarComentario(ComentarioLivroDTO comentarioLivroDTO)
+        {
+            await _livroRepository.EditarComentario(comentarioLivroDTO);
         }
     }
 }

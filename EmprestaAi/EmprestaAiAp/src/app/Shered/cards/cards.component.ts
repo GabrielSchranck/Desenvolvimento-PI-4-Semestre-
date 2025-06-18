@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, HostListener, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnInit, OnDestroy, Input, SimpleChanges } from '@angular/core';
 import { Card } from '../../core/models/Card';
 import { Router } from '@angular/router';
 import { LivroService } from '../../core/services/livro.service';

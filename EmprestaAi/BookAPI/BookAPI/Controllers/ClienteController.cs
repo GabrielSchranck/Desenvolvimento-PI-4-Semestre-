@@ -18,6 +18,7 @@ using Optivem.Framework.Core.Domain;
 using Optivem.Framework.Core.Common.Http;
 using Microsoft.EntityFrameworkCore;
 using BookModels.DTOs.Notificacoes;
+using BookModels.DTOs.Livros;
 
 namespace BookAPI.Controllers
 {
@@ -111,8 +112,20 @@ namespace BookAPI.Controllers
                     Mensagem = notificacao.Mensagem,
                     Notificado = notificacao.Notificado,
                     Tipo = (int?)notificacao.Tipo,
-                    Visto = notificacao.Visto
+                    Visto = notificacao.Visto,
+                    LivroId = notificacao.LivroId
                 };
+
+                if (notificacao.Livro != null)
+                {
+                    var livroDTO = new LivroDTO
+                    {
+                        Id = notificacao.Livro.Id,
+                        Titulo = notificacao.Livro.Titulo
+                    };
+
+                    notificacaoDTO.LivroDTO = livroDTO;
+                }
 
                 notificacoesDTO.Add(notificacaoDTO);
             }
@@ -128,6 +141,7 @@ namespace BookAPI.Controllers
                     cliente.Idade,
                     cliente.DDD,
                     cliente.Contato,
+                    cliente.Saldo,
                     dataNascimento
                 },
                 enderecos = enderecosCliente,
@@ -162,8 +176,6 @@ namespace BookAPI.Controllers
             }
         }
 
-
-
         [AllowAnonymous]
         [HttpPost("google-login")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest req)
@@ -173,14 +185,17 @@ namespace BookAPI.Controllers
 
             try
             {
-
                 var settings = new GoogleJsonWebSignature.ValidationSettings
                 {
                     Audience = new[] { _configuration["Authentication:Google:ClientId"] },
-                    IssuedAtClockTolerance = TimeSpan.FromMinutes(2)
+                    IssuedAtClockTolerance = TimeSpan.FromMinutes(20),
+                    ExpirationTimeClockTolerance = TimeSpan.FromMinutes(20)
                 };
 
+
                 var payload = await GoogleJsonWebSignature.ValidateAsync(req.IdToken, settings);
+                
+
 
                 var cliente = await _repository.GetClienteByEmailAsync(payload.Email);
 
@@ -204,7 +219,6 @@ namespace BookAPI.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-
 
         [AllowAnonymous]
         [HttpPost("create")]
@@ -313,6 +327,26 @@ namespace BookAPI.Controllers
             try
             {
                await _clienteService.FecharNotificacao(notificacaoId);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("sacar/{saldo}")]
+        public async Task<ActionResult> Sacar([FromRoute] decimal saldo)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                await _clienteService.Sacar(clienteId, saldo);
 
                 return Ok();
             }

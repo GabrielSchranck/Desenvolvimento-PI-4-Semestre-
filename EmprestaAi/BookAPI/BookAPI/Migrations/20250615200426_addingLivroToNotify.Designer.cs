@@ -4,6 +4,7 @@ using BookAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookAPI.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    partial class BookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250615200426_addingLivroToNotify")]
+    partial class addingLivroToNotify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,33 +272,6 @@ namespace BookAPI.Migrations
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Pagamentos");
-                });
-
-            modelBuilder.Entity("BookAPI.Entities.Clientes.Saque", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataSaque")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Sacado")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("Saques");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.ClientesLivros.ClienteLivro", b =>
@@ -597,36 +573,6 @@ namespace BookAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookAPI.Entities.Livros.ComentarioLivro", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comentario")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataComentario")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LivroId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("LivroId");
-
-                    b.ToTable("ComentariosLivros");
-                });
-
             modelBuilder.Entity("BookAPI.Entities.Livros.FotoLivro", b =>
                 {
                     b.Property<int>("Id")
@@ -726,43 +672,6 @@ namespace BookAPI.Migrations
                     b.HasIndex("LivroId");
 
                     b.ToTable("LivrosAnunciados");
-                });
-
-            modelBuilder.Entity("BookAPI.Entities.Livros.LivroEmprestado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CompradorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataDevolucao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataEmprestimo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Devolvido")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LivroId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VendedorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompradorId");
-
-                    b.HasIndex("LivroId");
-
-                    b.HasIndex("VendedorId");
-
-                    b.ToTable("LivrosEmprestados");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Notificacoes.Notificacao", b =>
@@ -880,17 +789,6 @@ namespace BookAPI.Migrations
                     b.Navigation("Cliente");
                 });
 
-            modelBuilder.Entity("BookAPI.Entities.Clientes.Saque", b =>
-                {
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-                });
-
             modelBuilder.Entity("BookAPI.Entities.ClientesLivros.ClienteLivro", b =>
                 {
                     b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
@@ -940,25 +838,6 @@ namespace BookAPI.Migrations
                     b.Navigation("Livro");
                 });
 
-            modelBuilder.Entity("BookAPI.Entities.Livros.ComentarioLivro", b =>
-                {
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookAPI.Entities.Livros.Livro", "Livro")
-                        .WithMany()
-                        .HasForeignKey("LivroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Livro");
-                });
-
             modelBuilder.Entity("BookAPI.Entities.Livros.FotoLivro", b =>
                 {
                     b.HasOne("BookAPI.Entities.Livros.Livro", "Livro")
@@ -1004,33 +883,6 @@ namespace BookAPI.Migrations
                     b.Navigation("Cliente");
 
                     b.Navigation("Livro");
-                });
-
-            modelBuilder.Entity("BookAPI.Entities.Livros.LivroEmprestado", b =>
-                {
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Comprador")
-                        .WithMany()
-                        .HasForeignKey("CompradorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BookAPI.Entities.Livros.Livro", "Livro")
-                        .WithMany()
-                        .HasForeignKey("LivroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookAPI.Entities.Clientes.Cliente", "Vendedor")
-                        .WithMany()
-                        .HasForeignKey("VendedorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Comprador");
-
-                    b.Navigation("Livro");
-
-                    b.Navigation("Vendedor");
                 });
 
             modelBuilder.Entity("BookAPI.Entities.Notificacoes.Notificacao", b =>

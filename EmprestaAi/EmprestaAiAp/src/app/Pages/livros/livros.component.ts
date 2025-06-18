@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserInfoComponent } from "../../MainPages/user-info/user-info.component";
-import { LivroAnunciadoDTO, LivroDTO } from '../../core/models/Livros';
+import { LivroAnunciadoDTO, LivroDTO, LivroEmprestado } from '../../core/models/Livros';
 import { CategoriasDTO } from '../../core/models/Categorias';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ export class LivrosComponent implements OnInit {
   livros: LivroDTO[] = [];
   livrosEncontrados: LivroDTO[] = [];
   Categorias: CategoriasDTO[] = [];
-  livrosEmprestados: LivroDTO[] = [];
+  livrosEmprestados: LivroEmprestado[] = [];
   livrosAnunciados: LivroDTO[] = [];
   abrirModal: boolean = false;
   modalAnuciar: boolean = false;
@@ -28,6 +28,7 @@ export class LivrosComponent implements OnInit {
   formLivroAnunciar!: FormGroup;
   selectedFile: File | null = null;
   quantidadeDisponivel: number = 0;
+
 
 
   constructor(private router: Router, private formBuilder: FormBuilder, private livroService: LivroService){}
@@ -59,10 +60,36 @@ export class LivrosComponent implements OnInit {
         }
       });
 
+      this.livroService.GetLivrosEmprestados().subscribe({
+        next: (result) => {
+          this.livrosEmprestados = result.livrosEmprestados;
+          
+        },
+        error: (error: any) => {
+          console.error("Erro ao buscar livros emprestados:", error);
+        }
+      });
+
     } catch (error) {
       console.error("❌ Erro ao buscar livros:", error);
     }
   }
+
+  public getTempoRestante(item: LivroEmprestado): string {
+    if (!item.dataDevolucao) return 'Sem data';
+
+    const agora = new Date();
+    const devolucao = new Date(item.dataDevolucao);
+
+    const diffMs = devolucao.getTime() - agora.getTime();
+    const diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDias < 0) return 'Atrasado';
+    if (diffDias === 0) return 'Último dia';
+
+    return `${diffDias} dia(s)`;
+  }
+
 
   public getTipoAnuncio(tipo: number | undefined): string {
     switch (tipo) {
@@ -439,12 +466,42 @@ export class LivrosComponent implements OnInit {
   }
 
   public getTipoAnuncioNumero(tipo: string): number {
-    switch (tipo.toLowerCase()) {
-      case 'venda': return 0;
-      case 'empréstimo': return 1;
-      case 'doação': return 2;
-      default: return -1; 
-    }
-}
+      switch (tipo.toLowerCase()) {
+        case 'venda': return 0;
+        case 'empréstimo': return 1;
+        case 'doação': return 2;
+        default: return -1; 
+      }
+  }
 
+  public devolverLivroEmprestado(livroId: number): void {
+    this.livroService.DevolverLivro(livroId).subscribe({
+      next: (response) => {
+        Swal.fire({
+          title: 'Sucesso',
+          text: 'Livro devolvido com sucesso.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        }).then(() => {
+          this.atualizarListaDeLivros();
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Erro',
+          text: error.error || 'Erro ao devolver o livro.',
+          icon: 'error',
+          confirmButtonText: 'Fechar',
+          customClass: {
+            confirmButton: 'bg-[#3596D2] hover:bg-[#287bb3] text-white font-medium px-4 py-2 rounded-md'
+          },
+          buttonsStyling: false
+        });
+      }
+    });
+  }
 }

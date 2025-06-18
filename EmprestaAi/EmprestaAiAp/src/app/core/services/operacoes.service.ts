@@ -29,9 +29,37 @@ export class OperacoesService {
     return { headers };
   }
 
-  ComprarLivro(operacoes: Operacao[]) {
+  public ComprarLivro(operacoes: Operacao[]) {
     const apiUrl = `${this.url}/comprarLivro`;
     const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post<any>(apiUrl, operacoes, httpOptions).pipe(
+      catchError((error) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public SolicitarEmprestimoDoacao(Operacoes: Operacao[]) {
+    const apiUrl = `${this.url}/solicitarEmprestimoDoacao`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post<any>(apiUrl, Operacoes, httpOptions).pipe(
+      catchError((error) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public FinalizarOperacaoEmprestimoDoacao(operacoes: Operacao[], clienteId: number) {
+    const apiUrl = `${this.url}/finalizarOperacaoEmprestimoDocao?clienteId=${clienteId}`;
+    const httpOptions = this.getHttpOptions(); 
 
     return this.httpCliente.post<any>(apiUrl, operacoes, httpOptions).pipe(
       catchError((error) => {

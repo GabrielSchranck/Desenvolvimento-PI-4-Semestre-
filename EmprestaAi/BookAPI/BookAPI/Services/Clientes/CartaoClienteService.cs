@@ -59,6 +59,11 @@ namespace BookAPI.Services.Clientes
             return await _cartaoClienteRepository.GetSaldo(clienteId);
         }
 
+        public async Task<double> GetSaldoSacado(int clienteId)
+        {
+			return await _cartaoClienteRepository.GetSaldoSacado(clienteId);
+        }
+
         public async Task<string> GetUUID(int clienteId)
         {
             return await _cartaoClienteRepository.GetUUIDMercadoPago(clienteId);

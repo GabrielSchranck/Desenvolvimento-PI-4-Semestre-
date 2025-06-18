@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookModels.DTOs.Clientes;
 using System.ComponentModel;
+using BookModels.DTOs.Livros;
 
 namespace BookModels.DTOs.Notificacoes
 {
@@ -30,8 +31,10 @@ namespace BookModels.DTOs.Notificacoes
         public int? Visto { get; set; } = 0;
         public int? VendedorId { get; set; }
         public int? CompradorId { get; set; }
+        public int? LivroId { get; set; }
         public string? Mensagem { get; set; } = string.Empty;
         public ClienteDTO? Comprador { get; set; }
         public ClienteDTO? Vendedor { get; set; }
+        public LivroDTO? LivroDTO { get; set; }
     }
 }

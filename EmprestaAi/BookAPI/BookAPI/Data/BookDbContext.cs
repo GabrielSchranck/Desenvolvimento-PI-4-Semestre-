@@ -32,6 +32,9 @@ namespace BookAPI.Data
         public DbSet<ItemCarrinho> ItemCarrinho { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<Notificacao> Notificacoes { get; set; }
+        public DbSet<LivroEmprestado> LivrosEmprestados { get; set; }
+        public DbSet<Saque> Saques { get; set; }
+        public DbSet<ComentarioLivro> ComentariosLivros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -124,6 +127,24 @@ namespace BookAPI.Data
                 .WithMany()
                 .HasForeignKey(n => n.VendedorId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<LivroEmprestado>()
+                .HasOne(x => x.Comprador)
+                .WithMany()
+                .HasForeignKey(x => x.CompradorId)
+                .OnDelete(DeleteBehavior.Restrict); // evita cascata
+
+            modelBuilder.Entity<LivroEmprestado>()
+                .HasOne(x => x.Vendedor)
+                .WithMany()
+                .HasForeignKey(x => x.VendedorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LivroEmprestado>()
+                .HasOne(x => x.Livro)
+                .WithMany()
+                .HasForeignKey(x => x.LivroId)
+                .OnDelete(DeleteBehavior.Cascade); // esse pode manter cascata
+
 
         }
     }

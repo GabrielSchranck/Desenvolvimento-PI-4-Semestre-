@@ -58,6 +58,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
               <button 
                 type="button"
+                (click)="emprestimoDocao = true"
                 class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
                 Obter agora
               </button>
@@ -132,17 +133,86 @@
       </div>
     </div>
   }
-@else {
 
-}
+  @if(emprestimoDocao) {
+    <div id="modalEmprestimo" class="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-4xl flex gap-6">
+
+        <!-- 📚 Coluna da esquerda: Livros -->
+        <div class="w-1/2 border-r pr-4">
+          @if (livroAnunciado.tipo === 1) {
+            <h2 class="text-2xl font-semibold mb-4">Livros para Empréstimo</h2>
+          }
+          @else if (livroAnunciado.tipo === 2) {
+            <h2 class="text-2xl font-semibold mb-4">Livros para Docação</h2>
+          }
+          <div class="space-y-2">
+            <div class="p-3 border rounded shadow-sm">
+              <p class="font-medium">Livro: {{ livroAnunciado.livroDTO?.titulo }}</p>
+              <p class="text-sm text-gray-600">Disponíveis: {{ livroAnunciado.quantidadeAnunciado }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📝 Coluna da direita: Quantidade e Endereço -->
+        <div class="w-1/2 pl-4">
+          @if (livroAnunciado.tipo === 1) {
+            <h2 class="text-2xl font-semibold mb-4">Solicitar Empréstimo</h2>
+          }
+          @else if (livroAnunciado.tipo === 2) {
+            <h2 class="text-2xl font-semibold mb-4">Solicitar Doação</h2>
+          }
+
+          <!-- Quantidade -->
+          <!-- <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Quantidade</label>
+            <input type="number"
+                  min="1"
+                  max="{{ livroAnunciado.quantidadeAnunciado }}"
+                  [(ngModel)]="quantidadeEmprestimo"
+                  id="quantidadeEmprestimo"
+                  name="quantidadeEmprestimo"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+          </div> -->
+
+          <!-- Endereço -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Endereço de Entrega</label>
+            <select id="enderecoEmprestimoSelect"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    [(ngModel)]="enderecoSelecionadoId"
+                    name="enderecoEmprestimoSelect">
+              @for (endereco of enderecos; track $index) {
+                <option [value]="endereco.id">{{ endereco.cep }} - {{ endereco.rua }}, {{ endereco.numero }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Botões -->
+          <div class="flex justify-end space-x-2">
+            <button type="button" (click)="emprestimoDocao = false;" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">Cancelar</button>
+            @if (livroAnunciado.tipo === 1) {
+              <button type="button" (click)="ConfirmarEmprestimo(enderecoSelecionadoId)" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white">Confirmar Empréstimo</button>
+            }
+            @else if (livroAnunciado.tipo === 2) {
+              <button type="button" (click)="ConfirmarEmprestimo(enderecoSelecionadoId)" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white">Confirmar Doação</button>
+            }
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
 
 
   <!-- Produtos relacionados -->
   <section class="container mx-auto bg-white rounded-xl shadow-md px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-8">
     <app-cards
-      [livrosAnunciados]="livrosRelacionados"
-      [tipo]="livroAnunciado.tipo ?? 0"
-      [titulo]="'Produtos relacionados'"/>
+        [livrosAnunciados]="livrosRelacionados"
+        [tipo]="livroAnunciado.tipo ?? 0"
+        [titulo]="'Produtos relacionados'"/>
   </section>
 
   <!-- Comentários -->
@@ -150,64 +220,68 @@
     <h2 class="text-2xl font-semibold text-gray-800 mb-6">Comentários sobre o produto</h2>
 
     <div class="space-y-6 mb-8">
-      <div class="border rounded-lg p-4 bg-gray-50">
-        <div class="flex items-center mb-2">
-          <div class="w-10 h-10 bg-blue-700 text-white flex items-center justify-center rounded-full text-sm font-semibold">JD</div>
-          <div class="ml-3">
-            <p class="font-medium text-gray-800">João Dias</p>
-            <p class="text-sm text-gray-500">há 2 dias</p>
-          </div>
-        </div>
-        <p class="text-gray-700">Livro excelente, leitura fluida e conteúdo muito bom para quem está começando!</p>
-      </div>
+      @for (item of comentarios; track $index) {
+        <div class="border rounded-lg p-4 bg-gray-50">
+          <div class="flex items-center mb-2">
+            <img src="useracess/user.png" alt="Foto do usuário"
+                class="w-10 h-10 rounded-full object-cover" />
+            <div class="ml-3 flex-1">
+              <p class="font-medium text-gray-800">{{ item.clienteDTO?.nome }}</p>
+              <p class="text-sm text-gray-500">há {{ CalculaDiasQueComentou(item.dataComentario!) }} dias</p>
+            </div>
 
-      <div class="border rounded-lg p-4 bg-gray-50">
-        <div class="flex items-center mb-2">
-          <div class="w-10 h-10 bg-purple-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">MA</div>
-          <div class="ml-3">
-            <p class="font-medium text-gray-800">Maria Alves</p>
-            <p class="text-sm text-gray-500">há 5 dias</p>
+            @if (item.clienteDTO?.id === cliente.id) {
+              <div class="flex gap-2">
+                @if (!item.editar) {
+                  <button class="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded hover:bg-blue-200 transition"
+                          (click)="editarComentario(item)">
+                    Editar
+                  </button>
+                  <button class="px-3 py-1 text-sm font-medium text-red-600 bg-red-100 rounded hover:bg-red-200 transition"
+                          (click)="excluirComentario(item.id)">
+                    Excluir
+                  </button>
+                }
+              </div>
+            }
           </div>
+
+          @if (item.editar) {
+            <textarea [(ngModel)]="item.comentario" rows="2"
+                      class="w-full p-2 border border-gray-300 rounded text-sm"></textarea>
+            <div class="flex gap-2 mt-2">
+              <button class="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition"
+                      (click)="salvarComentario(item)">
+                Salvar
+              </button>
+              <button class="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded hover:bg-gray-300 transition"
+                      (click)="cancelarEdicao(item)">
+                Cancelar
+              </button>
+            </div>
+          }
+
+          @else {
+            <p class="text-gray-700">{{ item.comentario }}</p>
+          }
         </div>
-        <p class="text-gray-700">Gostei bastante da abordagem. Vale o preço.</p>
-      </div>
+      }
     </div>
+
+<ng-template #visualizacao></ng-template>
+
+
+
+
 
     <!-- Formulário de comentário -->
-    <div class="bg-gray-100 p-4 rounded-lg">
-      <h3 class="text-lg font-medium text-gray-800 mb-2">Deixe seu comentário</h3>
-      <form onsubmit="event.preventDefault(); addComment();" class="space-y-4">
-        <textarea id="comentarioInput" rows="3" placeholder="Escreva seu comentário aqui..." class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"></textarea>
-        <button type="submit" class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800 transition">Enviar comentário</button>
-      </form>
-    </div>
+    <form (ngSubmit)="EnviarComentario()" class="space-y-4">
+      <textarea [(ngModel)]="comentario" name="comentarioInput" rows="3"
+        placeholder="Escreva seu comentário aqui..."
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"></textarea>
+      <button type="submit"
+        class="bg-blue-700 text-white px-5 py-2 rounded hover:bg-blue-800 transition">Enviar comentário</button>
+    </form>
+
   </section>
-
-  <!-- Script para adicionar comentário dinamicamente -->
-  <script>
-    function addComment() {
-      const input = document.getElementById('comentarioInput');
-      const texto = input.value.trim();
-      if (!texto) return;
-
-      const comentariosContainer = document.querySelector('section > .space-y-6');
-
-      const novoComentario = document.createElement('div');
-      novoComentario.className = 'border rounded-lg p-4 bg-gray-50';
-
-      novoComentario.innerHTML = `
-        <div class="flex items-center mb-2">
-          <div class="w-10 h-10 bg-green-600 text-white flex items-center justify-center rounded-full text-sm font-semibold">VO</div>
-          <div class="ml-3">
-            <p class="font-medium text-gray-800">Você</p>
-            <p class="text-sm text-gray-500">agora mesmo</p>
-          </div>
-        </div>
-        <p class="text-gray-700">${texto}</p>
-      `;
-
-      comentariosContainer.prepend(novoComentario);
-      input.value = '';
-    }
-  </script>
 </main>

@@ -118,15 +118,47 @@
     <div class="mt-12">
       <h2 class="text-xl font-bold text-[#3596D2] mb-4">📦 Livros Emprestados</h2>
       <hr class="border-t border-[#3596D2] mb-4" />
-      @for (item of livrosEmprestados; track $index) {
-        <!-- Adicione conteúdo futuramente -->
-      }
-      @empty {
+
+      @if (livrosEmprestados.length > 0) {
+        @for (item of livrosEmprestados; track $index) {
+          <div
+            class="flex items-center justify-between bg-white shadow-md rounded-xl p-4 mb-4"
+          >
+
+            <img
+              [src]="item.livro?.uriImagemLivro"
+              alt="Capa do livro"
+              class="w-20 h-28 object-cover rounded"
+            />
+
+            <!-- Detalhes -->
+            <div class="flex-1 ml-4">
+              <h3 class="text-lg font-semibold text-gray-800">
+                {{ item.livro?.titulo }}
+              </h3>
+              <p class="text-sm text-gray-600 mt-1">
+                Tempo restante:
+                <span class="font-medium text-red-500">
+                  {{ getTempoRestante(item) }}
+                </span>
+              </p>
+            </div>
+
+            <button
+              (click)="devolverLivroEmprestado(item.livro?.id!)"
+              class="bg-[#3596D2] text-white px-4 py-2 rounded hover:bg-[#2c7bb2] transition"
+            >
+              Devolver
+            </button>
+          </div>
+        }
+      } @else {
         <div class="text-center text-gray-500 mt-6">
           <p class="text-lg">Nenhum livro emprestado.</p>
         </div>
       }
     </div>
+
   </div>
 
     @if (abrirModal) {

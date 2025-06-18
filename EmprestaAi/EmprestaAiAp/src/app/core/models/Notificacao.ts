@@ -1,3 +1,5 @@
+import { LivroDTO } from "./Livros";
+
 export class Notificacao {
   id?: number;
   tipo?: number;
@@ -6,4 +8,6 @@ export class Notificacao {
   vendedorId?: number;
   compradorId?: number;
   mensagem: string = '';
+  livroDTO?: LivroDTO;
+  livroId?: number;
 }

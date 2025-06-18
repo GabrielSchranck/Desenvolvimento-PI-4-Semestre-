@@ -3,6 +3,7 @@ using BookAPI.Entities.Historicos;
 using BookAPI.Repositories.Vendas;
 using BookModels.DTOs.Clientes;
 using BookModels.DTOs.Livros;
+using BookModels.DTOs.Operacoes;
 using Stripe.BillingPortal;
 using Stripe.Checkout;
 
@@ -54,8 +55,8 @@ namespace BookAPI.Services.Vendas
                     }
                 },
                 Mode = "payment",
-                SuccessUrl = "https://2759-177-128-11-134.ngrok-free.app/sucesso?session_id={CHECKOUT_SESSION_ID}",
-                CancelUrl = "https://2759-177-128-11-134.ngrok-free.app/erro"
+                SuccessUrl = "https://0630-177-128-11-29.ngrok-free.app/sucesso?session_id={CHECKOUT_SESSION_ID}",
+                CancelUrl = "https://0630-177-128-11-29.ngrok-free.app/erro"
             };
 
             var service = new Stripe.Checkout.SessionService();
@@ -82,7 +83,7 @@ namespace BookAPI.Services.Vendas
             {
                 if (await _vendaRepository.OperacaoVenda(clienteId, livroAnunciadoDTO))
                 {
-                    if(await _vendaRepository.OperacaoLivro(clienteId, livroAnunciadoDTO))
+                    if (await _vendaRepository.OperacaoLivro(clienteId, livroAnunciadoDTO))
                     {
                         return await SalvarHistorico(livroAnunciadoDTO, clienteId);
                     }
@@ -93,7 +94,22 @@ namespace BookAPI.Services.Vendas
             return await _vendaRepository.OperacaoLivro(clienteId, livroAnunciadoDTO);
         }
 
+        public async Task<bool> FinalizarOperacaoLivro(int clienteId, Operacao Operacoes)
+        {
+            return await _vendaRepository.OperacaoEmprestimo(clienteId, Operacoes.LivroAnunciadoDTO);
+        }
+
         private async Task<bool> SalvarHistorico(LivroAnunciadoDTO livroAnunciadoDTO, int clienteId)
+        {
+            return await _vendaRepository.SaveHistorico(clienteId, livroAnunciadoDTO);
+        }
+
+        public Task<bool> DoarLivro(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> SolicitarEmprestimo(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
         {
             return await _vendaRepository.SaveHistorico(clienteId, livroAnunciadoDTO);
         }

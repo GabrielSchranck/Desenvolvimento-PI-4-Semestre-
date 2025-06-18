@@ -65,6 +65,11 @@ namespace BookAPI.Services.Clientes
             return await _clienteRepository.GetNotificacao(clienteId);
         }
 
+        public async Task Sacar(int clienteId, decimal saldo)
+        {
+            await _clienteRepository.Sacar(clienteId, saldo);
+        }
+
         public async Task SendEmail(string token, IConfiguration configuration, Cliente cliente)
         {
             await Task.Run(() =>

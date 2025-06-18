@@ -9,42 +9,44 @@
                     <button 
                         class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded"
                         type="button"
-                        (click)="FinalizarCompra()"
+                        (click)="comprarLivro = true;"
                     >Comprar</button>
                 </div>
-            <div>
-                <div class="space-y-4" id="venda-lista">
-                @for (item of itensVenda; track item.id) {
-                    <div class="flex items-center bg-blue-50/70 rounded-xl shadow p-3 sm:p-4 space-x-3 sm:space-x-4">
-                    <img src="{{ item.livroAnunciadoDTO?.livroDTO?.uriImagemLivro }}"
-                        alt="Capa do livro"
-                        class="w-12 h-20 sm:w-16 sm:h-24 object-cover rounded-md">
-                    <div class="flex-1">
-                        <h3 class="text-sm sm:text-base font-semibold">{{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</h3>
-                        <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
-                    </div>
-                    <div class="flex items-center space-x-1 sm:space-x-2">
-                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
-                        Qtd:
-                        <input type="number"
-                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
-                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
+                <div>
+                    <div class="space-y-4" id="venda-lista">
+                    @for (item of itensVenda; track item.id) {
+                        <div class="flex items-center bg-blue-50/70 rounded-xl shadow p-3 sm:p-4 space-x-3 sm:space-x-4">
+                        <img src="{{ item.livroAnunciadoDTO?.livroDTO?.uriImagemLivro }}"
+                            alt="Capa do livro"
+                            class="w-12 h-20 sm:w-16 sm:h-24 object-cover rounded-md">
+                        <div class="flex-1">
+                            <h3 class="text-sm sm:text-base font-semibold">{{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</h3>
+                            <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
+                        </div>
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
+                            Qtd:
+                            <input type="number"
+                                [value]="quantidadesSelecionadas[item?.id!] || 1"
+                                (input)="quantidadesSelecionadas[item?.id ?? 1] = $any($event.target).value"
+                                [max]="item.livroAnunciadoDTO?.quantidadeAnunciado"
                                 min="1"
                                 class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
-                        </span>
-                        <button 
-                            class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
-                            (click)="RemoverItemCarrinho(item?.id!)"
-                            >Remover
-                        </button>
+
+                            </span>
+                            <button 
+                                class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
+                                (click)="RemoverItemCarrinho(item?.id!)"
+                                >Remover
+                            </button>
+                        </div>
+                        </div>
+                    }
+                    @empty {
+                        <div class="text-gray-500 text-sm">Nenhum livro adicionado para venda.</div>
+                    }
                     </div>
-                    </div>
-                }
-                @empty {
-                    <div class="text-gray-500 text-sm">Nenhum livro adicionado para venda.</div>
-                }
                 </div>
-            </div>
             </section>
         }
 
@@ -53,7 +55,12 @@
             <section>
                 <div class="flex justify-between items-center m-4">
                     <h2 class="text-xl sm:text-2xl font-bold mb-4 text-green-600">Livros para Empréstimo</h2>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Pegar emprestado</button>
+                    <button 
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded"
+                        type="button"
+                        (click)="solicitarLivros(1)">
+                        Pegar emprestado
+                    </button>
                 </div>
             <div>
                 <div class="space-y-4" id="emprestimo-lista">
@@ -67,14 +74,6 @@
                         <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
                     </div>
                     <div class="flex items-center space-x-1 sm:space-x-2">
-                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
-                        Qtd:
-                        <input type="number"
-                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
-                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
-                                min="1"
-                                class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
-                        </span>
                         <button 
                             class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
                             (click)="RemoverItemCarrinho(item?.id!)"
@@ -93,7 +92,11 @@
             <section>
                 <div class="flex justify-between items-center m-4">
                     <h2 class="text-xl sm:text-2xl font-bold mb-4 text-purple-600">Livros para Doação</h2>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded">Receber doação</button>
+                    <button 
+                        class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] sm:text-xs md:text-sm px-2 sm:px-3 md:px-5 py-1 sm:py-1.5 md:py-2 rounded"
+                        type="button"
+                        (click)="solicitarLivros(2)">
+                        >Receber doação</button>
                 </div>
             <div>
                 <div class="space-y-4" id="doacao-lista">
@@ -107,14 +110,6 @@
                         <p class="text-gray-500 text-xs sm:text-sm">Pertence a: {{ item.livroAnunciadoDTO?.clienteDTO?.nome }}</p>
                     </div>
                     <div class="flex items-center space-x-1 sm:space-x-2">
-                        <span class="text-[11px] sm:text-sm font-semibold text-gray-700">
-                        Qtd:
-                        <input type="number"
-                                value="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
-                                max="{{ item.livroAnunciadoDTO?.quantidadeAnunciado }}"
-                                min="1"
-                                class="w-10 sm:w-12 border rounded px-1 py-0.5 text-xs sm:text-sm text-center" />
-                        </span>
                         <button 
                             class="bg-red-500 hover:bg-red-600 text-white text-[11px] sm:text-xs px-2 sm:px-3 py-1 rounded"
                             (click)="RemoverItemCarrinho(item?.id!)">
@@ -136,5 +131,172 @@
         </div>
 
     }
+
+    @if (comprarLivro) {
+        <div id="modalCompra" class="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-4xl flex gap-6">
+            
+                <!-- Coluna esquerda: Lista de livros -->
+                <div class="w-1/2 border-r pr-4">
+                    <h2 class="text-2xl font-semibold mb-4">Livros</h2>
+                    <div class="space-y-2">
+                    @for (item of itensVenda; track $index) {
+                        <div class="p-3 border rounded shadow-sm">
+                            <p class="font-medium">Livro: {{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</p>
+                            <p class="text-sm text-gray-600">
+                            Preço unitário: R$ {{ formatNumber(item.livroAnunciadoDTO?.livroDTO?.valor ?? 0) }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                            Quantidade: {{ quantidadesSelecionadas[item.id!] }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                            Subtotal: R$ {{
+                                formatNumber((item.livroAnunciadoDTO?.livroDTO?.valor ?? 0) * quantidadesSelecionadas[item.id!])
+                            }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                            Taxa: R$ {{
+                                formatNumber((item.livroAnunciadoDTO?.valorTaxa ?? 0) * quantidadesSelecionadas[item.id!])
+                            }}
+                            </p>
+                            <p class="text-sm font-semibold text-blue-700">
+                            Total item: R$ {{
+                                formatNumber(
+                                ((item.livroAnunciadoDTO?.livroDTO?.valor ?? 0) + (item.livroAnunciadoDTO?.valorTaxa ?? 0)) *
+                                (quantidadesSelecionadas[item.id!])
+                                )
+                            }}
+                            </p>
+                        </div>
+                        }
+
+                    </div>
+                </div>
+
+                <!-- Coluna direita: Finalizar Compra -->
+                <div class="w-1/2 pl-4">
+                    <h2 class="text-2xl font-semibold mb-4">Finalizar Compra</h2>
+
+                    <!-- Saldo -->
+                    <div class="mb-2">
+                        <label class="block text-sm font-medium text-gray-700">Seu Saldo</label>
+                        <p class="mt-1 font-semibold text-base text-blue-700">
+                            R$ {{ formatNumber(cliente.saldo ?? 0) }}
+                        </p>
+                    </div>
+
+                    <!-- Subtotal -->
+                    <div class="mb-2">
+                        <label class="block text-sm font-medium text-gray-700">Subtotal</label>
+                        <p class="mt-1 font-semibold text-base">
+                            R$ {{ formatNumber(calcularSomaValorVenda()) }}
+                        </p>
+                    </div>
+
+                    <!-- Taxa -->
+                    <div class="mb-2">
+                        <label class="block text-sm font-medium text-gray-700">Taxas</label>
+                        <p class="mt-1 font-semibold text-base">
+                            R$ {{ formatNumber(calcularTaxaServico()) }}
+                        </p>
+                    </div>
+
+                    <!-- Total com taxa -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Total com taxa</label>
+                        <p class="mt-1 font-bold text-lg text-green-700">
+                            R$ {{ formatNumber(calcularTotalComTaxa()) }}
+                        </p>
+                    </div>
+
+
+                    <!-- Endereço -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Endereço</label>
+                        <select id="enderecoSelect"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                [(ngModel)]="enderecoSelecionadoId"
+                                name="enderecoSelect">
+                            @for (endereco of enderecos; track $index) {
+                            <option [value]="endereco.id">
+                                {{ endereco.cep }} - {{ endereco.rua }}, {{ endereco.numero }}
+                            </option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="flex justify-end space-x-2">
+                    <button type="button"
+                            (click)="comprarLivro = false"
+                            class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">
+                        Cancelar
+                    </button>
+                    <button type="button"
+                            (click)="FinalizarCompra()"
+                            class="px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white">
+                        Finalizar
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (mostrarModalSolicitacao) {
+        <div id="modalSolicitacao" class="fixed inset-0 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-3xl flex gap-6">
+            
+            <!-- Coluna esquerda: Lista de itens -->
+            <div class="w-1/2 border-r pr-4">
+                <h2 class="text-2xl font-semibold mb-4">Itens Solicitados</h2>
+                <div class="space-y-2">
+                @for (item of itensSolicitados; track $index) {
+                    <div class="p-3 border rounded shadow-sm">
+                        <p class="font-medium">Livro: {{ item.livroAnunciadoDTO?.livroDTO?.titulo }}</p>
+                    </div>
+                }
+                </div>
+            </div>
+
+            <!-- Coluna direita: Endereço + Botões -->
+            <div class="w-1/2 pl-4">
+                <h2 class="text-2xl font-semibold mb-4">Endereço para Entrega</h2>
+
+                <!-- Endereço -->
+                <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Selecione um endereço</label>
+                <select id="enderecoSolicitacao"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        [(ngModel)]="enderecoSelecionadoId"
+                        name="enderecoSolicitacao">
+                    @for (endereco of enderecos; track $index) {
+                    <option [value]="endereco.id">
+                        {{ endereco.cep }} - {{ endereco.rua }}, {{ endereco.numero }}
+                    </option>
+                    }
+                </select>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex justify-end space-x-2 mt-6">
+                <button type="button"
+                        (click)="cancelarSolicitacao()"
+                        class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800">
+                    Cancelar
+                </button>
+                <button type="button"
+                        (click)="SolicitarEmprestimo()"
+                        class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white">
+                    Solicitar
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+    }
+
+
+
   </main>
 </app-user-info>

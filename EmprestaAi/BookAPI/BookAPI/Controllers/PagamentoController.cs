@@ -88,6 +88,47 @@ namespace BookAPI.Controllers
             }
         }
 
+        [HttpPost("solicitarEmprestimoDoacao")]
+        public async Task<ActionResult> Solicitar([FromBody] List<Operacao> operacoes)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
 
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                foreach (var operacao in operacoes)
+                {
+                    operacao.LivroAnunciadoDTO.qtdOperacao = operacao.Quantidade;
+                    await _vendaService.SolicitarEmprestimo(clienteId, operacao.LivroAnunciadoDTO);
+                }
+
+                return Ok(new { result = "Solicitação realizadas com sucesso!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("finalizarOperacaoEmprestimoDocao")]
+        public async Task<ActionResult> FinalizarOperacao([FromBody] List<Operacao> operacoes, int clienteId)
+        {
+            try
+            {
+                foreach (var operacao in operacoes)
+                {
+                    operacao.LivroAnunciadoDTO.qtdOperacao = operacao.Quantidade;
+                    await _vendaService.FinalizarOperacaoLivro(clienteId, operacao);
+                }
+
+                return Ok(new { result = "Solicitação realizadas com sucesso!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
     }
 }

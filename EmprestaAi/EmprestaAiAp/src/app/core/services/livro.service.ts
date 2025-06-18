@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environments';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, firstValueFrom, map, Observable, tap, throwError } from 'rxjs';
-import { LivroAnunciadoDTO, LivroDTO } from '../models/Livros';
+import { ComentarioLivroDTO, LivroAnunciadoDTO, LivroDTO } from '../models/Livros';
 import { CategoriasDTO } from '../models/Categorias';
 
 @Injectable({
@@ -169,11 +169,9 @@ export class LivroService {
     );
   }
 
-  public GetAllLivrosAnunciadosByCat(categoriaId: number, livroId: number): Observable<any> { 
-    const apiUrl = `${this.url}/getRelacionados/${categoriaId}/${livroId}`;
+  public GetAllLivrosAnunciadosByCat(categoriaId: number, livroId: number, tipo: number): Observable<any> { 
+    const apiUrl = `${this.url}/getRelacionados/${categoriaId}/${livroId}/${tipo}`;
     const httpOptions = this.getHttpOptions();
-
-    console.log("URL API: ", apiUrl);
 
     return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
@@ -190,6 +188,90 @@ export class LivroService {
     const httpOptions = this.getHttpOptions();
 
     return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public GetLivrosEmprestados(): Observable<any> {
+    const apiUrl = `${this.url}/getLivrosEmprestados`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public DevolverLivro(livroId: number): Observable<any> {
+    const apiUrl = `${this.url}/devolver/${livroId}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, {}, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public GetComentariosLivro(livroId: number): Observable<any> {
+    const apiUrl = `${this.url}/obterComentarios/${livroId}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.get<any>(apiUrl, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public AdicionarComentarioLivro(comentario: ComentarioLivroDTO): Observable<any> {
+    const apiUrl = `${this.url}/addicionarComentario`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, comentario, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public EditarComentarioLivro(comentario: ComentarioLivroDTO): Observable<any> {
+    const apiUrl = `${this.url}/editarComentario/${comentario.id}/${comentario.comentario}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, comentario, httpOptions).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => error.error);
+        }
+        return throwError(() => "Erro ao conectar com a API.");
+      })
+    );
+  }
+
+  public DeletarComentarioLivro(comentarioId: number): Observable<any> {
+    const apiUrl = `${this.url}/excluirComentario/${comentarioId}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.httpCliente.post(apiUrl, {}, httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
           return throwError(() => error.error);

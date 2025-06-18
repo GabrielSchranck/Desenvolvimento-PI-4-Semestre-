@@ -1,6 +1,7 @@
 ﻿using BookAPI.Entities.ClientesLivros;
 using BookAPI.Entities.Livros;
 using BookAPI.mappings;
+using BookAPI.Migrations;
 using BookAPI.Repositories.Livros;
 using BookAPI.Services.Livros;
 using BookAPI.Services.Token;
@@ -284,12 +285,12 @@ namespace BookAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getRelacionados/{categoriaId}/{livroId}")]
-        public async Task<ActionResult> GetAllRelacionados([FromRoute] int categoriaId, [FromRoute] int livroId)
+        [HttpGet("getRelacionados/{categoriaId}/{livroId}/{tipo}")]
+        public async Task<ActionResult> GetAllRelacionados([FromRoute] int categoriaId, [FromRoute] int livroId, [FromRoute] int tipo)
         {
             try
             {
-                var livrosAnunciadosRelacionadosDTO = await _livroServices.GetAllRelacionados(categoriaId, livroId);
+                var livrosAnunciadosRelacionadosDTO = await _livroServices.GetAllRelacionados(categoriaId, livroId, tipo);
 
                 foreach (var livro in livrosAnunciadosRelacionadosDTO)
                 {
@@ -306,6 +307,130 @@ namespace BookAPI.Controllers
             }
             catch (Exception)
             {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpGet("getLivrosEmprestados")]
+        public async Task<ActionResult> GetLivrosEmprestados()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                var livrosEmprestadosDto = await _livroServices.GetLivrosEmprestados(clienteId);
+
+                foreach (var livroEmprestado in livrosEmprestadosDto)
+                {
+                    if (!string.IsNullOrEmpty(livroEmprestado.Livro.UriImagemLivro) && livroEmprestado.Livro.UriImagemLivro.StartsWith("imagens/"))
+                    {
+                        livroEmprestado.Livro.UriImagemLivro = $"{Request.Scheme}://{Request.Host}/{livroEmprestado.Livro.UriImagemLivro}";
+                    }
+                }
+
+
+                return Ok(new { livrosEmprestados = livrosEmprestadosDto });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("devolver/{livroId}")]
+        public async Task<ActionResult> DevolverLivro([FromRoute] int livroId)
+        {
+            try
+            {
+                await _livroServices.DevolverLivro(livroId);
+
+                return Ok(new { resposta = "Livro devolvido com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("addicionarComentario")]
+        public async Task<ActionResult> AdicionarComentario([FromBody] ComentarioLivroDTO comentarioLivroDTO)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                if (string.IsNullOrEmpty(token)) return Unauthorized("Token de autenticação não encontrado.");
+
+                int clienteId = (int)await TokenService.GetClientIdFromToken(token);
+
+                comentarioLivroDTO.ClienteId = clienteId;
+
+                await _livroServices.AdicionarComentario(comentarioLivroDTO);
+
+
+                return Ok(new { result = "Comentário adicionado com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpGet("obterComentarios/{livroId}")]
+        public async Task<ActionResult> ObterComentario([FromRoute] int livroId)
+        {
+            try
+            {
+                var comentarios = await _livroServices.GetComentarioLivroDTO(livroId);
+
+                return Ok(new { comentarios = comentarios });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("excluirComentario/{comentarioId}")]
+        public async Task<ActionResult> ExcluirComentario([FromRoute] int comentarioId)
+        {
+            try
+            {
+                await _livroServices.ExcluirComentario(comentarioId);
+
+                return Ok(new { result = "Comentário excluido com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
+            }
+        }
+
+        [HttpPost("editarComentario/{comentarioId}/{comentario}")]
+        public async Task<ActionResult> EditarComentario([FromRoute] int comentarioId, [FromRoute] string comentario)
+        {
+            try
+            {
+                var comentarioLivroDTO = new ComentarioLivroDTO
+                {
+                    Comentario = comentario,
+                    Id = comentarioId
+                };
+
+                await _livroServices.EditarComentario(comentarioLivroDTO);
+
+                return Ok(new { result = "Comentario excluido com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro no GetLivros: " + ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao acessar a base de dados");
             }
         }

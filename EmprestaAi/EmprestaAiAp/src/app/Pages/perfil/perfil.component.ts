@@ -10,6 +10,10 @@ import { CommonModule } from '@angular/common';
 import { InputsComponent } from '../../Shered/inputs/inputs.component';
 import { Notificacao } from '../../core/models/Notificacao';
 import { NotificationService } from '../../core/services/notification.service';
+import { OperacoesService } from '../../core/services/operacoes.service';
+import { Operacao } from '../../core/models/Operacao';
+import { LivroAnunciadoDTO } from '../../core/models/Livros';
+import { LivroService } from '../../core/services/livro.service';
 
 @Component({
   selector: 'app-perfil',
@@ -25,6 +29,8 @@ export class PerfilComponent implements OnInit{
   enabled: boolean = true;
   enderecos: EnderecoCliente[] = [];
   notificacoes:Notificacao[] = [];
+  operacoes: Operacao[] = [];
+  livroAnunciado!: LivroAnunciadoDTO;
   cep: string = "";
   editarPerfil: boolean = false;
   deletarEndereco: boolean = false;
@@ -36,7 +42,10 @@ export class PerfilComponent implements OnInit{
     private formBuilder: FormBuilder, 
     private clienteService: ClienteService, 
     private enderecoService: EnderecoService, 
-    private notificacaoService: NotificationService){}
+    private notificacaoService: NotificationService,
+    private operacoesService: OperacoesService,
+    private livroService: LivroService
+  ){}
 
   ngOnInit(): void {
     this.CreateFormPerfil();
@@ -75,13 +84,80 @@ export class PerfilComponent implements OnInit{
   }
 
   public confirmarNotificacao(notificacao: Notificacao): void {
-    // Lógica para aceitar a proposta
+
+    notificacao.visto = 1;
+    this.notificacaoService.closeNotificacao(notificacao.id!).subscribe({
+      next: () => {
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Notificação marcada como vista.",
+          icon: "success",
+          confirmButtonText: "Ok"
+        }).then(() => {
+
+          if (notificacao.livroId !== undefined) {
+            this.livroService.GetLivrosAnunciados(
+              notificacao.livroId as number,
+              notificacao.tipo as number
+            ).subscribe({
+              next: (livro) => {
+                this.livroAnunciado = livro.livroAnunciado;
+                console.log("Livro Anunciado:", this.livroAnunciado);
+
+                var operacao = new Operacao();
+                operacao.LivroAnunciadoDTO = this.livroAnunciado;
+                operacao.Quantidade = 1;
+                operacao.tipo = notificacao.tipo !== undefined ? notificacao.tipo : 0;
+                console.log("Notificacao:", notificacao);
+
+                this.operacoes.push(operacao);
+                if (notificacao.compradorId !== undefined) {
+                  this.operacoesService.FinalizarOperacaoEmprestimoDoacao(this.operacoes, notificacao.compradorId).subscribe({
+                    next: (response) => {
+                      Swal.fire({
+                        title: "Sucesso!",
+                        text: "Operação finalizada com sucesso.",
+                        icon: "success",
+                        confirmButtonText: "Ok"
+                      });
+                      this.GetUserData();
+                    },
+                    error: (error) => {
+                      Swal.fire({
+                        title: "Erro!",
+                        text: "Erro ao finalizar operação.",
+                        icon: "error",
+                        confirmButtonText: "Ok"
+                      });
+                      console.error("Erro ao finalizar operação:", error);
+                    }
+                  });
+                } else {
+                  console.error("compradorId está indefinido.");
+                }
+              },
+              error: (err) => {
+                console.error("Erro ao carregar livro anunciado:", err);
+              }
+            });
+          }
+        });
+      },
+      error: (error: any) => {
+        Swal.fire({
+          title: "Erro!",
+          text: "Erro ao marcar notificação como vista.",
+          icon: "error",
+          confirmButtonText: "Ok"
+        });
+        console.error("Erro ao marcar notificação como vista:", error);
+      }
+    });
   }
 
   public recusarNotificacao(notificacao: Notificacao): void {
     // Lógica para recusar a proposta
   }
-
 
   public editarEndereco(endereco: EnderecoCliente): void {
     this.modalAberto = true;
@@ -134,7 +210,7 @@ export class PerfilComponent implements OnInit{
         this.cliente = dados.cliente;
         this.enderecos = dados.enderecos;
         this.notificacoes = dados.notificacoes;
-        console.log("Notificações: ", this.notificacoes);
+        
         if (this.cliente.DataNascimento) {
           this.cliente.DataNascimento = this.cliente.DataNascimento.split("T")[0];
         }

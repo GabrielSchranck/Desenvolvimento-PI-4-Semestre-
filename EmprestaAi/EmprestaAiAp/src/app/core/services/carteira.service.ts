@@ -69,17 +69,16 @@ export class CarteiraService {
     );
   }
 
-public async getUUID(): Promise<{ uuid: string }> {
-  const apiUrl = `${this.url}/getUuidMP`;
-  const httpOptions = this.getHttpOptions();
+  public async getUUID(): Promise<{ uuid: string }> {
+    const apiUrl = `${this.url}/getUuidMP`;
+    const httpOptions = this.getHttpOptions();
 
-  const result = await this.httpCliente.get<{ uuid: string }>(apiUrl, httpOptions).toPromise();
-  if (!result) {
-    throw new Error('UUID não encontrado.');
+    const result = await this.httpCliente.get<{ uuid: string }>(apiUrl, httpOptions).toPromise();
+    if (!result) {
+      throw new Error('UUID não encontrado.');
+    }
+    return result;
   }
-  return result;
-}
-
 
   public createUUID(uuid: string): Promise<void> {
     const apiUrl = `${this.url}/creteUuid`;

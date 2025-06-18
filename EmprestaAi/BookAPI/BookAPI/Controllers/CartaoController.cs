@@ -169,9 +169,10 @@ namespace BookAPI.Controllers
 
                 int clienteId = (int)await TokenService.GetClientIdFromToken(token);
 
-                var result = await _cartaoClienteService.GetSaldo(clienteId);
+                var saldo = await _cartaoClienteService.GetSaldo(clienteId);
+                var saldoSacado = await _cartaoClienteService.GetSaldoSacado(clienteId);
 
-                return Ok(new{ result = result });
+                return Ok(new{ saldo = saldo, saldoSacado = saldoSacado});
             }
             catch (Exception)
             {

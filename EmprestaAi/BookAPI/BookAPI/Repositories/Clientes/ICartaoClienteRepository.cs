@@ -12,5 +12,6 @@ namespace BookAPI.Repositories.Clientes
 		Task<string> GetUUIDMercadoPago(int clienteId);
 		Task<bool> CreateUUid(string uuid, int clienteId);
 		Task<double> GetSaldo(int clienteId);
-	}
+        Task<double> GetSaldoSacado(int clienteId);
+    }
 }

@@ -26,3 +26,27 @@ export class LivroAnunciadoDTO {
   clienteDTO?: Cliente;
   valorTaxa?: number;
 }
+
+export class LivroEmprestado {
+  id?: number;
+  livroId?: number;
+  vendedorId?: number;
+  compradorId?: number;
+  dataEmprestimo?: Date;
+  dataDevolucao?: Date;
+  devolvido?: boolean = false;
+  livro?: LivroDTO;
+  vendedor?: Cliente;
+  comprador?: Cliente;
+}
+
+export class ComentarioLivroDTO {
+  id?: number;
+  clienteId?: number;
+  livroId?: number;
+  comentario?: string;
+  dataComentario?: Date;
+  livroDTO?: LivroDTO;
+  clienteDTO?: Cliente;
+  editar?: boolean = false;
+}

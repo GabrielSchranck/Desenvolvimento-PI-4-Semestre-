@@ -12,5 +12,6 @@ namespace BookAPI.Services.Clientes
 		Task<string> GetUUID(int clienteId);
 		Task<bool> CreateUUId(string uuid, int clienteId);
         Task<double> GetSaldo(int clienteId);
+        Task<double> GetSaldoSacado(int clienteId);
     }
 }

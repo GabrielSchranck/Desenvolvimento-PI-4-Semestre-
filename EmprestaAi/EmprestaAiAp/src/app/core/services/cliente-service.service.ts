@@ -16,8 +16,24 @@ const httpOptions = {
 export class ClienteService {
 
   private readonly url = `${environment["apiUrl"]}/cliente`;
+  httpCliente: any;
 
   constructor(private http: HttpClient) { }
+
+  private getHttpOptions(): { headers: HttpHeaders } {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado.');
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return { headers };
+  }
 
   GetAll() : Observable<Cliente[]>{
     return this.http.get<Cliente[]>(this.url);
@@ -50,7 +66,6 @@ export class ClienteService {
         })
       );
   }
-
 
   GetByEmailPassword(cliente: Cliente) : Observable<any>{
     const urlApi = `${this.url}/login`
@@ -107,5 +122,12 @@ export class ClienteService {
       `${this.url}/google-login`,
       { idToken }
     );
+  }
+
+  public sacarSaldo(valor: number): Observable<any> {
+    const apiUrl = `${this.url}/sacar/${valor}`;
+    const httpOptions = this.getHttpOptions();
+
+    return this.http.post<any>(apiUrl, {}, httpOptions);
   }
 }

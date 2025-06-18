@@ -1,5 +1,6 @@
 ﻿using BookAPI.Entities.CEPs;
 using BookAPI.Entities.Clientes;
+using BookAPI.Entities.Livros;
 using BookAPI.Entities.Notificacoes;
 
 namespace BookAPI.Repositories.Clientes
@@ -19,5 +20,6 @@ namespace BookAPI.Repositories.Clientes
         Task<Cliente> FindByTokenAsync(string token);
         Task<IEnumerable<Notificacao>> GetNotificacao(int clienteId);
         Task FecharNotificacao(int notificacaoId);
+        Task Sacar(int clienteId, decimal saldo);
     }
 }

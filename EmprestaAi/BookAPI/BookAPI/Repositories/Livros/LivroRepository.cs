@@ -307,7 +307,7 @@ namespace BookAPI.Repositories.Livros
             }
         }
 
-        public async Task<IEnumerable<LivroDTO>> GetAllByCategoria(int categoriaId, int livroId)
+        public async Task<IEnumerable<LivroDTO>> GetAllByCategoria(int categoriaId, int livroId, int tipo)
         {
             var livros = await _dbContext.Livros
                 .Include(l => l.livrosAnunciados)
@@ -316,8 +316,8 @@ namespace BookAPI.Repositories.Livros
                 .Include(l => l.FotosLivros)
                 .Where(l =>
                     l.CategoriaId == categoriaId &&
-                    l.Id != livroId && // EXCLUI o livro do parâmetro
-                    l.livrosAnunciados.Any(la => la.QuantidadeAnunciado > 0 && la.Tipo == 0)
+                    l.Id != livroId &&
+                    l.livrosAnunciados.Any(la => la.QuantidadeAnunciado > 0 && la.Tipo == tipo)
                 )
                 .OrderBy(r => Guid.NewGuid())
                 .Take(10)
@@ -354,6 +354,127 @@ namespace BookAPI.Repositories.Livros
             return livroDTOs;
         }
 
+        public async Task<IEnumerable<LivroEmprestadoDTO>> GetLivrosEmprestados(int clienteId)
+        {
+            var livrosEmprestados = await _dbContext.LivrosEmprestados
+                .Include(le => le.Livro)
+                    .ThenInclude(l => l.FotosLivros)
+                .Include(le => le.Vendedor)
+                .Include(le => le.Comprador)
+                .Where(le => le.CompradorId == clienteId)
+                .ToListAsync();
 
+            var livroEmprestadoDTOs = livrosEmprestados.Select(le => new LivroEmprestadoDTO
+            {
+                Id = le.Id,
+                LivroId = le.LivroId,
+                VendedorId = le.VendedorId,
+                CompradorId = le.CompradorId,
+                DataEmprestimo = le.DataEmprestimo,
+                DataDevolucao = le.DataDevolucao,
+                Devolvido = le.Devolvido,
+                Livro = le.Livro != null ? new LivroDTO
+                {
+                    Id = le.Livro.Id,
+                    Titulo = le.Livro.Titulo,
+                    UriImagemLivro = le.Livro.FotosLivros.FirstOrDefault()?.UrlImagem
+                } : null,
+                Vendedor = le.Vendedor != null ? new ClienteDTO
+                {
+                    Id = le.Vendedor.Id,
+                    Nome = le.Vendedor.Nome
+                } : null,
+                Comprador = le.Comprador != null ? new ClienteDTO
+                {
+                    Id = le.Comprador.Id,
+                    Nome = le.Comprador.Nome
+                } : null
+            }).ToList();
+
+            return livroEmprestadoDTOs;
+        }
+
+        public async Task DevolverLivro(int livroId)
+        {
+            var livro = await _dbContext.Livros.FindAsync(livroId);
+            var livroEmprestado = await _dbContext.LivrosEmprestados.Where(le => le.LivroId == livroId).FirstOrDefaultAsync();
+            var clienteLivro = await _dbContext.ClientesLivros.Where(cl => cl.LivroId == livroId).FirstOrDefaultAsync();
+            var comprador = await _dbContext.Clientes.FindAsync(livroEmprestado.CompradorId);
+            var vendedor = await _dbContext.Clientes.FindAsync(livroEmprestado.VendedorId);
+
+            livro.Quantidade += 1;
+
+            _dbContext.LivrosEmprestados.Remove(livroEmprestado);
+            _dbContext.Livros.Update(livro);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AdicionarComentario(ComentarioLivroDTO comentarioLivroDTO)
+        {
+            var cliente = await _dbContext.Clientes.FindAsync(comentarioLivroDTO.ClienteId);
+            var livro = await _dbContext.Livros.FindAsync(comentarioLivroDTO.LivroId);
+
+            var comentario = new ComentarioLivro
+            {
+                Id = 0,
+                Cliente = cliente,
+                ClienteId = cliente.Id,
+                Comentario = comentarioLivroDTO.Comentario,
+                DataComentario = DateTime.Now,
+                Livro = livro,
+                LivroId = livro.Id
+            };
+
+            await _dbContext.ComentariosLivros.AddAsync(comentario);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ComentarioLivroDTO>> GetComentarios(int livroId)
+        {
+            var comentarios = await _dbContext.ComentariosLivros
+                .Where(cl => cl.LivroId == livroId)
+                .Include(cl => cl.Cliente) // se quiser trazer o cliente
+                .Include(cl => cl.Livro)   // se quiser trazer o livro
+                .ToListAsync();
+
+            if (comentarios == null || !comentarios.Any())
+                return Enumerable.Empty<ComentarioLivroDTO>();
+
+            return comentarios.Select(c => new ComentarioLivroDTO
+            {
+                Id = c.Id,
+                ClienteId = c.ClienteId,
+                LivroId = c.LivroId,
+                Comentario = c.Comentario,
+                DataComentario = c.DataComentario,
+                ClienteDTO = c.Cliente != null ? new ClienteDTO
+                {
+                    Id = c.Cliente.Id,
+                    Nome = c.Cliente.Nome,
+                } : null,
+                LivroDTO = c.Livro != null ? new LivroDTO
+                {
+                    Id = c.Livro.Id,
+                    Titulo = c.Livro.Titulo,
+                } : null
+            });
+        }
+
+        public async Task ExcluirComentario(int comentarioId)
+        {
+            var comentario = await _dbContext.ComentariosLivros.FindAsync(comentarioId);
+            _dbContext.Remove(comentario);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task EditarComentario(ComentarioLivroDTO comentarioLivroDTO)
+        {
+            var comentario = await _dbContext.ComentariosLivros.FindAsync(comentarioLivroDTO.Id);
+            comentario.Comentario = comentarioLivroDTO.Comentario;
+
+            _dbContext.ComentariosLivros.Update(comentario);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

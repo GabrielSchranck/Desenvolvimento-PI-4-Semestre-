@@ -19,6 +19,12 @@ namespace BookAPI.Services.Livros
 		Task CancelarAnuncioAsync(LivroAnunciadoDTO livroAnunciadoDTO);
 		Task<IEnumerable<LivroDTO>> SelecionarAnuncios();
 		Task<LivroAnunciadoDTO> GetLivroAnunciadoDTO(int livroId, int tipo);
-		Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId);
+		Task<IEnumerable<LivroDTO>> GetAllRelacionados(int categoriaId, int livroId, int tipo);
+        Task<IEnumerable<LivroEmprestadoDTO>> GetLivrosEmprestados(int clienteId);
+		Task DevolverLivro(int livroId);
+		Task AdicionarComentario(ComentarioLivroDTO comentarioLivroDTO);
+		Task<IEnumerable<ComentarioLivroDTO>> GetComentarioLivroDTO(int livroId);
+		Task ExcluirComentario(int comentarioId);
+		Task EditarComentario(ComentarioLivroDTO comentarioLivroDTO);
     }
 }

@@ -1,5 +1,6 @@
 export class Cliente {
     Id?: number;
+    id?: number;
     Nome?: string;
     Email?: string;
     Cpf?: string;
@@ -10,6 +11,7 @@ export class Cliente {
     Senha?: string;
     Enderecos?: EnderecoCliente[];
     nome?: string;
+    saldo?: number;
 }
 
 export class EnderecoCliente{

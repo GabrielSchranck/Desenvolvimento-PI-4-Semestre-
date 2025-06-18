@@ -14,5 +14,6 @@ namespace BookAPI.Services.Clientes
         Task<Cliente> FindByToken(string token);
         Task<IEnumerable<Notificacao>> GetNotificacoes(int clienteId);
         Task FecharNotificacao(int notificacaoId);
+        Task Sacar(int clienteId, decimal saldo);
     }
 }

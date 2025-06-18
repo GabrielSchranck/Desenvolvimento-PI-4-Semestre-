@@ -79,6 +79,15 @@ namespace BookAPI.Repositories.Clientes
 			return (double)cliente.Saldo;
         }
 
+        public async Task<double> GetSaldoSacado(int clienteId)
+        {
+			var saldoClienteSacado = await _dbContext.Saques.FindAsync(clienteId);
+
+			if (saldoClienteSacado is null) return 0;
+
+			return (double)saldoClienteSacado.Saldo;
+        }
+
         public async Task<string> GetUUIDMercadoPago(int clienteId)
         {
 			var cliente = await this._dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();

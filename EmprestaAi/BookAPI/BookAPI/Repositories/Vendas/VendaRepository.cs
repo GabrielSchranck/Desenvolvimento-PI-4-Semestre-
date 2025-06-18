@@ -52,6 +52,118 @@ namespace BookAPI.Repositories.Vendas
             return true;
         }
 
+        public Task<bool> OperacaoDoacao(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> OperacaoEmprestimo(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
+        {
+            var livro = await _dbContext.Livros.FirstOrDefaultAsync(l => l.Id == livroAnunciadoDTO.LivroDTO.Id);
+            var comprador = await _dbContext.Clientes.FirstOrDefaultAsync(c => c.Id == clienteId);
+            var vendedor = await _dbContext.Clientes.FirstOrDefaultAsync(c => c.Id == livroAnunciadoDTO.ClienteId);
+            var livroAnunciado = await _dbContext.LivrosAnunciados.FirstOrDefaultAsync(al => al.Id == livroAnunciadoDTO.Id);
+            var clienteLivro = await _dbContext.ClientesLivros.FirstOrDefaultAsync(cl => cl.ClienteId == vendedor.Id && cl.LivroId == livro.Id);
+            var fotoLivro = await _dbContext.FotosLivros.FirstOrDefaultAsync(fl => fl.LivroId == livro.Id);
+            var notificacoes = await _dbContext.Notificacoes.Where(n => n.LivroId == livro.Id).ToListAsync();
+
+            if (livro == null || comprador == null || vendedor == null || livroAnunciado == null || clienteLivro == null)
+                return false;
+
+            livroAnunciado.QuantidadeAnunciado -= 1;
+            livro.Emprestado = true;
+            livro.DataEmprestimo = DateTime.Now;
+
+            if (livroAnunciadoDTO.Tipo == 1) 
+            {
+                var livroEmprestado = new LivroEmprestado
+                {
+                    CompradorId = comprador.Id,
+                    VendedorId = vendedor.Id,
+                    LivroId = livro.Id,
+                    DataEmprestimo = DateTime.Now,
+                    DataDevolucao = DateTime.Now.AddDays(30),
+                    Devolvido = false
+                };
+
+                await _dbContext.LivrosEmprestados.AddAsync(livroEmprestado);
+            }
+            else 
+            {
+                var livrosDoComprador = await _dbContext.ClientesLivros
+                    .Where(cl => cl.ClienteId == comprador.Id)
+                    .ToListAsync();
+
+                Livro livroCompradorExistente = null;
+
+                foreach (var lc in livrosDoComprador)
+                {
+                    var l = await _dbContext.Livros.FirstOrDefaultAsync(x => x.Id == lc.LivroId);
+                    if (l != null && l.Titulo == livro.Titulo)
+                    {
+                        livroCompradorExistente = l;
+                        break;
+                    }
+                }
+
+                if (livroCompradorExistente != null)
+                {
+                    livroCompradorExistente.Quantidade += 1;
+                    _dbContext.Livros.Update(livroCompradorExistente);
+                }
+                else
+                {
+                    var novoLivro = new Livro
+                    {
+                        Titulo = livro.Titulo,
+                        QtdPaginas = livro.QtdPaginas,
+                        Quantidade = 1,
+                        Valor = livro.Valor,
+                        Anunciado = false,
+                        CategoriaId = livro.CategoriaId,
+                        Custo = livro.Custo
+                    };
+
+                    await _dbContext.Livros.AddAsync(novoLivro);
+                    await _dbContext.SaveChangesAsync(); 
+
+                    var novoClienteLivro = new ClienteLivro
+                    {
+                        ClienteId = comprador.Id,
+                        LivroId = novoLivro.Id
+                    };
+
+                    await _dbContext.ClientesLivros.AddAsync(novoClienteLivro);
+
+                    if (fotoLivro != null)
+                    {
+                        var novaFoto = new FotoLivro
+                        {
+                            LivroId = novoLivro.Id,
+                            UrlImagem = fotoLivro.UrlImagem
+                        };
+
+                        await _dbContext.FotosLivros.AddAsync(novaFoto);
+                    }
+                }
+            }
+
+            foreach(var notificacao in notificacoes)
+            {
+                notificacao.Notificado = 1;
+                notificacao.Visto = 1;
+
+                _dbContext.Notificacoes.Update(notificacao);
+            }
+
+            _dbContext.LivrosAnunciados.Update(livroAnunciado);
+            _dbContext.Livros.Update(livro);
+
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+
         public async Task<bool> OperacaoLivro(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
         {
             bool clienteJaPossuiLivro = false;
@@ -174,30 +286,6 @@ namespace BookAPI.Repositories.Vendas
         public async Task<bool> SaveHistorico(int clienteId, LivroAnunciadoDTO livroAnunciadoDTO)
         {
             var livro = await _dbContext.Livros.Where(l => l.Id == livroAnunciadoDTO.LivroDTO.Id).FirstOrDefaultAsync();
-
-            //var historico = new Historico
-            //{
-            //    ClienteId = clienteId,
-            //    DataHora = DateTime.UtcNow,
-            //    TipoOperacao = livroAnunciadoDTO.Tipo,
-            //    Id = 0
-            //};
-
-            //await _dbContext.Historicos.AddAsync(historico);
-            //await _dbContext.SaveChangesAsync();
-
-            //var itemHistorico = new ItemHistorico
-            //{
-            //    Id = 0,
-            //    LivroId = (int)livroAnunciadoDTO.LivroId,
-            //    Quantidade = (int)livroAnunciadoDTO.qtdOperacao,
-            //    Valor = (decimal)(livroAnunciadoDTO.valorTaxa + livro.Valor),
-            //    HistoricoId = historico.Id,
-            //};
-
-            //await _dbContext.ItensHistoricos.AddAsync(itemHistorico);
-            //await _dbContext.SaveChangesAsync();
-
             var vendedor = await _dbContext.Clientes.Where(v => v.Id == livroAnunciadoDTO.ClienteId).FirstOrDefaultAsync();
 
             if(livroAnunciadoDTO.Tipo == 0)
@@ -215,6 +303,54 @@ namespace BookAPI.Repositories.Vendas
                     Notificado = 0,
                     Tipo = TipoOperacaoEnum.Venda,
                     VendedorId = (int)livroAnunciadoDTO.ClienteId
+                };
+
+                await _dbContext.Notificacoes.AddAsync(notificacao);
+                await _dbContext.SaveChangesAsync();
+
+                await _hubContext.Clients.User(notificacao.VendedorId.ToString()).SendAsync("ReceiveNotification", notificacao.Mensagem);
+            }
+            else if(livroAnunciadoDTO.Tipo == 1)
+            {
+                var comprador = await _dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();
+
+                var notificacao = new Notificacao
+                {
+                    Id = 0,
+                    Comprador = comprador,
+                    Vendedor = vendedor,
+                    Visto = 0,
+                    CompradorId = clienteId,
+                    Mensagem = $"O usuário {comprador.Nome} está querendo emprestar seu livro {livro.Titulo}\nDeseja aceitar esse empréstimo?",
+                    Notificado = 0,
+                    Tipo = TipoOperacaoEnum.Emprestimo,
+                    VendedorId = (int)livroAnunciadoDTO.ClienteId,
+                    Livro = livro,
+                    LivroId = livro.Id
+                };
+
+                await _dbContext.Notificacoes.AddAsync(notificacao);
+                await _dbContext.SaveChangesAsync();
+
+                await _hubContext.Clients.User(notificacao.VendedorId.ToString()).SendAsync("ReceiveNotification", notificacao.Mensagem);
+            }
+            else if (livroAnunciadoDTO.Tipo == 2)
+            {
+                var comprador = await _dbContext.Clientes.Where(c => c.Id == clienteId).FirstOrDefaultAsync();
+
+                var notificacao = new Notificacao
+                {
+                    Id = 0,
+                    Comprador = comprador,
+                    Vendedor = vendedor,
+                    Visto = 0,
+                    CompradorId = clienteId,
+                    Mensagem = $"O usuário {comprador.Nome} está querendo seu livro {livro.Titulo}\nDeseja aceitar essa doação?",
+                    Notificado = 0,
+                    Tipo = TipoOperacaoEnum.Doacao,
+                    VendedorId = (int)livroAnunciadoDTO.ClienteId,
+                    Livro = livro,
+                    LivroId = livro.Id
                 };
 
                 await _dbContext.Notificacoes.AddAsync(notificacao);
